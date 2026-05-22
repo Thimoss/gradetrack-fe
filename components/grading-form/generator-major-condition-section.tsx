@@ -1,30 +1,21 @@
 import { generatorMajorConditionRows } from "./generator-major-condition-data";
-
-function getSeverityClass(severity: "critical" | "major") {
-  if (severity === "critical") {
-    return "bg-red-200";
-  }
-
-  return "bg-neutral-300";
-}
+import { GradingFormSection } from "./grading-form-section";
 
 export function GeneratorMajorConditionSection() {
   return (
-    <section className="border-b-4 border-blue-700 bg-white">
-      <h2 className="border-t-4 border-blue-700 px-1 text-lg font-bold uppercase leading-7 text-neutral-950">
-        Identifikasi Kondisi Major
-      </h2>
-      <table className="w-full border-collapse text-base text-neutral-950">
+    <GradingFormSection title="Identifikasi Kondisi Major">
+      <div className="overflow-x-auto">
+      <table className="w-full min-w-[760px] border-collapse text-sm text-neutral-950">
         <thead>
-          <tr className="bg-blue-300">
-            <th className="w-10 border border-neutral-300 px-2 py-4 text-center font-bold">
+          <tr className="bg-slate-100">
+            <th className="w-10 border border-zinc-200 px-2 py-3 text-center font-bold text-slate-700">
               No
             </th>
-            <th className="w-52 border border-neutral-300 px-3 py-4 text-center font-bold">
+            <th className="w-56 border border-zinc-200 px-3 py-3 text-center font-bold text-slate-700">
               Parameter
             </th>
             <th
-              className="border border-neutral-300 px-3 py-4 text-center font-bold"
+              className="border border-zinc-200 px-3 py-3 text-center font-bold text-slate-700"
               colSpan={2}
             >
               Kondisi
@@ -34,33 +25,34 @@ export function GeneratorMajorConditionSection() {
         <tbody>
           {generatorMajorConditionRows.map((row) => (
             <tr key={row.id}>
-              <td className="border border-neutral-300 px-2 py-7 text-center">
+              <td className="border border-zinc-200 px-2 py-5 text-center font-medium">
                 {row.id}
               </td>
               <th
-                className="border border-neutral-300 px-2 py-7 text-center font-normal"
+                className="border border-zinc-200 px-3 py-5 text-center font-medium"
                 scope="row"
               >
                 {row.parameter}
               </th>
               <td
-                className={`w-24 border border-neutral-300 p-0 ${getSeverityClass(row.severity)}`}
+                className="w-24 border border-zinc-200 bg-slate-50 p-0"
               >
                 <label className="flex h-full min-h-16 items-center justify-center">
                   <input
                     aria-label={`Pilih ${row.parameter}`}
-                    className="h-5 w-5 accent-blue-700"
+                    className="h-5 w-5 accent-slate-900"
                     type="checkbox"
                   />
                 </label>
               </td>
-              <td className="border border-neutral-300 px-1 py-7">
+              <td className="border border-zinc-200 px-4 py-5">
                 {row.condition}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-    </section>
+      </div>
+    </GradingFormSection>
   );
 }

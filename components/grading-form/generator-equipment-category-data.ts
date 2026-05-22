@@ -12,21 +12,21 @@ export const equipmentCategories: EquipmentCategory[] = [
     min: 0,
     max: 40,
     rangeLabel: "0% - 40%",
-    className: "bg-red-600",
+    className: "bg-rose-500 text-white",
   },
   {
     label: "MEDIUM INTEGRITY",
     min: 41,
     max: 75,
     rangeLabel: "41% - 75%",
-    className: "bg-yellow-300",
+    className: "bg-amber-300 text-slate-950",
   },
   {
     label: "HIGH INTEGRITY",
     min: 76,
     max: 100,
     rangeLabel: "76% - 100%",
-    className: "bg-lime-500",
+    className: "bg-emerald-500 text-white",
   },
 ];
 

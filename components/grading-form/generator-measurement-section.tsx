@@ -5,12 +5,13 @@ import {
   vibrationColumns,
   vibrationRows,
 } from "./generator-measurement-data";
+import { GradingFormSection } from "./grading-form-section";
 
 function MeasurementInput({ label }: { label: string }) {
   return (
     <input
       aria-label={label}
-      className="h-7 w-full bg-blue-100 px-2 text-center outline-none focus:bg-white focus:ring-2 focus:ring-blue-500"
+      className="h-9 w-full bg-slate-50 px-2 text-center outline-none transition focus:bg-white focus:ring-2 focus:ring-sky-500"
       type="text"
     />
   );
@@ -18,31 +19,23 @@ function MeasurementInput({ label }: { label: string }) {
 
 export function GeneratorMeasurementSection() {
   return (
-    <section className="border-b border-neutral-300 bg-white">
-      <div className="grid grid-cols-[minmax(0,1.25fr)_minmax(320px,0.9fr)] gap-8 px-1 max-lg:grid-cols-1">
-        <div>
-          <h2 className="text-lg font-bold uppercase leading-8 text-neutral-950">
-            Data Vibrasi, Suhu, Voltase dan Frekuensi
-          </h2>
-        </div>
-        <div>
-          <h2 className="text-lg font-bold uppercase leading-8 text-neutral-950">
-            Data Noise & Grounding
-          </h2>
-        </div>
-      </div>
-      <div className="mx-9 mb-3 grid grid-cols-[minmax(0,1.25fr)_minmax(320px,0.9fr)] gap-14 border border-neutral-300 px-10 py-7 max-lg:grid-cols-1 max-lg:gap-8 max-md:mx-4 max-md:px-4">
-        <div>
-          <table className="w-full border-collapse text-center text-base text-neutral-950">
+    <GradingFormSection title="Data Vibrasi, Suhu, Voltase, Frekuensi, Noise & Grounding">
+      <div className="grid grid-cols-[minmax(0,1.25fr)_minmax(320px,0.9fr)] gap-5 max-lg:grid-cols-1">
+        <div className="overflow-hidden rounded-lg border border-zinc-200">
+          <div className="border-b border-zinc-200 bg-slate-50 px-4 py-3 text-sm font-bold uppercase tracking-wide text-slate-700">
+            Vibrasi, Suhu, Voltase dan Frekuensi
+          </div>
+          <div className="overflow-x-auto p-4">
+          <table className="w-full min-w-[560px] border-collapse text-center text-sm text-neutral-950">
             <thead>
               <tr>
-                <th className="border border-neutral-300 bg-blue-300 px-3 py-0.5 font-normal uppercase">
+                <th className="border border-zinc-200 bg-slate-100 px-3 py-2 font-bold uppercase text-slate-700">
                   Titik
                 </th>
                 {vibrationColumns.map((column) => (
                   <th
                     key={column.key}
-                    className="border border-neutral-300 bg-blue-300 px-3 py-0.5 font-normal uppercase"
+                    className="border border-zinc-200 bg-slate-100 px-3 py-2 font-bold uppercase text-slate-700"
                   >
                     {column.label}
                   </th>
@@ -53,7 +46,7 @@ export function GeneratorMeasurementSection() {
               {vibrationRows.map((row) => (
                 <tr key={row.key}>
                   <th
-                    className="border border-neutral-300 px-3 py-0.5 font-normal"
+                    className="border border-zinc-200 px-3 py-2 font-medium"
                     scope="row"
                   >
                     {row.label}
@@ -61,7 +54,7 @@ export function GeneratorMeasurementSection() {
                   {vibrationColumns.map((column) => (
                     <td
                       key={column.key}
-                      className="border border-neutral-300 p-0"
+                      className="border border-zinc-200 p-0"
                     >
                       <MeasurementInput
                         label={`${row.label} ${column.label}`}
@@ -72,18 +65,18 @@ export function GeneratorMeasurementSection() {
               ))}
             </tbody>
           </table>
-          <div className="grid grid-cols-[1fr_1fr] text-base font-bold text-neutral-950">
+          <div className="grid grid-cols-[1fr_1fr] px-1 py-2 text-xs font-bold uppercase tracking-wide text-neutral-500">
             <span>*mm/s</span>
             <span className="pl-2">*°C</span>
           </div>
 
-          <table className="mt-1 w-80 border-collapse text-center text-base text-neutral-950 max-sm:w-full">
+          <table className="mt-2 w-80 border-collapse text-center text-sm text-neutral-950 max-sm:w-full">
             <thead>
               <tr>
                 {electricalColumns.map((column) => (
                   <th
                     key={column.key}
-                    className="border border-neutral-300 bg-blue-300 px-3 py-0.5 font-normal uppercase"
+                    className="border border-zinc-200 bg-slate-100 px-3 py-2 font-bold uppercase text-slate-700"
                   >
                     {column.label}
                   </th>
@@ -95,7 +88,7 @@ export function GeneratorMeasurementSection() {
                 {electricalColumns.map((column) => (
                   <td
                     key={column.key}
-                    className="border border-neutral-300 p-0"
+                    className="border border-zinc-200 p-0"
                   >
                     <MeasurementInput label={column.label} />
                   </td>
@@ -103,20 +96,25 @@ export function GeneratorMeasurementSection() {
               </tr>
             </tbody>
           </table>
-          <div className="grid w-80 grid-cols-[1fr_1fr] text-base font-bold text-neutral-950 max-sm:w-full">
+          <div className="grid w-80 grid-cols-[1fr_1fr] px-1 py-2 text-xs font-bold uppercase tracking-wide text-neutral-500 max-sm:w-full">
             <span>*Volt</span>
             <span>*Hz</span>
           </div>
+          </div>
         </div>
 
-        <div>
-          <table className="w-full border-collapse text-center text-base text-neutral-950">
+        <div className="overflow-hidden rounded-lg border border-zinc-200">
+          <div className="border-b border-zinc-200 bg-slate-50 px-4 py-3 text-sm font-bold uppercase tracking-wide text-slate-700">
+            Noise & Grounding
+          </div>
+          <div className="p-4">
+          <table className="w-full border-collapse text-center text-sm text-neutral-950">
             <thead>
               <tr>
-                <th className="border border-neutral-300 bg-blue-300 px-3 py-0.5 font-normal uppercase">
+                <th className="border border-zinc-200 bg-slate-100 px-3 py-2 font-bold uppercase text-slate-700">
                   Titik
                 </th>
-                <th className="border border-neutral-300 bg-blue-300 px-3 py-0.5 font-normal uppercase">
+                <th className="border border-zinc-200 bg-slate-100 px-3 py-2 font-bold uppercase text-slate-700">
                   Nilai
                 </th>
               </tr>
@@ -125,27 +123,27 @@ export function GeneratorMeasurementSection() {
               {noiseRows.map((row) => (
                 <tr key={row.key}>
                   <th
-                    className="border border-neutral-300 px-3 py-0.5 font-normal"
+                    className="border border-zinc-200 px-3 py-2 font-medium"
                     scope="row"
                   >
                     {row.label}
                   </th>
-                  <td className="border border-neutral-300 p-0">
+                  <td className="border border-zinc-200 p-0">
                     <MeasurementInput label={`Noise ${row.label}`} />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <p className="text-base font-bold leading-7 text-neutral-950">*dB</p>
+          <p className="px-1 py-2 text-xs font-bold uppercase tracking-wide text-neutral-500">*dB</p>
 
-          <table className="w-full border-collapse text-center text-base text-neutral-950">
+          <table className="w-full border-collapse text-center text-sm text-neutral-950">
             <thead>
               <tr>
-                <th className="border border-neutral-300 bg-blue-300 px-3 py-0.5 font-normal uppercase">
+                <th className="border border-zinc-200 bg-slate-100 px-3 py-2 font-bold uppercase text-slate-700">
                   Parameter
                 </th>
-                <th className="border border-neutral-300 bg-blue-300 px-3 py-0.5 font-normal uppercase">
+                <th className="border border-zinc-200 bg-slate-100 px-3 py-2 font-bold uppercase text-slate-700">
                   Nilai
                 </th>
               </tr>
@@ -154,21 +152,22 @@ export function GeneratorMeasurementSection() {
               {groundingRows.map((row) => (
                 <tr key={row.key}>
                   <th
-                    className="border border-neutral-300 px-3 py-0.5 font-normal uppercase"
+                    className="border border-zinc-200 px-3 py-2 font-medium uppercase"
                     scope="row"
                   >
                     {row.label}
                   </th>
-                  <td className="border border-neutral-300 p-0">
+                  <td className="border border-zinc-200 p-0">
                     <MeasurementInput label={row.label} />
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-          <p className="text-base font-bold leading-7 text-neutral-950">*Ohm</p>
+          <p className="px-1 py-2 text-xs font-bold uppercase tracking-wide text-neutral-500">*Ohm</p>
+          </div>
         </div>
       </div>
-    </section>
+    </GradingFormSection>
   );
 }

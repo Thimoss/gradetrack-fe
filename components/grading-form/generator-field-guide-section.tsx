@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { GradingFormSection } from "./grading-form-section";
 
 type GeneratorFieldGuideSectionProps = {
   sketchSrc?: string;
@@ -10,16 +11,13 @@ export function GeneratorFieldGuideSection({
   orientationSrc = "/guide/gst-orientasi.png",
 }: GeneratorFieldGuideSectionProps) {
   return (
-    <section className="border-b border-neutral-300 bg-white">
-      <h2 className="px-1 text-lg font-bold uppercase leading-8 text-neutral-950">
-        Pengambilan Data Lapangan
-      </h2>
-      <div className="mx-9 mb-3 grid grid-cols-[minmax(0,1.55fr)_minmax(280px,1fr)] gap-8 border border-neutral-300 px-1 py-1 max-md:mx-4 max-md:grid-cols-1 max-md:gap-4">
-        <figure>
-          <figcaption className="text-lg font-bold uppercase leading-7 text-neutral-950">
+    <GradingFormSection title="Pengambilan Data Lapangan">
+      <div className="grid grid-cols-[minmax(0,1.55fr)_minmax(280px,1fr)] gap-5 max-md:grid-cols-1">
+        <figure className="rounded-lg border border-zinc-200 bg-slate-50 p-4">
+          <figcaption className="text-sm font-bold uppercase tracking-wide text-neutral-700">
             Sketsa
           </figcaption>
-          <div className="flex min-h-64 items-center justify-center">
+          <div className="mt-3 flex min-h-64 items-center justify-center">
             <Image
               src={sketchSrc}
               alt="Sketsa titik pengambilan data generator"
@@ -30,11 +28,11 @@ export function GeneratorFieldGuideSection({
             />
           </div>
         </figure>
-        <figure>
-          <figcaption className="text-lg font-bold uppercase leading-7 text-neutral-950">
+        <figure className="rounded-lg border border-zinc-200 bg-slate-50 p-4">
+          <figcaption className="text-sm font-bold uppercase tracking-wide text-neutral-700">
             Orientasi
           </figcaption>
-          <div className="flex min-h-64 items-center justify-center">
+          <div className="mt-3 flex min-h-64 items-center justify-center">
             <Image
               src={orientationSrc}
               alt="Orientasi pengambilan data generator"
@@ -46,6 +44,6 @@ export function GeneratorFieldGuideSection({
           </div>
         </figure>
       </div>
-    </section>
+    </GradingFormSection>
   );
 }

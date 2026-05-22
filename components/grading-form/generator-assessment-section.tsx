@@ -6,6 +6,7 @@ import {
   formatScore,
   generatorAssessmentParameters,
 } from "./generator-assessment-data";
+import { GradingFormSection } from "./grading-form-section";
 
 type SelectedAssessment = Record<string, number>;
 
@@ -35,29 +36,35 @@ export function GeneratorAssessmentSection({
   }, [onTotalScoreChange, totalScore]);
 
   return (
-    <section className="border-b-4 border-blue-700 bg-white">
-      <h2 className="px-1 text-lg font-bold uppercase leading-8 text-neutral-950">
-        Penilaian Peralatan
-      </h2>
-      <table className="w-full border-collapse text-base text-neutral-950">
+    <GradingFormSection
+      title="Penilaian Peralatan"
+      headerSlot={
+        <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white">
+          Total {formatScore(totalScore)}
+        </span>
+      }
+      bodyClassName="p-0"
+    >
+      <div className="overflow-x-auto">
+      <table className="w-full min-w-[980px] border-collapse text-sm text-neutral-950">
         <thead>
-          <tr className="bg-blue-300">
-            <th className="w-10 border border-neutral-300 px-2 py-4 text-center font-bold">
+          <tr className="bg-slate-100">
+            <th className="w-10 border border-zinc-200 px-2 py-3 text-center font-bold text-slate-700">
               No
             </th>
-            <th className="w-52 border border-neutral-300 px-3 py-4 text-center font-bold">
+            <th className="w-52 border border-zinc-200 px-3 py-3 text-center font-bold text-slate-700">
               Parameter
             </th>
             <th
-              className="border border-neutral-300 px-3 py-4 text-center font-bold"
+              className="border border-zinc-200 px-3 py-3 text-center font-bold text-slate-700"
               colSpan={2}
             >
               Kondisi
             </th>
-            <th className="w-28 border border-neutral-300 px-3 py-4 text-center font-bold">
+            <th className="w-28 border border-zinc-200 px-3 py-3 text-center font-bold text-slate-700">
               Nilai (%)
             </th>
-            <th className="w-36 border border-neutral-300 px-3 py-4 text-center font-bold">
+            <th className="w-36 border border-zinc-200 px-3 py-3 text-center font-bold text-slate-700">
               Skor
             </th>
           </tr>
@@ -76,13 +83,13 @@ export function GeneratorAssessmentSection({
                   {optionIndex === 0 ? (
                     <>
                       <td
-                        className="border border-neutral-300 px-2 text-center"
+                        className="border border-zinc-200 px-2 text-center font-medium"
                         rowSpan={parameter.options.length}
                       >
                         {parameter.displayNo}
                       </td>
                       <th
-                        className="border border-neutral-300 px-2 text-center font-normal"
+                        className="border border-zinc-200 px-3 text-center font-semibold"
                         rowSpan={parameter.options.length}
                         scope="rowgroup"
                       >
@@ -91,10 +98,14 @@ export function GeneratorAssessmentSection({
                     </>
                   ) : null}
                   <td
-                    className={`w-24 border border-neutral-300 p-0 ${isSelected ? "bg-neutral-300" : "bg-blue-100"}`}
+                    className={`w-24 border border-zinc-200 p-0 transition ${
+                      isSelected
+                        ? "bg-slate-900 text-white hover:bg-slate-900"
+                        : "bg-slate-50 text-slate-700 hover:bg-sky-50"
+                    }`}
                   >
                     <label
-                      className="flex min-h-10 cursor-pointer items-center justify-center px-2"
+                      className="flex h-full min-h-11 w-full cursor-pointer items-center justify-center px-2"
                       htmlFor={selectionId}
                     >
                       <input
@@ -114,15 +125,15 @@ export function GeneratorAssessmentSection({
                       <span className="font-bold">{isSelected ? "X" : ""}</span>
                     </label>
                   </td>
-                  <td className="whitespace-pre-line border border-neutral-300 px-1 py-1.5">
+                  <td className="whitespace-pre-line border border-zinc-200 px-4 py-2 leading-6">
                     {option.description}
                   </td>
-                  <td className="border border-neutral-300 px-3 py-1.5 text-center">
+                  <td className="border border-zinc-200 px-3 py-2 text-center font-semibold">
                     {option.value}
                   </td>
                   {optionIndex === 0 ? (
                     <td
-                      className="border border-neutral-300 px-3 text-center"
+                      className="border border-zinc-200 px-3 text-center font-bold"
                       rowSpan={parameter.options.length}
                     >
                       {formatScore(score)}
@@ -134,17 +145,18 @@ export function GeneratorAssessmentSection({
           })}
           <tr>
             <td
-              className="border border-neutral-300 px-3 py-1 text-right font-bold"
+              className="border border-zinc-200 bg-slate-50 px-3 py-3 text-right font-bold"
               colSpan={5}
             >
               Total
             </td>
-            <td className="border border-neutral-300 px-3 py-1 text-center font-bold">
+            <td className="border border-zinc-200 bg-slate-50 px-3 py-3 text-center font-bold">
               {formatScore(totalScore)}
             </td>
           </tr>
         </tbody>
       </table>
-    </section>
+      </div>
+    </GradingFormSection>
   );
 }

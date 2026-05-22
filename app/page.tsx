@@ -30,8 +30,31 @@ export default function Home() {
   const [totalScore, setTotalScore] = useState(0);
 
   return (
-    <div className="min-h-screen bg-neutral-100 px-6 py-8 text-neutral-950">
-      <main className="mx-auto w-full max-w-5xl border border-neutral-300 bg-white">
+    <div className="min-h-screen bg-zinc-100 px-6 py-8 text-neutral-950">
+      <main className="mx-auto flex w-full max-w-7xl flex-col gap-5">
+        <header className="rounded-lg border border-zinc-200 bg-white px-6 py-5 shadow-sm">
+          <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
+            Form Grading Generator
+          </p>
+          <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-neutral-950">
+                Generator Set GST
+              </h1>
+              <p className="mt-1 text-sm text-neutral-600">
+                Data inspeksi, penilaian, kategori, dan kesimpulan peralatan.
+              </p>
+            </div>
+            <div className="rounded-lg bg-slate-950 px-4 py-3 text-right text-white shadow-sm">
+              <p className="text-xs uppercase tracking-wide text-slate-300">
+                Total Skor
+              </p>
+              <p className="text-2xl font-bold">
+                {totalScore.toFixed(1).replace(".", ",")}
+              </p>
+            </div>
+          </div>
+        </header>
         <GeneratorEquipmentDataSection equipment={generatorEquipment} />
         <GeneratorDocumentationSection />
         <GeneratorFieldGuideSection />

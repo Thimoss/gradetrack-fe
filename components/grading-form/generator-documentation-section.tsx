@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { GradingFormSection } from "./grading-form-section";
 
 type DocumentationImage = {
   id: string;
@@ -20,11 +21,8 @@ export function GeneratorDocumentationSection() {
   const [images, setImages] = useState<Record<number, DocumentationImage>>({});
 
   return (
-    <section className="border-b border-neutral-300 bg-white">
-      <h2 className="px-1 text-lg font-bold uppercase leading-8 text-neutral-950">
-        Dokumentasi Peralatan
-      </h2>
-      <div className="grid grid-cols-2 gap-x-24 gap-y-8 px-10 pb-8 pt-5 max-lg:gap-x-10 max-md:grid-cols-1 max-md:px-4">
+    <GradingFormSection title="Dokumentasi Peralatan">
+      <div className="grid grid-cols-2 gap-5 max-md:grid-cols-1">
         {documentationSlots.map((label, index) => {
           const image = images[index];
           const inputId = `documentation-image-${index}`;
@@ -32,7 +30,7 @@ export function GeneratorDocumentationSection() {
           return (
             <label
               key={label}
-              className="relative flex aspect-[2.08/1] cursor-pointer items-center justify-center border border-neutral-300 bg-blue-100 text-sm font-medium text-neutral-600 outline-none focus-within:ring-2 focus-within:ring-blue-500"
+              className="relative flex aspect-[2.08/1] cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-dashed border-slate-300 bg-slate-50 text-sm font-semibold text-slate-600 outline-none transition hover:border-sky-500 hover:bg-sky-50 focus-within:ring-2 focus-within:ring-sky-500"
               htmlFor={inputId}
             >
               {image?.previewUrl ? (
@@ -72,6 +70,6 @@ export function GeneratorDocumentationSection() {
           );
         })}
       </div>
-    </section>
+    </GradingFormSection>
   );
 }
