@@ -1,45 +1,44 @@
 "use client";
 
 import { useState } from "react";
-import { GeneratorEquipmentDataSection } from "@/components/grading-form/generator-equipment-data-section";
-import { GeneratorAssessmentSection } from "@/components/grading-form/generator-assessment-section";
-import { GeneratorConclusionSection } from "@/components/grading-form/generator-conclusion-section";
 import { GeneratorDocumentationSection } from "@/components/grading-form/generator-documentation-section";
 import { GeneratorEquipmentCategorySection } from "@/components/grading-form/generator-equipment-category-section";
-import { GeneratorFieldGuideSection } from "@/components/grading-form/generator-field-guide-section";
-import { GeneratorMajorConditionSection } from "@/components/grading-form/generator-major-condition-section";
-import { GeneratorMeasurementSection } from "@/components/grading-form/generator-measurement-section";
+import { MovFieldDataSection } from "@/components/grading-form/mov-field-data-section";
+import { MtrAssessmentSection } from "@/components/grading-form/mtr-assessment-section";
+import { MtrConclusionSection } from "@/components/grading-form/mtr-conclusion-section";
+import { MtrEquipmentDataSection } from "@/components/grading-form/mtr-equipment-data-section";
+import { MtrMajorConditionSection } from "@/components/grading-form/mtr-major-condition-section";
 
-const generatorEquipment = {
-  tagNumber: "327-G-302/00",
-  serialNumber: "4B159808",
-  manufacturer: "STAMFORD AC G",
-  model: "B5 5000",
-  voltage: 220,
-  voltageUnit: "Volt",
-  insulationClass: "B",
-  capacity: 400,
-  capacityUnit: "KVA",
-  power: 50,
-  powerUnit: "Hz",
-  manufactureYear: 1994,
-  location: "IT Cikampek F204-LJP",
+const mtrEquipment = {
+  tagNumber: "327-FQI-209/00",
+  serialNumber: "0",
+  location: "IT Cikampek",
+  manufactureYear: 0,
+  manufacturer: "SMITH METER IN",
+  model: "PRIME 4-0-0-1",
+  flowMeterType: "Positive Displacement (PD) Flow Meter",
+  fluid: "PREMIUM",
+  flowCapacity: 0,
+  flowCapacityUnit: "m3/h",
 };
 
 export default function Home() {
   const [totalScore, setTotalScore] = useState(0);
+  const [improvementParameters, setImprovementParameters] = useState<string[]>(
+    [],
+  );
 
   return (
     <div className="min-h-screen bg-zinc-100 px-6 py-8 text-neutral-950">
       <main className="mx-auto flex w-full max-w-7xl flex-col gap-5">
         <header className="rounded-lg border border-zinc-200 bg-white px-6 py-5 shadow-sm">
           <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
-            Form Grading Generator
+            Form Grading Flow Meter
           </p>
           <div className="mt-2 flex flex-wrap items-end justify-between gap-4">
             <div>
               <h1 className="text-2xl font-bold text-neutral-950">
-                Generator Set GST
+                Meter Arus MTR
               </h1>
               <p className="mt-1 text-sm text-neutral-600">
                 Data inspeksi, penilaian, kategori, dan kesimpulan peralatan.
@@ -55,14 +54,21 @@ export default function Home() {
             </div>
           </div>
         </header>
-        <GeneratorEquipmentDataSection equipment={generatorEquipment} />
+        <MtrEquipmentDataSection equipment={mtrEquipment} />
         <GeneratorDocumentationSection />
-        <GeneratorFieldGuideSection />
-        <GeneratorMeasurementSection />
-        <GeneratorMajorConditionSection />
-        <GeneratorAssessmentSection onTotalScoreChange={setTotalScore} />
+        <MovFieldDataSection />
+        <MtrMajorConditionSection />
+        <MtrAssessmentSection
+          onSummaryChange={(summary) => {
+            setTotalScore(summary.totalScore);
+            setImprovementParameters(summary.improvementParameters);
+          }}
+        />
         <GeneratorEquipmentCategorySection totalScore={totalScore} />
-        <GeneratorConclusionSection totalScore={totalScore} />
+        <MtrConclusionSection
+          totalScore={totalScore}
+          improvementParameters={improvementParameters}
+        />
       </main>
     </div>
   );
