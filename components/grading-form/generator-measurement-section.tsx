@@ -11,7 +11,7 @@ function MeasurementInput({ label }: { label: string }) {
   return (
     <input
       aria-label={label}
-      className="h-9 w-full bg-slate-50 px-2 text-center outline-none transition focus:bg-white focus:ring-2 focus:ring-sky-500"
+      className="h-9 w-full border border-transparent bg-slate-50 px-2 text-center outline-none transition focus:border-sky-500 focus:bg-white"
       type="text"
     />
   );
@@ -45,29 +45,46 @@ export function GeneratorMeasurementSection() {
             <tbody>
               {vibrationRows.map((row) => (
                 <tr key={row.key}>
-                  <th
-                    className="border border-zinc-200 px-3 py-2 font-medium"
-                    scope="row"
-                  >
-                    {row.label}
-                  </th>
-                  {vibrationColumns.map((column) => (
-                    <td
-                      key={column.key}
-                      className="border border-zinc-200 p-0"
-                    >
-                      <MeasurementInput
-                        label={`${row.label} ${column.label}`}
-                      />
-                    </td>
-                  ))}
+                  {row.key === "bodyAlternator" ? (
+                    <>
+                      <th
+                        className="border border-zinc-200 px-3 py-2 text-center font-medium"
+                        colSpan={4}
+                        scope="row"
+                      >
+                        {row.label}
+                      </th>
+                      <td className="border border-zinc-200 p-0">
+                        <MeasurementInput label={`${row.label} Suhu`} />
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <th
+                        className="border border-zinc-200 px-3 py-2 font-medium"
+                        scope="row"
+                      >
+                        {row.label}
+                      </th>
+                      {vibrationColumns.map((column) => (
+                        <td
+                          key={column.key}
+                          className="border border-zinc-200 p-0"
+                        >
+                          <MeasurementInput
+                            label={`${row.label} ${column.label}`}
+                          />
+                        </td>
+                      ))}
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>
           </table>
-          <div className="grid grid-cols-[1fr_1fr] px-1 py-2 text-xs font-bold uppercase tracking-wide text-neutral-500">
-            <span>*mm/s</span>
-            <span className="pl-2">*°C</span>
+          <div className="grid grid-cols-5 px-1 py-2 text-xs font-bold uppercase tracking-wide text-neutral-500">
+            <span className="col-span-4">*mm/s</span>
+            <span>*°C</span>
           </div>
 
           <table className="mt-2 w-80 border-collapse text-center text-sm text-neutral-950 max-sm:w-full">
