@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Pertamina Grading",
-  description: "Pertamina equipment grading form",
+  title: "GradeTrack",
+  description: "Equipment grading, tasklist, and recap workspace",
 };
 
 export default function RootLayout({
