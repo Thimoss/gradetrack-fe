@@ -12,7 +12,7 @@ export type NavigationItem = {
 export const navigationItems: NavigationItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/grading", label: "Grading", icon: "grading" },
-  { href: "/dashboard", label: "Tasklist", icon: "tasklist" },
+  { href: "/tasklist", label: "Tasklist", icon: "tasklist" },
   { href: "/dashboard", label: "Rekap", icon: "recap" },
 ];
 

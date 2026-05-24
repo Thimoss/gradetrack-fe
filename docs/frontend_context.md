@@ -47,9 +47,29 @@ Snapshot konteks `grading-fe` per 2026-05-24.
 - Dashboard masih berbasis UI awal untuk grading, tasklist, rekap.
 - Jika user kirim file XLSX dashboard, gunakan file itu sebagai sumber kebutuhan widget, filter, tabel, status, dan rekap.
 
+## Tasklist
+
+- Kontrak awal tasklist ada di `docs/tasklist_contract.md`.
+- Tasklist mengisi beberapa task untuk semua equipment dengan jenis yang sama dalam satu session.
+- Result tasklist wajib lengkap untuk semua kombinasi `task x equipment`.
+- Performance cell hanya `H`, `M`, atau `L`.
+- `measuredValue` hanya dipakai untuk task dengan `inputType = "MEASUREMENT"`.
+- UI tasklist web diutamakan per equipment/tag, bukan tabel Excel lebar, tetapi data tetap dihitung sebagai matrix `task x equipment`.
+- Tasklist web adalah input ulang data lapangan; header, matrix task, tanggal pelaksanaan, dan keterangan tetap dibuat, tetapi row paraf/signature, page break, dan watermark tidak perlu dibuat di UI.
+
 ## Form Grading
 
 Komponen form grading ada di `components/grading-form/`.
+
+Flow input grading:
+
+- User login.
+- User masuk menu `/grading`.
+- User klik `Input Grading`.
+- Modal pertama memilih tanggal penilaian.
+- Modal berikutnya memilih jenis equipment.
+- Setelah itu user masuk ke halaman form grading equipment tersebut.
+- Di dalam form ada dropdown nomor tag untuk memilih equipment spesifik, contoh `GST-01` atau `GST-02`.
 
 Equipment yang sudah pernah dibuat:
 
