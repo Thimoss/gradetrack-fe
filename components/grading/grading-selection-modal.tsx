@@ -42,10 +42,10 @@ export function GradingSelectionModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 px-4 py-6">
       <div
         aria-modal="true"
-        className="w-full max-w-2xl overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-2xl"
+        className="flex max-h-[calc(100dvh-8rem)] w-full max-w-2xl flex-col overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-2xl sm:max-h-[calc(100dvh-4rem)]"
         role="dialog"
       >
-        <div className="flex items-start justify-between gap-4 border-b border-zinc-200 px-5 py-4">
+        <div className="shrink-0 flex items-start justify-between gap-4 border-b border-zinc-200 px-5 py-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
               Input Grading
@@ -108,8 +108,9 @@ export function GradingSelectionModal({
             </div>
           </form>
         ) : (
-          <div className="p-5">
-            <div className="grid gap-3 sm:grid-cols-2">
+          <div className="flex min-h-0 flex-1 flex-col">
+            <div className="min-h-0 flex-1 overflow-y-auto p-5">
+              <div className="grid gap-3 sm:grid-cols-2">
               {equipmentOptions.map((option) => {
                 const isSelected = option.type === selectedEquipmentType;
 
@@ -147,8 +148,9 @@ export function GradingSelectionModal({
                   </button>
                 );
               })}
+              </div>
             </div>
-            <div className="mt-5 flex justify-end gap-3">
+            <div className="shrink-0 flex justify-end gap-3 border-t border-zinc-200 bg-white p-5">
               <button
                 className="h-10 rounded-lg border border-zinc-200 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                 onClick={onClose}

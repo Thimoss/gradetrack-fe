@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
-import { ToastContainer } from "react-toastify/unstyled";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const metadata: Metadata = {
   title: "GradeTrack",
@@ -17,7 +18,7 @@ export default function RootLayout({
     <html lang="en" className="h-full antialiased">
       <body className="min-h-full flex flex-col">
         <NextTopLoader showSpinner={false} />
-        <ToastContainer />
+        <ToastContainer position="top-right" autoClose={3000} />
         {children}
       </body>
     </html>

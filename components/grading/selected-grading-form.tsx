@@ -1,6 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
+import { toast } from "react-toastify";
 import { GeneratorAssessmentSection } from "@/components/grading-form/generator-assessment-section";
 import { GeneratorConclusionSection } from "@/components/grading-form/generator-conclusion-section";
 import { GeneratorDocumentationSection } from "@/components/grading-form/generator-documentation-section";
@@ -310,7 +312,9 @@ export function SelectedGradingForm({
   onSelectedTagChange,
   onRestartFlow,
 }: SelectedGradingFormProps) {
+  const router = useRouter();
   const formKey = `${selectedEquipmentType}-${selectedTag}`;
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [summaryState, setSummaryState] = useState<AssessmentSummaryState>({
     formKey,
     ...emptySummary,
@@ -325,6 +329,44 @@ export function SelectedGradingForm({
   const updateTotalScore = useCallback((totalScore: number) => {
     setSummaryState({ formKey, totalScore, improvementParameters: [] });
   }, [formKey]);
+
+  async function submitGrading() {
+    setIsSubmitting(true);
+
+    try {
+      const createdBy =
+        window.localStorage.getItem("grading_employee_number") ?? "admin-depot";
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:3001"}/grading-submissions/${selectedEquipmentType}`,
+        {
+          body: JSON.stringify({
+            tagNumber: selectedTag,
+            equipmentType: selectedEquipmentType,
+            inspectionDate: assessmentDate,
+            equipmentData: { tagNumber: selectedTag },
+            totalScore: summary.totalScore,
+            createdBy,
+          }),
+          headers: { "Content-Type": "application/json" },
+          method: "POST",
+        },
+      );
+      const payload = (await response.json()) as { message?: string };
+
+      if (!response.ok) {
+        throw new Error(payload.message ?? "Gagal submit grading.");
+      }
+
+      toast.success("Grading disubmit dan otomatis approved.");
+      router.push("/submissions");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Gagal submit grading.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-5" key={formKey}>
@@ -374,6 +416,14 @@ export function SelectedGradingForm({
                 {summary.totalScore.toFixed(1).replace(".", ",")}
               </p>
             </div>
+            <button
+              className="mt-5 h-11 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={isSubmitting}
+              onClick={submitGrading}
+              type="button"
+            >
+              {isSubmitting ? "Submit..." : "Submit Grading"}
+            </button>
           </div>
         </div>
       </header>

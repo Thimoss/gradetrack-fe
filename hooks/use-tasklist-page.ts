@@ -2501,6 +2501,17 @@ function isResultComplete(
   return true;
 }
 
+function getMonthlyOccurrenceCount(cycle: TasklistCycle, monthNumber: number) {
+  if (cycle === "DAILY") return 20;
+  if (cycle === "WEEKLY") return 4;
+  if (cycle === "MONTHLY") return 1;
+  if (cycle === "SIX_MONTHLY") {
+    return monthNumber === 6 || monthNumber === 12 ? 1 : 0;
+  }
+
+  return monthNumber === 12 ? 1 : 0;
+}
+
 export function useTasklistPage() {
   const [step, setStep] = useState<TasklistStep>("equipment");
   const [selectedEquipmentType, setSelectedEquipmentType] =
@@ -2557,18 +2568,27 @@ export function useTasklistPage() {
   const [executionDate, setExecutionDate] = useState("2026-05-24");
   const [remarks, setRemarks] = useState("");
 
-  const totalTasklistPlan = useMemo(
+  const monthNumber = 5;
+  const occurrenceCount = useMemo(
+    () => getMonthlyOccurrenceCount(cycle, monthNumber),
+    [cycle],
+  );
+  const planPerOccurrence = useMemo(
     () => tasks.length * equipment.length,
     [equipment.length, tasks.length],
   );
-  const totalTasklistSelesai = results.filter((result) => {
+  const totalTasklistPlan = planPerOccurrence * occurrenceCount;
+  const completedCellCount = results.filter((result) => {
     const task = tasks.find((item) => item.id === result.taskId);
 
     return task ? isResultComplete(result, task) : false;
   }).length;
+  const totalTasklistSelesai = completedCellCount * occurrenceCount;
 
   const sessionSnapshot = {
     equipmentCount: equipment.length,
+    occurrenceCount,
+    planPerOccurrence,
     taskCount: tasks.length,
     totalTasklistPlan,
     totalTasklistSelesai,
@@ -2705,7 +2725,7 @@ export function useTasklistPage() {
     reportDate: "2026-05-24",
     location: "IT Cikampek",
     year: "2026",
-    monthNumber: "5",
+    monthNumber: String(monthNumber),
     weekNumber: "4",
     equipment,
     tasks,

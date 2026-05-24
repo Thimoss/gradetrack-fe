@@ -53,6 +53,8 @@ Snapshot konteks `grading-fe` per 2026-05-24.
 - Kontrak BE tasklist ada di `../docs/api/tasklist_contract.md`.
 - Tasklist mengisi beberapa task untuk semua equipment dengan jenis yang sama dalam satu session.
 - Result tasklist wajib lengkap untuk semua kombinasi `task x equipment`.
+- Rekap tasklist dihitung bulanan: `task x equipment x occurrence`.
+- Occurrence: harian = hari efektif, mingguan = jumlah minggu, bulanan = 1, 6 bulanan = bulan 6/12, tahunan = bulan 12.
 - Performance cell hanya `H`, `M`, atau `L`.
 - `measuredValue` hanya dipakai untuk task dengan `inputType = "MEASUREMENT"`.
 - UI tasklist web diutamakan per equipment/tag, bukan tabel Excel lebar, tetapi data tetap dihitung sebagai matrix `task x equipment`.

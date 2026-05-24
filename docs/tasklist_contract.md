@@ -16,8 +16,8 @@ Contoh:
 - User wajib mengisi 7 task untuk semua 7 genset.
 - Total cell wajib diisi: `7 task x 7 equipment = 49 result`.
 
-`totalTasklistPlan` dan `totalTasklistSelesai` disimpan sebagai snapshot session.
-Jika jumlah equipment berubah di masa depan, total session lama tidak ikut berubah.
+`totalTasklistPlan` dan `totalTasklistSelesai` disimpan sebagai snapshot rekap bulanan.
+Jika jumlah equipment, template, atau jumlah occurrence berubah di masa depan, total session lama tidak ikut berubah.
 
 ## Cycle
 
@@ -90,9 +90,23 @@ Saat form dibuka, FE wajib generate semua cell kosong dari kombinasi `tasks x eq
 FE menghitung:
 
 ```ts
-totalTasklistPlan = tasks.length * equipment.length;
-totalTasklistSelesai = results.filter((result) => result.performance).length;
+planPerOccurrence = tasks.length * equipment.length;
+totalTasklistPlan = planPerOccurrence * occurrenceCount;
+totalTasklistSelesai = completedCells * realizedOccurrenceCount;
 ```
+
+`occurrenceCount` mengikuti cycle pada bulan terpilih:
+
+- `DAILY`: jumlah hari efektif bulan itu.
+- `WEEKLY`: jumlah minggu bulan itu.
+- `MONTHLY`: 1.
+- `SIX_MONTHLY`: 1 hanya pada bulan ke-6 dan ke-12, selain itu 0.
+- `YEARLY`: 1 hanya pada bulan ke-12, selain itu 0.
+
+Contoh: 1 equipment harian, 8 task, 20 hari efektif.
+`totalTasklistPlan = 1 x 8 x 20 = 160`.
+Jika semua task diisi selama 20 hari, `totalTasklistSelesai = 160`.
+Jika baru 15 hari selesai, `totalTasklistSelesai = 120`.
 
 Nilai ini dikirim ke BE saat submit dan BE tetap menghitung ulang untuk validasi.
 

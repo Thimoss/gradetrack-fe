@@ -9,7 +9,11 @@ export default function Home() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const employeeNumber = String(form.get("employeeNumber") ?? "").trim();
     setIsSubmitting(true);
+    window.localStorage.setItem("grading_employee_number", employeeNumber);
+    window.localStorage.setItem("grading_user_role", "ADMIN_DEPOT");
     router.push("/dashboard");
   }
 

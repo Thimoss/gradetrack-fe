@@ -1,7 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
+import { toast } from "react-toastify";
 import { TasklistEquipmentSection } from "@/components/tasklist/tasklist-equipment-section";
 import { TasklistHeaderSection } from "@/components/tasklist/tasklist-header-section";
 import { TasklistSelectionFlow } from "@/components/tasklist/tasklist-selection-flow";
@@ -32,8 +34,10 @@ const equipmentTypeLabel: Record<TasklistEquipmentType, string> = {
 };
 
 export function TasklistPage() {
+  const router = useRouter();
   const tasklistPage = useTasklistPage();
   const [submitMessage, setSubmitMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function scrollToTask(taskId: string) {
     window.requestAnimationFrame(() => {
@@ -44,10 +48,84 @@ export function TasklistPage() {
   }
   const {
     equipmentCount,
+    occurrenceCount,
+    planPerOccurrence,
     taskCount,
     totalTasklistPlan,
     totalTasklistSelesai,
   } = tasklistPage.sessionSnapshot;
+
+  async function submitTasklist() {
+    const validation = tasklistPage.validateBeforeSubmit();
+    setSubmitMessage(validation.message);
+
+    if (!validation.isValid && validation.taskId) {
+      toast.error(validation.message);
+      scrollToTask(validation.taskId);
+      return;
+    }
+
+    if (!validation.isValid) {
+      toast.error(validation.message);
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const createdBy =
+        window.localStorage.getItem("grading_employee_number") ?? "admin-depot";
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:3001"}/tasklists`,
+        {
+          body: JSON.stringify({
+            session: {
+              equipmentType: tasklistPage.selectedEquipmentType,
+              cycle: tasklistPage.cycle,
+              reportDate: tasklistPage.reportDate,
+              executionDate: tasklistPage.executionDate,
+              location: tasklistPage.location,
+              year: tasklistPage.year,
+              monthNumber: tasklistPage.monthNumber,
+              weekNumber: tasklistPage.weekNumber,
+              remarks: tasklistPage.remarks,
+              occurrenceCount,
+              createdBy,
+            },
+            equipmentIds: tasklistPage.equipment.map((item) => item.tagNumber),
+            resultsByTask: tasklistPage.tasks.map((task) => ({
+              taskCode: task.code,
+              results: tasklistPage.equipment.map((equipment) => {
+                const result = tasklistPage.getResult(task.id, equipment.id);
+
+                return {
+                  equipmentId: equipment.tagNumber,
+                  performance: result?.performance,
+                  measuredValue: result?.measuredValue,
+                };
+              }),
+            })),
+          }),
+          headers: { "Content-Type": "application/json" },
+          method: "POST",
+        },
+      );
+      const payload = (await response.json()) as { message?: string };
+
+      if (!response.ok) {
+        throw new Error(payload.message ?? "Gagal submit tasklist.");
+      }
+
+      toast.success("Tasklist disubmit dan otomatis approved.");
+      router.push("/submissions");
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Gagal submit tasklist.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-5">
@@ -100,14 +178,15 @@ export function TasklistPage() {
               />
               <div>
                 <p className="font-bold text-slate-950">
-                  Snapshot plan session ini: {taskCount} task x {equipmentCount}{" "}
-                  equipment = {totalTasklistPlan}.
+                  Rekap bulan ini: {taskCount} task x {equipmentCount}{" "}
+                  equipment x {occurrenceCount} occurrence ={" "}
+                  {totalTasklistPlan}.
                 </p>
                 <p className="mt-1 leading-6">
-                  Total plan disimpan saat session dibuat. Kalau jumlah equipment
-                  berubah di masa depan, total plan dan real session lama tidak
-                  ikut berubah. Total selesai dihitung dari jumlah cell yang
-                  sudah punya performance.
+                  Plan per occurrence {planPerOccurrence}. Harian memakai hari
+                  efektif, mingguan memakai jumlah minggu, bulanan satu kali, 6
+                  bulanan masuk bulan ke-6 dan ke-12, tahunan masuk bulan ke-12.
+                  Real mengikuti occurrence yang sudah direalisasikan.
                 </p>
               </div>
             </div>
@@ -151,17 +230,11 @@ export function TasklistPage() {
             </div>
             <button
               className="h-10 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
-              onClick={() => {
-                const validation = tasklistPage.validateBeforeSubmit();
-                setSubmitMessage(validation.message);
-
-                if (!validation.isValid && validation.taskId) {
-                  scrollToTask(validation.taskId);
-                }
-              }}
+              disabled={isSubmitting}
+              onClick={submitTasklist}
               type="button"
             >
-              Submit Tasklist
+              {isSubmitting ? "Submit..." : "Submit Tasklist"}
             </button>
           </section>
         </>

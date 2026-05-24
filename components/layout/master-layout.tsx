@@ -6,13 +6,16 @@ import {
   IoAnalyticsOutline,
   IoBarChartOutline,
   IoBriefcaseOutline,
+  IoBusinessOutline,
   IoChevronBack,
   IoChevronForward,
   IoClose,
   IoClipboardOutline,
+  IoDocumentTextOutline,
   IoGridOutline,
   IoHelpCircleOutline,
   IoMenu,
+  IoPeopleOutline,
   IoPersonOutline,
 } from "react-icons/io5";
 import type { NavigationItem } from "@/hooks/use-master-layout";
@@ -24,8 +27,11 @@ type MasterLayoutProps = {
 
 const navigationIcon: Record<NavigationItem["icon"], ReactNode> = {
   dashboard: <IoGridOutline aria-hidden="true" />,
+  depot: <IoBusinessOutline aria-hidden="true" />,
+  user: <IoPeopleOutline aria-hidden="true" />,
   grading: <IoClipboardOutline aria-hidden="true" />,
   tasklist: <IoAnalyticsOutline aria-hidden="true" />,
+  submission: <IoDocumentTextOutline aria-hidden="true" />,
   recap: <IoBarChartOutline aria-hidden="true" />,
 };
 
