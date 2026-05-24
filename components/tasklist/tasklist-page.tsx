@@ -2,23 +2,37 @@
 
 import { useState } from "react";
 import { IoInformationCircleOutline } from "react-icons/io5";
-import { GeneratorTasklistEquipmentSection } from "@/components/tasklist/generator-tasklist-equipment-section";
-import { GeneratorTasklistHeaderSection } from "@/components/tasklist/generator-tasklist-header-section";
+import { TasklistEquipmentSection } from "@/components/tasklist/tasklist-equipment-section";
+import { TasklistHeaderSection } from "@/components/tasklist/tasklist-header-section";
 import { TasklistSelectionFlow } from "@/components/tasklist/tasklist-selection-flow";
 import {
-  type GeneratorTasklistCycle,
-  useGeneratorTasklistPage,
-} from "@/hooks/use-generator-tasklist-page";
+  type TasklistCycle,
+  type TasklistEquipmentType,
+  useTasklistPage,
+} from "@/hooks/use-tasklist-page";
 
-const cycleLabel: Record<GeneratorTasklistCycle, string> = {
+const cycleLabel: Record<TasklistCycle, string> = {
+  DAILY: "Harian",
   WEEKLY: "Mingguan",
   MONTHLY: "Bulanan",
   SIX_MONTHLY: "6 Bulanan",
   YEARLY: "Tahunan",
 };
 
-export function GeneratorTasklistPage() {
-  const tasklistPage = useGeneratorTasklistPage();
+const equipmentTypeLabel: Record<TasklistEquipmentType, string> = {
+  GST: "Genset",
+  MOV: "Motor Operated Valve",
+  MTR: "Meter Arus",
+  PIP: "Sistem Perpipaan",
+  PMP: "Pompa Produk",
+  SGR: "Switch Gear",
+  TNK: "Tangki",
+  TRF: "Transformer",
+  UPS: "UPS",
+};
+
+export function TasklistPage() {
+  const tasklistPage = useTasklistPage();
   const [submitMessage, setSubmitMessage] = useState("");
 
   function scrollToTask(taskId: string) {
@@ -38,6 +52,7 @@ export function GeneratorTasklistPage() {
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-5">
       <TasklistSelectionFlow
+        availableCycles={tasklistPage.availableCycles}
         onEquipmentTypeChange={tasklistPage.setSelectedEquipmentType}
         onSubmitCycle={tasklistPage.submitCycleSelection}
         onSubmitEquipment={tasklistPage.submitEquipmentSelection}
@@ -47,7 +62,7 @@ export function GeneratorTasklistPage() {
 
       {tasklistPage.step === "form" ? (
         <>
-          <GeneratorTasklistHeaderSection
+          <TasklistHeaderSection
             location={tasklistPage.location}
             monthNumber={tasklistPage.monthNumber}
             reportDate={tasklistPage.reportDate}
@@ -60,7 +75,8 @@ export function GeneratorTasklistPage() {
           <section className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-white p-4 shadow-sm">
             <div>
               <p className="text-sm font-bold text-neutral-950">
-                Generator - {cycleLabel[tasklistPage.cycle]}
+                {equipmentTypeLabel[tasklistPage.selectedEquipmentType]} -{" "}
+                {cycleLabel[tasklistPage.cycle]}
               </p>
               <p className="mt-1 text-xs text-neutral-500">
                 Siklus dipilih di awal. Untuk mengganti siklus, ulangi pilihan
@@ -97,8 +113,9 @@ export function GeneratorTasklistPage() {
             </div>
           </section>
 
-          <GeneratorTasklistEquipmentSection
+          <TasklistEquipmentSection
             cycleLabel={cycleLabel[tasklistPage.cycle]}
+            equipmentType={tasklistPage.selectedEquipmentType}
             equipment={tasklistPage.equipment}
             executionDate={tasklistPage.executionDate}
             firstEmptyTaskId={tasklistPage.firstEmptyTaskId}

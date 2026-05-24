@@ -1,14 +1,15 @@
 import type {
-  GeneratorTasklistEquipment,
-  GeneratorTasklistTask,
+  TasklistEquipment,
+  TasklistTask,
   TasklistPerformance,
-} from "@/hooks/use-generator-tasklist-page";
+} from "@/hooks/use-tasklist-page";
 
-type GeneratorTasklistEquipmentSectionProps = {
-  equipment: GeneratorTasklistEquipment[];
-  tasks: GeneratorTasklistTask[];
-  selectedEquipment: GeneratorTasklistEquipment;
+type TasklistEquipmentSectionProps = {
+  equipment: TasklistEquipment[];
+  tasks: TasklistTask[];
+  selectedEquipment: TasklistEquipment;
   selectedEquipmentFinishedCount: number;
+  equipmentType: string;
   cycleLabel: string;
   firstEmptyTaskId: string | null;
   executionDate: string;
@@ -64,11 +65,12 @@ function getTaskStatusClass(performance: TasklistPerformance) {
   return "border-zinc-200 bg-white";
 }
 
-export function GeneratorTasklistEquipmentSection({
+export function TasklistEquipmentSection({
   equipment,
   tasks,
   selectedEquipment,
   selectedEquipmentFinishedCount,
+  equipmentType,
   cycleLabel,
   firstEmptyTaskId,
   executionDate,
@@ -80,16 +82,16 @@ export function GeneratorTasklistEquipmentSection({
   onMeasuredValueChange,
   onPerformanceChange,
   onRemarksChange,
-}: GeneratorTasklistEquipmentSectionProps) {
+}: TasklistEquipmentSectionProps) {
   return (
     <section className="overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 bg-slate-50 px-5 py-3">
         <div>
           <h2 className="text-sm font-bold uppercase tracking-wide text-slate-900">
-            Rutin : GST ({cycleLabel})
+            Rutin : {equipmentType} ({cycleLabel})
           </h2>
           <p className="mt-1 text-xs text-neutral-500">
-            Pilih satu genset, lalu isi semua task untuk equipment tersebut.
+            Pilih satu equipment, lalu isi semua task untuk equipment tersebut.
           </p>
         </div>
         <div className="rounded-full bg-slate-950 px-3 py-1 text-xs font-bold text-white">

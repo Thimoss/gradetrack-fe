@@ -49,13 +49,32 @@ Snapshot konteks `grading-fe` per 2026-05-24.
 
 ## Tasklist
 
-- Kontrak awal tasklist ada di `docs/tasklist_contract.md`.
+- Kontrak FE tasklist ada di `docs/tasklist_contract.md`.
+- Kontrak BE tasklist ada di `../docs/api/tasklist_contract.md`.
 - Tasklist mengisi beberapa task untuk semua equipment dengan jenis yang sama dalam satu session.
 - Result tasklist wajib lengkap untuk semua kombinasi `task x equipment`.
 - Performance cell hanya `H`, `M`, atau `L`.
 - `measuredValue` hanya dipakai untuk task dengan `inputType = "MEASUREMENT"`.
 - UI tasklist web diutamakan per equipment/tag, bukan tabel Excel lebar, tetapi data tetap dihitung sebagai matrix `task x equipment`.
 - Tasklist web adalah input ulang data lapangan; header, matrix task, tanggal pelaksanaan, dan keterangan tetap dibuat, tetapi row paraf/signature, page break, dan watermark tidak perlu dibuat di UI.
+- `/tasklist` saat ini support equipment `GST`, `MOV`, `MTR`, `PIP`, `PMP`, `SGR`, `TNK`, `TRF`, dan `UPS`.
+- GST support cycle `WEEKLY`, `MONTHLY`, `SIX_MONTHLY`, `YEARLY`.
+- MOV support cycle `DAILY`, `MONTHLY`, `YEARLY`.
+- MTR support cycle `DAILY`, `WEEKLY`, `YEARLY`.
+- PIP support cycle `MONTHLY`, `YEARLY`.
+- PMP support cycle `DAILY`, `MONTHLY`, `SIX_MONTHLY`.
+- SGR support cycle `MONTHLY`, `YEARLY`.
+- TNK support cycle `MONTHLY`, `YEARLY`.
+- TRF support cycle `WEEKLY`, `SIX_MONTHLY`.
+- UPS support cycle `MONTHLY`, `YEARLY`.
+- Source MOV tasklist: `docs/xlsx/Tasklist_MORX_00_XXX_MOV_yyyymmdd.xlsx`.
+- Source MTR tasklist: `docs/xlsx/Tasklist_MORX_00_XXX_MTR_yyyymmdd.xlsx`.
+- Source PIP tasklist: `docs/xlsx/Tasklist_MORX_00_XXX_PIP_yyyymmdd.xlsx`.
+- Source PMP tasklist: `docs/xlsx/Tasklist_MORX_00_XXX_PMP_yyyymmdd.xlsx`.
+- Source SGR tasklist: `docs/xlsx/Tasklist_MORX_00_XXX_SGR_yyyymmdd.xlsx`.
+- Source TNK tasklist: `docs/xlsx/Tasklist_MORX_00_XXX_TNK_yyyymmdd.xlsx`.
+- Source TRF tasklist: `docs/xlsx/Tasklist_MORX_00_XXX_TRF_yyyymmdd.xlsx`.
+- Source UPS tasklist: `docs/xlsx/Tasklist_MORX_00_XXX_UPS_yyyymmdd.xlsx`.
 
 ## Form Grading
 
@@ -73,7 +92,7 @@ Flow input grading:
 
 Equipment yang sudah pernah dibuat:
 
-- Generator / GST.
+- Genset / GST.
 - Motor Operated Valve / MOV.
 - Meter Arus / MTR.
 - Sistem Perpipaan / PIP.

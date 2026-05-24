@@ -1,10 +1,10 @@
 import { MasterLayout } from "@/components/layout/master-layout";
-import { GeneratorTasklistPage } from "@/components/tasklist/generator-tasklist-page";
+import { TasklistPage } from "@/components/tasklist/tasklist-page";
 
 export default function TasklistRoute() {
   return (
     <MasterLayout>
-      <GeneratorTasklistPage />
+      <TasklistPage />
     </MasterLayout>
   );
 }

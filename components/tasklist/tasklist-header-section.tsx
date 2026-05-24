@@ -1,4 +1,4 @@
-type GeneratorTasklistHeaderSectionProps = {
+type TasklistHeaderSectionProps = {
   reportDate: string;
   location: string;
   year: string;
@@ -26,7 +26,7 @@ function InfoRow({
   );
 }
 
-export function GeneratorTasklistHeaderSection({
+export function TasklistHeaderSection({
   reportDate,
   location,
   year,
@@ -34,12 +34,12 @@ export function GeneratorTasklistHeaderSection({
   weekNumber,
   totalTasklistPlan,
   totalTasklistSelesai,
-}: GeneratorTasklistHeaderSectionProps) {
+}: TasklistHeaderSectionProps) {
   return (
     <section className="overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm">
       <div className="border-b border-zinc-200 bg-slate-50 px-5 py-3">
         <h1 className="text-sm font-bold uppercase tracking-wide text-slate-900">
-          Tasklist Generator
+          Tasklist
         </h1>
       </div>
       <div className="grid gap-6 p-5 lg:grid-cols-[minmax(0,1fr)_minmax(320px,420px)]">
