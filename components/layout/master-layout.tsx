@@ -6,6 +6,7 @@ import {
   IoAnalyticsOutline,
   IoBarChartOutline,
   IoBriefcaseOutline,
+  IoBuildOutline,
   IoBusinessOutline,
   IoChevronBack,
   IoChevronForward,
@@ -28,6 +29,7 @@ type MasterLayoutProps = {
 const navigationIcon: Record<NavigationItem["icon"], ReactNode> = {
   dashboard: <IoGridOutline aria-hidden="true" />,
   depot: <IoBusinessOutline aria-hidden="true" />,
+  equipment: <IoBuildOutline aria-hidden="true" />,
   user: <IoPeopleOutline aria-hidden="true" />,
   grading: <IoClipboardOutline aria-hidden="true" />,
   tasklist: <IoAnalyticsOutline aria-hidden="true" />,

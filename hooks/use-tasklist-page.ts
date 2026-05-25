@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export type TasklistPerformance = "H" | "M" | "L" | "";
 export type TasklistEquipmentType =
@@ -19,7 +19,7 @@ export type TasklistCycle =
   | "MONTHLY"
   | "SIX_MONTHLY"
   | "YEARLY";
-export type TasklistStep = "equipment" | "cycle" | "form";
+export type TasklistStep = "depot" | "equipment" | "cycle" | "form";
 type TasklistResultKey =
   | "GST-WEEKLY"
   | "GST-MONTHLY"
@@ -68,6 +68,31 @@ export type TasklistResult = {
   performance: TasklistPerformance;
   measuredValue: string;
 };
+
+export type TasklistDepotOption = {
+  id: number;
+  depot_name: string;
+  depot_code: string;
+  city?: string;
+  province?: string;
+};
+
+type ApiEnvelope<T> = {
+  statusCode: number;
+  message: string;
+  data: T;
+};
+
+type DepotListResponse = {
+  items: TasklistDepotOption[];
+};
+
+type TasklistTemplateResponse = {
+  tasks: TasklistTask[];
+};
+
+const apiBaseUrl =
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:3001";
 
 const gstEquipment: TasklistEquipment[] = Array.from(
   { length: 7 },
@@ -2401,19 +2426,6 @@ function getAvailableCycles(equipmentType: TasklistEquipmentType) {
   ] satisfies TasklistCycle[];
 }
 
-function getEquipmentByType(equipmentType: TasklistEquipmentType) {
-  if (equipmentType === "UPS") return upsEquipment;
-  if (equipmentType === "TRF") return trfEquipment;
-  if (equipmentType === "TNK") return tnkEquipment;
-  if (equipmentType === "SGR") return sgrEquipment;
-  if (equipmentType === "PMP") return pmpEquipment;
-  if (equipmentType === "PIP") return pipEquipment;
-  if (equipmentType === "MTR") return mtrEquipment;
-  if (equipmentType === "MOV") return movEquipment;
-
-  return gstEquipment;
-}
-
 function getTasksBySelection(
   equipmentType: TasklistEquipmentType,
   cycle: TasklistCycle,
@@ -2513,18 +2525,18 @@ function getMonthlyOccurrenceCount(cycle: TasklistCycle, monthNumber: number) {
 }
 
 export function useTasklistPage() {
-  const [step, setStep] = useState<TasklistStep>("equipment");
+  const [step, setStep] = useState<TasklistStep>("depot");
+  const [depots, setDepots] = useState<TasklistDepotOption[]>([]);
+  const [selectedDepotId, setSelectedDepotId] = useState("");
+  const [isLoadingDepots, setIsLoadingDepots] = useState(false);
+  const [isLoadingEquipment, setIsLoadingEquipment] = useState(false);
+  const [isLoadingTemplate, setIsLoadingTemplate] = useState(false);
+  const [selectionError, setSelectionError] = useState<string | null>(null);
   const [selectedEquipmentType, setSelectedEquipmentType] =
     useState<TasklistEquipmentType>("GST");
   const [cycle, setCycle] = useState<TasklistCycle>("WEEKLY");
-  const equipment = useMemo(
-    () => getEquipmentByType(selectedEquipmentType),
-    [selectedEquipmentType],
-  );
-  const tasks = useMemo(
-    () => getTasksBySelection(selectedEquipmentType, cycle),
-    [cycle, selectedEquipmentType],
-  );
+  const [equipment, setEquipment] = useState<TasklistEquipment[]>([]);
+  const [tasks, setTasks] = useState<TasklistTask[]>([]);
   const resultKey = buildResultKey(selectedEquipmentType, cycle);
   const [resultsByKey, setResultsByKey] = useState(() => ({
     "GST-WEEKLY": buildInitialResults(gstWeeklyTasks, gstEquipment),
@@ -2560,13 +2572,141 @@ export function useTasklistPage() {
     "UPS-MONTHLY": buildInitialResults(upsMonthlyTasks, upsEquipment),
     "UPS-YEARLY": buildInitialResults(upsYearlyTasks, upsEquipment),
   }));
-  const results = resultsByKey[resultKey];
-  const [selectedEquipmentId, setSelectedEquipmentId] = useState(
-    gstEquipment[0].id,
-  );
+  const results = resultsByKey[resultKey] ?? [];
+  const [selectedEquipmentId, setSelectedEquipmentId] = useState("");
   const [firstEmptyTaskId, setFirstEmptyTaskId] = useState<string | null>(null);
   const [executionDate, setExecutionDate] = useState("2026-05-24");
   const [remarks, setRemarks] = useState("");
+  const selectedDepot = useMemo(() => {
+    return depots.find((depot) => String(depot.id) === selectedDepotId) ?? null;
+  }, [depots, selectedDepotId]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadDepots() {
+      setIsLoadingDepots(true);
+      setSelectionError(null);
+
+      try {
+        const data = await fetchJson<DepotListResponse>(
+          `${apiBaseUrl}/api/master/depots?limit=100&sort_by=depot_name&sort_order=asc`,
+          { signal: controller.signal },
+        );
+        setDepots(data.items);
+        setSelectedDepotId((current) => current || String(data.items[0]?.id ?? ""));
+      } catch (error) {
+        if (isAbortError(error)) return;
+        setSelectionError(getErrorMessage(error));
+      } finally {
+        setIsLoadingDepots(false);
+      }
+    }
+
+    void loadDepots();
+
+    return () => controller.abort();
+  }, []);
+
+  useEffect(() => {
+    if (!selectedDepotId) {
+      return;
+    }
+
+    const controller = new AbortController();
+
+    async function loadEquipment() {
+      setIsLoadingEquipment(true);
+      setSelectionError(null);
+
+      try {
+        const params = new URLSearchParams({
+          equipmentType: selectedEquipmentType,
+          depot_id: selectedDepotId,
+        });
+        const data = await fetchJson<TasklistEquipment[]>(
+          `${apiBaseUrl}/tasklists/equipment?${params}`,
+          { signal: controller.signal },
+        );
+        setEquipment(data);
+        setSelectedEquipmentId((current) => {
+          if (data.some((item) => item.id === current)) return current;
+          return data[0]?.id ?? "";
+        });
+      } catch (error) {
+        if (isAbortError(error)) return;
+        setEquipment([]);
+        setSelectionError(getErrorMessage(error));
+      } finally {
+        setIsLoadingEquipment(false);
+      }
+    }
+
+    void loadEquipment();
+
+    return () => controller.abort();
+  }, [selectedDepotId, selectedEquipmentType]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadTemplate() {
+      setIsLoadingTemplate(true);
+      setSelectionError(null);
+
+      try {
+        const params = new URLSearchParams({
+          equipmentType: selectedEquipmentType,
+          cycle,
+        });
+        const data = await fetchJson<TasklistTemplateResponse>(
+          `${apiBaseUrl}/tasklists/templates?${params}`,
+          { signal: controller.signal },
+        );
+        setTasks(data.tasks);
+      } catch (error) {
+        if (isAbortError(error)) return;
+        setTasks(getTasksBySelection(selectedEquipmentType, cycle));
+        setSelectionError(getErrorMessage(error));
+      } finally {
+        setIsLoadingTemplate(false);
+      }
+    }
+
+    void loadTemplate();
+
+    return () => controller.abort();
+  }, [cycle, selectedEquipmentType]);
+
+  useEffect(() => {
+    if (tasks.length === 0 || equipment.length === 0) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setResultsByKey((current) => ({ ...current, [resultKey]: [] }));
+      return;
+    }
+
+    setResultsByKey((current) => {
+      const currentResults = current[resultKey] ?? [];
+      const expectedCount = tasks.length * equipment.length;
+      const isSameShape =
+        currentResults.length === expectedCount &&
+        tasks.every((task) =>
+          equipment.every((item) =>
+            currentResults.some(
+              (result) =>
+                result.taskId === task.id && result.equipmentId === item.id,
+            ),
+          ),
+        );
+
+      if (isSameShape) return current;
+
+      return {
+        ...current,
+        [resultKey]: buildInitialResults(tasks, equipment),
+      };
+    });
+  }, [equipment, resultKey, tasks]);
 
   const monthNumber = 5;
   const occurrenceCount = useMemo(
@@ -2595,10 +2735,12 @@ export function useTasklistPage() {
   };
 
   const selectedEquipment =
-    equipment.find((item) => item.id === selectedEquipmentId) ?? equipment[0];
+    equipment.find((item) => item.id === selectedEquipmentId) ??
+    equipment[0] ?? { id: "", tagNumber: "" };
 
   const selectedEquipmentFinishedCount = results.filter(
     (result) => {
+      if (!selectedEquipment) return false;
       const task = tasks.find((item) => item.id === result.taskId);
       if (!task) return false;
 
@@ -2615,16 +2757,36 @@ export function useTasklistPage() {
   }
 
   function changeEquipmentType(nextEquipmentType: TasklistEquipmentType) {
-    const nextEquipment = getEquipmentByType(nextEquipmentType);
     const [nextCycle] = getAvailableCycles(nextEquipmentType);
 
     setSelectedEquipmentType(nextEquipmentType);
-    setSelectedEquipmentId(nextEquipment[0].id);
+    setEquipment([]);
+    setTasks([]);
+    setSelectedEquipmentId("");
     setCycle(nextCycle);
     setFirstEmptyTaskId(null);
   }
 
+  function submitDepotSelection() {
+    if (!selectedDepotId) {
+      setSelectionError("Pilih depot terlebih dahulu.");
+      return;
+    }
+
+    setStep("equipment");
+  }
+
   function submitEquipmentSelection() {
+    if (!selectedDepotId) {
+      setSelectionError("Pilih depot terlebih dahulu.");
+      return;
+    }
+
+    if (equipment.length === 0) {
+      setSelectionError("Equipment belum tersedia untuk depot dan jenis ini.");
+      return;
+    }
+
     setStep("cycle");
   }
 
@@ -2634,7 +2796,7 @@ export function useTasklistPage() {
   }
 
   function restartSelection() {
-    setStep("equipment");
+    setStep("depot");
     setFirstEmptyTaskId(null);
   }
 
@@ -2697,6 +2859,22 @@ export function useTasklistPage() {
   }
 
   function validateBeforeSubmit() {
+    if (!selectedDepotId) {
+      return {
+        isValid: false,
+        message: "Pilih depot terlebih dahulu.",
+        taskId: null,
+      };
+    }
+
+    if (equipment.length === 0 || tasks.length === 0) {
+      return {
+        isValid: false,
+        message: "Equipment atau template tasklist belum tersedia.",
+        taskId: null,
+      };
+    }
+
     const firstEmptyResult = findFirstEmptyResult();
 
     if (!firstEmptyResult) {
@@ -2721,9 +2899,14 @@ export function useTasklistPage() {
   return {
     cycle,
     step,
+    depots,
+    selectedDepot,
+    selectedDepotId,
     selectedEquipmentType,
     reportDate: "2026-05-24",
-    location: "IT Cikampek",
+    location: selectedDepot
+      ? `${selectedDepot.depot_name} (${selectedDepot.depot_code})`
+      : "",
     year: "2026",
     monthNumber: String(monthNumber),
     weekNumber: "4",
@@ -2736,18 +2919,44 @@ export function useTasklistPage() {
     selectedEquipmentFinishedCount,
     availableCycles: getAvailableCycles(selectedEquipmentType),
     firstEmptyTaskId,
+    isLoadingDepots,
+    isLoadingEquipment,
+    isLoadingTemplate,
+    selectionError,
     sessionSnapshot,
     getResult,
     restartSelection,
     setCycle: changeCycle,
     setExecutionDate,
+    setSelectedDepotId,
     setRemarks,
     setSelectedEquipmentType: changeEquipmentType,
     setSelectedEquipmentId,
     submitCycleSelection,
+    submitDepotSelection,
     submitEquipmentSelection,
     updateMeasuredValue,
     updatePerformance,
     validateBeforeSubmit,
   };
+}
+
+async function fetchJson<T>(input: RequestInfo | URL, init?: RequestInit) {
+  const response = await fetch(input, init);
+  const envelope = (await response.json()) as ApiEnvelope<T>;
+
+  if (!response.ok) {
+    throw new Error(envelope.message || "Request gagal.");
+  }
+
+  return envelope.data;
+}
+
+function isAbortError(error: unknown) {
+  return error instanceof DOMException && error.name === "AbortError";
+}
+
+function getErrorMessage(error: unknown) {
+  if (error instanceof Error) return error.message;
+  return "Terjadi kesalahan.";
 }

@@ -6,6 +6,7 @@ import {
   IoCloseOutline,
 } from "react-icons/io5";
 import type {
+  GradingDepotOption,
   GradingEquipmentOption,
   GradingEquipmentType,
   GradingStep,
@@ -14,29 +15,44 @@ import type {
 type GradingSelectionModalProps = {
   step: GradingStep;
   assessmentDate: string;
+  depots: GradingDepotOption[];
   equipmentOptions: GradingEquipmentOption[];
+  isLoadingDepots: boolean;
+  isLoadingEquipment: boolean;
+  selectedDepotId: string;
   selectedEquipmentType: GradingEquipmentType;
+  selectionError: string | null;
   onAssessmentDateChange: (value: string) => void;
+  onDepotChange: (value: string) => void;
   onEquipmentTypeChange: (type: GradingEquipmentType) => void;
   onClose: () => void;
   onSubmitDate: () => void;
+  onSubmitLocation: () => void;
   onSubmitEquipment: () => void;
 };
 
 export function GradingSelectionModal({
   step,
   assessmentDate,
+  depots,
   equipmentOptions,
+  isLoadingDepots,
+  isLoadingEquipment,
+  selectedDepotId,
   selectedEquipmentType,
+  selectionError,
   onAssessmentDateChange,
+  onDepotChange,
   onEquipmentTypeChange,
   onClose,
   onSubmitDate,
+  onSubmitLocation,
   onSubmitEquipment,
 }: GradingSelectionModalProps) {
-  if (step !== "date" && step !== "equipment") return null;
+  if (step !== "date" && step !== "location" && step !== "equipment") return null;
 
   const isDateStep = step === "date";
+  const isLocationStep = step === "location";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 px-4 py-6">
@@ -51,7 +67,11 @@ export function GradingSelectionModal({
               Input Grading
             </p>
             <h2 className="mt-1 text-xl font-bold text-neutral-950">
-              {isDateStep ? "Pilih tanggal penilaian" : "Pilih jenis equipment"}
+              {isDateStep
+                ? "Pilih tanggal penilaian"
+                : isLocationStep
+                  ? "Pilih depot"
+                  : "Pilih jenis equipment"}
             </h2>
           </div>
           <button
@@ -107,12 +127,73 @@ export function GradingSelectionModal({
               </button>
             </div>
           </form>
+        ) : isLocationStep ? (
+          <form
+            className="space-y-5 p-5"
+            onSubmit={(event) => {
+              event.preventDefault();
+              onSubmitLocation();
+            }}
+          >
+            <label className="block" htmlFor="grading-depot-select">
+              <span className="text-sm font-semibold text-neutral-700">
+                Lokasi survey
+              </span>
+              <select
+                className="mt-2 h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-neutral-950 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                disabled={isLoadingDepots}
+                id="grading-depot-select"
+                onChange={(event) => onDepotChange(event.target.value)}
+                required
+                value={selectedDepotId}
+              >
+                <option value="">Pilih depot</option>
+                {depots.map((depot) => (
+                  <option key={depot.id} value={depot.id}>
+                    {depot.depot_name} ({depot.depot_code})
+                  </option>
+                ))}
+              </select>
+            </label>
+            {selectionError ? (
+              <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">
+                {selectionError}
+              </p>
+            ) : null}
+            <div className="flex justify-end gap-3">
+              <button
+                className="h-10 rounded-lg border border-zinc-200 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                onClick={onClose}
+                type="button"
+              >
+                Batal
+              </button>
+              <button
+                className="h-10 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                disabled={!selectedDepotId || isLoadingDepots}
+                type="submit"
+              >
+                Lanjut
+              </button>
+            </div>
+          </form>
         ) : (
           <div className="flex min-h-0 flex-1 flex-col">
             <div className="min-h-0 flex-1 overflow-y-auto p-5">
+              {selectionError ? (
+                <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">
+                  {selectionError}
+                </p>
+              ) : null}
+              {isLoadingEquipment ? (
+                <p className="rounded-lg border border-zinc-200 bg-slate-50 px-3 py-4 text-sm font-semibold text-slate-600">
+                  Memuat equipment...
+                </p>
+              ) : null}
               <div className="grid gap-3 sm:grid-cols-2">
               {equipmentOptions.map((option) => {
                 const isSelected = option.type === selectedEquipmentType;
+                const equipmentCount = option.tags.length;
 
                 return (
                   <button
@@ -135,7 +216,7 @@ export function GradingSelectionModal({
                             isSelected ? "text-slate-200" : "text-neutral-500"
                           }`}
                         >
-                          {option.description}
+                          {option.description} {equipmentCount} equipment.
                         </span>
                       </span>
                       {isSelected ? (
@@ -160,6 +241,12 @@ export function GradingSelectionModal({
               </button>
               <button
                 className="h-10 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+                disabled={
+                  isLoadingEquipment ||
+                  !equipmentOptions.find(
+                    (option) => option.type === selectedEquipmentType,
+                  )?.tags.length
+                }
                 onClick={onSubmitEquipment}
                 type="button"
               >

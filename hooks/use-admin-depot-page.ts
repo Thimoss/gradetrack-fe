@@ -7,6 +7,14 @@ export type AdminDepotUser = {
   id: number;
   employee_number: string;
   name: string;
+  depot_id: number | null;
+  depot: {
+    id: number;
+    depot_code: string;
+    depot_name: string;
+    city: string;
+    province: string;
+  } | null;
   role: "ADMIN_REGION" | "ADMIN_DEPOT";
   status: "active" | "inactive";
   created_at: string;

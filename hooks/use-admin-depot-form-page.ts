@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import type { AdminDepotUser } from "@/hooks/use-admin-depot-page";
 
@@ -9,6 +9,13 @@ type AdminDepotFormState = {
   employee_number: string;
   name: string;
   password: string;
+  depot_id: string;
+};
+
+type DepotOption = {
+  id: number;
+  depot_name: string;
+  depot_code: string;
 };
 
 type ApiEnvelope<T> = {
@@ -24,15 +31,39 @@ const emptyForm: AdminDepotFormState = {
   employee_number: "",
   name: "",
   password: "",
+  depot_id: "",
 };
 
 export function useAdminDepotFormPage() {
   const router = useRouter();
   const [form, setForm] = useState(emptyForm);
+  const [depots, setDepots] = useState<DepotOption[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  function handleFieldChange(event: ChangeEvent<HTMLInputElement>) {
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadDepots() {
+      try {
+        const data = await fetchJson<{ items: DepotOption[] }>(
+          `${apiBaseUrl}/api/master/depots?limit=100&sort_by=depot_name&sort_order=asc`,
+          { signal: controller.signal },
+        );
+        setDepots(data.items);
+      } catch {
+        setDepots([]);
+      }
+    }
+
+    void loadDepots();
+
+    return () => controller.abort();
+  }, []);
+
+  function handleFieldChange(
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) {
     const { name, value } = event.target;
     setForm((current) => ({ ...current, [name]: value }));
   }
@@ -44,7 +75,11 @@ export function useAdminDepotFormPage() {
 
     try {
       await fetchJson<AdminDepotUser>(`${apiBaseUrl}/api/master/users`, {
-        body: JSON.stringify({ ...form, role: "ADMIN_DEPOT" }),
+        body: JSON.stringify({
+          ...form,
+          depot_id: Number(form.depot_id),
+          role: "ADMIN_DEPOT",
+        }),
         headers: { "Content-Type": "application/json" },
         method: "POST",
       });
@@ -66,6 +101,7 @@ export function useAdminDepotFormPage() {
 
   return {
     form,
+    depots,
     isSubmitting,
     error,
     handleFieldChange,

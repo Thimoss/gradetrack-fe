@@ -81,6 +81,9 @@ export function AdminDepotPage() {
                   Nama
                 </th>
                 <th className="border-b border-zinc-200 px-4 py-3 font-bold">
+                  Lokasi Tugas
+                </th>
+                <th className="border-b border-zinc-200 px-4 py-3 font-bold">
                   Status
                 </th>
                 <th className="border-b border-zinc-200 px-5 py-3 text-right font-bold">
@@ -91,14 +94,14 @@ export function AdminDepotPage() {
             <tbody className="divide-y divide-zinc-100">
               {page.isLoading ? (
                 <tr>
-                  <td className="px-5 py-8 text-center text-neutral-500" colSpan={4}>
+                  <td className="px-5 py-8 text-center text-neutral-500" colSpan={5}>
                     Memuat admin depot...
                   </td>
                 </tr>
               ) : null}
               {!page.isLoading && page.users.length === 0 ? (
                 <tr>
-                  <td className="px-5 py-8 text-center text-neutral-500" colSpan={4}>
+                  <td className="px-5 py-8 text-center text-neutral-500" colSpan={5}>
                     Admin depot belum ada.
                   </td>
                 </tr>
@@ -110,6 +113,14 @@ export function AdminDepotPage() {
                         {user.employee_number}
                       </td>
                       <td className="px-4 py-4 text-neutral-700">{user.name}</td>
+                      <td className="px-4 py-4 text-neutral-700">
+                        <p className="font-semibold text-neutral-950">
+                          {user.depot?.depot_name ?? "-"}
+                        </p>
+                        <p className="mt-1 text-xs text-neutral-500">
+                          {user.depot?.city ?? "-"}
+                        </p>
+                      </td>
                       <td className="px-4 py-4">
                         <span
                           className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${

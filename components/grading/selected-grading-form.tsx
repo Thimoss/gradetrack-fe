@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "react-toastify";
+import { TemplateDownloadLink } from "@/components/template-download-link";
 import { GeneratorAssessmentSection } from "@/components/grading-form/generator-assessment-section";
 import { GeneratorConclusionSection } from "@/components/grading-form/generator-conclusion-section";
 import { GeneratorDocumentationSection } from "@/components/grading-form/generator-documentation-section";
@@ -61,13 +62,17 @@ import type { UpsEquipmentData } from "@/components/grading-form/ups-equipment-d
 import { UpsFieldDataSection } from "@/components/grading-form/ups-field-data-section";
 import { UpsMajorConditionSection } from "@/components/grading-form/ups-major-condition-section";
 import type {
+  GradingDepotOption,
   GradingEquipmentOption,
   GradingEquipmentType,
 } from "@/hooks/use-grading-page";
+import type { Equipment } from "@/hooks/use-equipment-page";
 
 type SelectedGradingFormProps = {
   assessmentDate: string;
   selectedEquipmentOption: GradingEquipmentOption;
+  selectedDepot: GradingDepotOption | null;
+  selectedEquipment: Equipment | null;
   selectedEquipmentType: GradingEquipmentType;
   selectedTag: string;
   onSelectedTagChange: (value: string) => void;
@@ -88,57 +93,73 @@ const emptySummary: AssessmentSummary = {
   improvementParameters: [],
 };
 
-function buildGeneratorEquipment(tag: string): GeneratorEquipmentData {
+type UnitValue = {
+  value?: unknown;
+  unit?: unknown;
+};
+
+function buildGeneratorEquipment(
+  tag: string,
+  equipment?: Equipment | null,
+): GeneratorEquipmentData {
   return {
     tagNumber: tag,
-    serialNumber: "",
-    manufacturer: "",
-    model: "",
-    voltage: "",
-    voltageUnit: "Volt",
-    insulationClass: "",
-    capacity: "",
-    capacityUnit: "KVA",
-    power: "",
-    powerUnit: "Hz",
-    manufactureYear: "",
-    location: "",
+    serialNumber: readString(equipment?.identity.serialNumber),
+    manufacturer: readString(equipment?.maker?.manufacturer),
+    model: readString(equipment?.maker?.model),
+    voltage: readUnitValue(equipment?.specifications.voltage).value,
+    voltageUnit: readUnitValue(equipment?.specifications.voltage, "Volt").unit,
+    insulationClass: readString(equipment?.specifications.insulationClass),
+    capacity: readUnitValue(equipment?.specifications.capacity).value,
+    capacityUnit: readUnitValue(equipment?.specifications.capacity, "KVA").unit,
+    power: readUnitValue(equipment?.specifications.power).value,
+    powerUnit: readUnitValue(equipment?.specifications.power, "Hz").unit,
+    manufactureYear: readString(equipment?.identity.manufactureYear),
+    location: readString(equipment?.identity.location),
   };
 }
 
-function buildMovEquipment(tag: string): MovEquipmentData {
+function buildMovEquipment(tag: string, equipment?: Equipment | null): MovEquipmentData {
+  const actuator = readRecord(equipment?.specifications.actuator);
+
   return {
     tagNumber: tag,
-    serialNumber: "",
-    location: "",
-    manufactureYear: "",
-    valveBodyManufacturer: "",
-    valveBodyModel: "",
-    valveType: "",
-    nps: "",
-    rating: "",
-    actuatorManufacturer: "",
-    actuatorModel: "",
-    actuatorType: "",
-    failurePosition: "",
-    fluid: "",
-    flowCapacity: "",
-    flowCapacityUnit: "m3/h",
+    serialNumber: readString(equipment?.identity.serialNumber),
+    location: readString(equipment?.identity.location),
+    manufactureYear: readString(equipment?.identity.manufactureYear),
+    valveBodyManufacturer: readString(equipment?.maker?.manufacturer),
+    valveBodyModel: readString(equipment?.maker?.model),
+    valveType: readString(equipment?.specifications.valveType),
+    nps: readString(equipment?.specifications.nps),
+    rating: readString(equipment?.specifications.rating),
+    actuatorManufacturer: readString(actuator.manufacturer),
+    actuatorModel: readString(actuator.model),
+    actuatorType: readString(actuator.type),
+    failurePosition: readString(equipment?.specifications.failurePosition),
+    fluid: readString(equipment?.specifications.fluid),
+    flowCapacity: readUnitValue(equipment?.specifications.flowCapacity).value,
+    flowCapacityUnit: readUnitValue(
+      equipment?.specifications.flowCapacity,
+      "m3/h",
+    ).unit,
   };
 }
 
-function buildMtrEquipment(tag: string): MtrEquipmentData {
+function buildMtrEquipment(tag: string, equipment?: Equipment | null): MtrEquipmentData {
   return {
     tagNumber: tag,
-    serialNumber: "",
-    location: "",
-    manufactureYear: "",
-    manufacturer: "",
-    model: "",
-    flowMeterType: "",
-    fluid: "",
-    flowCapacity: "",
-    flowCapacityUnit: "m3/h",
+    serialNumber: readString(equipment?.identity.serialNumber),
+    location: readString(equipment?.identity.location),
+    manufactureYear: readString(equipment?.identity.manufactureYear),
+    manufacturer: readString(equipment?.maker?.manufacturer),
+    model: readString(equipment?.maker?.model),
+    flowMeterType: readString(equipment?.specifications.flowMeterType),
+    fluid: readString(equipment?.specifications.fluid),
+    flowCapacity: readUnitValue(equipment?.specifications.flowCapacity).value,
+    flowCapacityUnit: readUnitValue(
+      equipment?.specifications.flowCapacity,
+      "m3/h",
+    ).unit,
   };
 }
 
@@ -306,6 +327,8 @@ function buildUpsEquipment(tag: string): UpsEquipmentData {
 
 export function SelectedGradingForm({
   assessmentDate,
+  selectedDepot,
+  selectedEquipment,
   selectedEquipmentOption,
   selectedEquipmentType,
   selectedTag,
@@ -340,10 +363,15 @@ export function SelectedGradingForm({
         `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:3001"}/grading-submissions/${selectedEquipmentType}`,
         {
           body: JSON.stringify({
+            equipmentId: selectedEquipment?.id,
             tagNumber: selectedTag,
             equipmentType: selectedEquipmentType,
             inspectionDate: assessmentDate,
-            equipmentData: { tagNumber: selectedTag },
+            equipmentData: buildEquipmentDataPayload(
+              selectedTag,
+              selectedDepot,
+              selectedEquipment,
+            ),
             totalScore: summary.totalScore,
             createdBy,
           }),
@@ -381,6 +409,7 @@ export function SelectedGradingForm({
             </h1>
             <p className="mt-1 text-sm text-neutral-600">
               Tanggal penilaian {assessmentDate}
+              {selectedDepot ? ` - ${selectedDepot.depot_name}` : ""}
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-3">
@@ -408,6 +437,13 @@ export function SelectedGradingForm({
             >
               Ganti Pilihan
             </button>
+            <TemplateDownloadLink
+              className="mt-5 h-11"
+              equipmentType={selectedEquipmentType}
+              kind="grading"
+            >
+              Download Template
+            </TemplateDownloadLink>
             <div className="mt-5 rounded-lg bg-slate-950 px-4 py-3 text-right text-white shadow-sm">
               <p className="text-xs uppercase tracking-wide text-slate-300">
                 Total Skor
@@ -418,7 +454,7 @@ export function SelectedGradingForm({
             </div>
             <button
               className="mt-5 h-11 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !selectedEquipment}
               onClick={submitGrading}
               type="button"
             >
@@ -431,7 +467,7 @@ export function SelectedGradingForm({
       {selectedEquipmentType === "gst" ? (
         <>
           <GeneratorEquipmentDataSection
-            equipment={buildGeneratorEquipment(selectedTag)}
+            equipment={buildGeneratorEquipment(selectedTag, selectedEquipment)}
           />
           <GeneratorDocumentationSection />
           <GeneratorFieldGuideSection />
@@ -447,7 +483,9 @@ export function SelectedGradingForm({
 
       {selectedEquipmentType === "mov" ? (
         <>
-          <MovEquipmentDataSection equipment={buildMovEquipment(selectedTag)} />
+          <MovEquipmentDataSection
+            equipment={buildMovEquipment(selectedTag, selectedEquipment)}
+          />
           <GeneratorDocumentationSection />
           <MovFieldDataSection />
           <MovMajorConditionSection />
@@ -462,7 +500,9 @@ export function SelectedGradingForm({
 
       {selectedEquipmentType === "mtr" ? (
         <>
-          <MtrEquipmentDataSection equipment={buildMtrEquipment(selectedTag)} />
+          <MtrEquipmentDataSection
+            equipment={buildMtrEquipment(selectedTag, selectedEquipment)}
+          />
           <GeneratorDocumentationSection />
           <MovFieldDataSection />
           <MtrMajorConditionSection />
@@ -567,4 +607,47 @@ export function SelectedGradingForm({
       ) : null}
     </div>
   );
+}
+
+function buildEquipmentDataPayload(
+  selectedTag: string,
+  selectedDepot: GradingDepotOption | null,
+  equipment: Equipment | null,
+) {
+  return {
+    tagNumber: selectedTag,
+    depot: selectedDepot
+      ? {
+          id: selectedDepot.id,
+          depot_code: selectedDepot.depot_code,
+          depot_name: selectedDepot.depot_name,
+        }
+      : null,
+    identity: equipment?.identity ?? { tagNumber: selectedTag },
+    maker: equipment?.maker ?? {},
+    specifications: equipment?.specifications ?? {},
+    status: equipment?.status,
+  };
+}
+
+function readRecord(value: unknown): Record<string, unknown> {
+  if (value && typeof value === "object" && !Array.isArray(value)) {
+    return value as Record<string, unknown>;
+  }
+
+  return {};
+}
+
+function readString(value: unknown) {
+  if (value === undefined || value === null) return "";
+  return String(value);
+}
+
+function readUnitValue(value: unknown, fallbackUnit = "") {
+  const record = readRecord(value) as UnitValue;
+
+  return {
+    value: readString(record.value),
+    unit: readString(record.unit) || fallbackUnit,
+  };
 }

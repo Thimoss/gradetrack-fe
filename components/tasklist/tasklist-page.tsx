@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { TasklistEquipmentSection } from "@/components/tasklist/tasklist-equipment-section";
 import { TasklistHeaderSection } from "@/components/tasklist/tasklist-header-section";
 import { TasklistSelectionFlow } from "@/components/tasklist/tasklist-selection-flow";
+import { TemplateDownloadLink } from "@/components/template-download-link";
 import {
   type TasklistCycle,
   type TasklistEquipmentType,
@@ -80,6 +81,7 @@ export function TasklistPage() {
         {
           body: JSON.stringify({
             session: {
+              depotId: Number(tasklistPage.selectedDepotId),
               equipmentType: tasklistPage.selectedEquipmentType,
               cycle: tasklistPage.cycle,
               reportDate: tasklistPage.reportDate,
@@ -92,14 +94,14 @@ export function TasklistPage() {
               occurrenceCount,
               createdBy,
             },
-            equipmentIds: tasklistPage.equipment.map((item) => item.tagNumber),
+            equipmentIds: tasklistPage.equipment.map((item) => item.id),
             resultsByTask: tasklistPage.tasks.map((task) => ({
               taskCode: task.code,
               results: tasklistPage.equipment.map((equipment) => {
                 const result = tasklistPage.getResult(task.id, equipment.id);
 
                 return {
-                  equipmentId: equipment.tagNumber,
+                  equipmentId: equipment.id,
                   performance: result?.performance,
                   measuredValue: result?.measuredValue,
                 };
@@ -131,10 +133,18 @@ export function TasklistPage() {
     <div className="mx-auto flex w-full max-w-7xl flex-col gap-5">
       <TasklistSelectionFlow
         availableCycles={tasklistPage.availableCycles}
+        depots={tasklistPage.depots}
+        isLoadingDepots={tasklistPage.isLoadingDepots}
+        isLoadingEquipment={tasklistPage.isLoadingEquipment}
+        isLoadingTemplate={tasklistPage.isLoadingTemplate}
+        onDepotChange={tasklistPage.setSelectedDepotId}
         onEquipmentTypeChange={tasklistPage.setSelectedEquipmentType}
+        onSubmitDepot={tasklistPage.submitDepotSelection}
         onSubmitCycle={tasklistPage.submitCycleSelection}
         onSubmitEquipment={tasklistPage.submitEquipmentSelection}
+        selectedDepotId={tasklistPage.selectedDepotId}
         selectedEquipmentType={tasklistPage.selectedEquipmentType}
+        selectionError={tasklistPage.selectionError}
         step={tasklistPage.step}
       />
 
@@ -168,6 +178,12 @@ export function TasklistPage() {
             >
               Ganti Pilihan
             </button>
+            <TemplateDownloadLink
+              equipmentType={tasklistPage.selectedEquipmentType}
+              kind="tasklist"
+            >
+              Download PDF
+            </TemplateDownloadLink>
           </section>
 
           <section className="rounded-lg border border-sky-200 bg-sky-50 p-4 text-sm text-slate-700">

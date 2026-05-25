@@ -7,6 +7,7 @@ import {
 } from "react-icons/io5";
 import { GradingSelectionModal } from "@/components/grading/grading-selection-modal";
 import { SelectedGradingForm } from "@/components/grading/selected-grading-form";
+import { TemplateDownloadLink } from "@/components/template-download-link";
 import { useGradingPage } from "@/hooks/use-grading-page";
 
 export function GradingPage() {
@@ -86,21 +87,57 @@ export function GradingPage() {
           assessmentDate={gradingPage.assessmentDate}
           onRestartFlow={gradingPage.restartFlow}
           onSelectedTagChange={gradingPage.setSelectedTag}
+          selectedDepot={gradingPage.selectedDepot}
+          selectedEquipment={gradingPage.selectedEquipment}
           selectedEquipmentOption={gradingPage.selectedEquipmentOption}
           selectedEquipmentType={gradingPage.selectedEquipmentType}
           selectedTag={gradingPage.selectedTag}
         />
       )}
 
+      {!isFormOpen ? (
+        <section className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
+                Template Lembar Fisik
+              </p>
+              <h2 className="mt-1 text-lg font-bold text-neutral-950">
+                Download template grading untuk survey lapangan
+              </h2>
+            </div>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {gradingPage.gradingEquipmentOptions.map((option) => (
+              <TemplateDownloadLink
+                className="w-full"
+                equipmentType={option.type}
+                kind="grading"
+                key={option.type}
+              >
+                {option.label}
+              </TemplateDownloadLink>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       <GradingSelectionModal
         assessmentDate={gradingPage.assessmentDate}
+        depots={gradingPage.depots}
         equipmentOptions={gradingPage.gradingEquipmentOptions}
+        isLoadingDepots={gradingPage.isLoadingDepots}
+        isLoadingEquipment={gradingPage.isLoadingEquipment}
         onAssessmentDateChange={gradingPage.setAssessmentDate}
         onClose={gradingPage.closeModal}
+        onDepotChange={gradingPage.setSelectedDepotId}
         onEquipmentTypeChange={gradingPage.selectEquipmentType}
         onSubmitDate={gradingPage.submitAssessmentDate}
+        onSubmitLocation={gradingPage.submitLocation}
         onSubmitEquipment={gradingPage.submitEquipmentType}
+        selectedDepotId={gradingPage.selectedDepotId}
         selectedEquipmentType={gradingPage.selectedEquipmentType}
+        selectionError={gradingPage.selectionError}
         step={gradingPage.step}
       />
     </div>

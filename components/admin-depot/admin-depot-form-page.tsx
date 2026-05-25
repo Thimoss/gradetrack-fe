@@ -45,6 +45,17 @@ export function AdminDepotFormPage() {
           ) : null}
 
           <div className="grid gap-4 p-5">
+            <SelectField
+              label="Lokasi tugas (depot)"
+              name="depot_id"
+              onChange={page.handleFieldChange}
+              options={page.depots.map((depot) => ({
+                value: String(depot.id),
+                label: `${depot.depot_name} (${depot.depot_code})`,
+              }))}
+              required
+              value={page.form.depot_id}
+            />
             <TextField
               autoComplete="username"
               label="No. pegawai"
@@ -130,6 +141,42 @@ function TextField({
         type={type}
         value={value}
       />
+    </label>
+  );
+}
+
+function SelectField({
+  label,
+  name,
+  onChange,
+  options,
+  required,
+  value,
+}: {
+  label: string;
+  name: string;
+  onChange: ReturnType<typeof useAdminDepotFormPage>["handleFieldChange"];
+  options: Array<{ value: string; label: string }>;
+  required?: boolean;
+  value: string;
+}) {
+  return (
+    <label>
+      <span className="text-sm font-bold text-neutral-800">{label}</span>
+      <select
+        className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100"
+        name={name}
+        onChange={onChange}
+        required={required}
+        value={value}
+      >
+        <option value="">Pilih depot</option>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
     </label>
   );
 }
