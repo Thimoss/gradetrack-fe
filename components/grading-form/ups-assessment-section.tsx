@@ -52,14 +52,14 @@ export function UpsAssessmentSection({
     <GradingFormSection
       title="Penilaian Peralatan"
       headerSlot={
-        <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white">
+        <span className="rounded-full bg-[#036CB6] px-3 py-1 text-xs font-bold text-white">
           Total {formatUpsScore(summary.totalScore)}
         </span>
       }
       bodyClassName="p-0"
     >
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[1040px] border-collapse text-sm text-neutral-950">
+        <table className="w-full min-w-[1040px] border-collapse text-sm text-[#232122]">
           <thead>
             <tr className="bg-slate-100">
               <th className="w-10 border border-zinc-200 px-2 py-3 text-center font-bold text-slate-700">
@@ -116,8 +116,8 @@ export function UpsAssessmentSection({
                     <td
                       className={`w-24 border border-zinc-200 p-0 transition ${
                         isSelected
-                          ? "bg-slate-900 text-white hover:bg-slate-900"
-                          : "bg-white text-slate-700 hover:bg-sky-50"
+                          ? "bg-[#036CB6] text-white hover:bg-[#036CB6]"
+                          : "bg-white text-slate-700 hover:bg-[#E6F1FA]"
                       }`}
                     >
                       <label

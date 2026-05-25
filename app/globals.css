@@ -2,7 +2,16 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #232122;
+  --pertamina-blue: #036cb6;
+  --pertamina-blue-dark: #025894;
+  --pertamina-blue-soft: #e6f1fa;
+  --pertamina-red: #e91d32;
+  --pertamina-red-dark: #c91629;
+  --pertamina-red-soft: #fde8eb;
+  --pertamina-green: #a8bc36;
+  --pertamina-green-soft: #f3f7df;
+  --pertamina-black: #232122;
 }
 
 @theme inline {
@@ -14,8 +23,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    --foreground: #232122;
   }
 }
 
@@ -27,7 +36,7 @@ body {
 
 select:not([multiple]) {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%23334155' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%23036CB6' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-position: right 1.5rem center;
   background-repeat: no-repeat;
   background-size: 1rem;

@@ -16,7 +16,7 @@ export function GeneratorEquipmentCategorySection({
   return (
     <GradingFormSection title="Kategori Peralatan">
       <div className="grid grid-cols-[minmax(260px,0.8fr)_minmax(360px,1fr)] items-center gap-10 max-lg:grid-cols-1">
-        <div className="rounded-lg border border-zinc-200 bg-slate-50 px-6 py-6 text-center text-3xl font-bold uppercase leading-tight text-slate-950">
+        <div className="rounded-lg border border-zinc-200 bg-slate-50 px-6 py-6 text-center text-3xl font-bold uppercase leading-tight text-[#232122]">
           {activeCategory.label.split(" ").map((word) => (
             <span key={word} className="block">
               {word}

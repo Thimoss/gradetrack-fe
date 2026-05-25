@@ -20,7 +20,7 @@ export function GradingFormSection({
       className={`overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm ${className}`}
     >
       <div className="flex items-center justify-between gap-4 border-b border-zinc-200 bg-slate-50 px-5 py-3">
-        <h2 className="text-sm font-bold uppercase tracking-wide text-slate-900">
+        <h2 className="text-sm font-bold uppercase tracking-wide text-[#232122]">
           {title}
         </h2>
         {headerSlot}

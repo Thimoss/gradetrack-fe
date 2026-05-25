@@ -154,10 +154,10 @@ export function SubmissionDetailPage({ id, kind }: SubmissionDetailPageProps) {
       <section className="rounded-lg border border-zinc-200 bg-white shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-4 border-b border-zinc-200 p-5">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
-              Detail Submission
+            <p className="text-xs font-bold uppercase tracking-wide text-[#036CB6]">
+              Detail Pengajuan
             </p>
-            <h1 className="mt-1 text-2xl font-bold capitalize text-neutral-950">
+            <h1 className="mt-1 text-2xl font-bold capitalize text-[#232122]">
               {title}
             </h1>
           </div>
@@ -171,7 +171,7 @@ export function SubmissionDetailPage({ id, kind }: SubmissionDetailPageProps) {
         </div>
 
         {error ? (
-          <div className="border-b border-red-200 bg-red-50 px-5 py-3 text-sm font-medium text-red-700">
+          <div className="border-b border-[#f6b9c0] bg-[#FDE8EB] px-5 py-3 text-sm font-medium text-[#E91D32]">
             {error}
           </div>
         ) : null}
@@ -185,7 +185,7 @@ export function SubmissionDetailPage({ id, kind }: SubmissionDetailPageProps) {
             <TasklistSubmissionView data={data} />
           ) : (
             <p className="rounded-lg border border-zinc-200 bg-slate-50 px-4 py-3 text-sm text-neutral-500">
-              Detail submission belum tersedia.
+              Detail pengajuan belum tersedia.
             </p>
           )}
         </div>
@@ -199,9 +199,9 @@ function GradingSubmissionView({ data }: { data: GradingSubmissionDetail }) {
 
   return (
     <div className="flex flex-col gap-5">
-      <GradingFormSection title="Data Submission">
-        <dl className="grid gap-3 text-sm text-neutral-950 md:grid-cols-2">
-          <InfoItem label="Jenis Equipment" value={getEquipmentLabel(data.equipmentType)} />
+      <GradingFormSection title="Data Pengajuan">
+        <dl className="grid gap-3 text-sm text-[#232122] md:grid-cols-2">
+          <InfoItem label="Jenis Peralatan" value={getEquipmentLabel(data.equipmentType)} />
           <InfoItem label="Nomor Tag" value={data.equipment?.tagNumber ?? "-"} />
           <InfoItem label="Tanggal Penilaian" value={formatDate(data.inspectionDate)} />
           <InfoItem label="Lokasi" value={data.equipment?.location ?? "-"} />
@@ -237,10 +237,10 @@ function TasklistSubmissionView({ data }: { data: TasklistSubmissionDetail }) {
         totalTasklistSelesai={data.session.totalTasklistSelesai}
       />
 
-      <GradingFormSection title="Status Submission">
-        <dl className="grid gap-3 text-sm text-neutral-950 md:grid-cols-2">
-          <InfoItem label="Equipment" value={data.session.equipmentType} />
-          <InfoItem label="Cycle" value={data.session.cycle} />
+      <GradingFormSection title="Status Pengajuan">
+        <dl className="grid gap-3 text-sm text-[#232122] md:grid-cols-2">
+          <InfoItem label="Peralatan" value={data.session.equipmentType} />
+          <InfoItem label="Siklus" value={data.session.cycle} />
           <InfoItem label="Tanggal Pelaksanaan" value={formatDate(data.session.executionDate)} />
           <InfoItem label="Status" value={formatStatus(data.session.approvalStatus)} />
           <InfoItem label="Dibuat Oleh" value={data.session.createdBy ?? "-"} />
@@ -277,14 +277,14 @@ function TasklistEquipmentResult({
     <section className="overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 bg-slate-50 px-5 py-3">
         <div>
-          <h2 className="text-sm font-bold uppercase tracking-wide text-slate-900">
+          <h2 className="text-sm font-bold uppercase tracking-wide text-[#232122]">
             {tagNumber}
           </h2>
           <p className="mt-1 text-xs text-neutral-500">
             {data.session.equipmentType} ({data.session.cycle})
           </p>
         </div>
-        <div className="rounded-full bg-slate-950 px-3 py-1 text-xs font-bold text-white">
+        <div className="rounded-full bg-[#036CB6] px-3 py-1 text-xs font-bold text-white">
           {finishedCount}/{data.tasks.length} task selesai
         </div>
       </div>
@@ -308,13 +308,13 @@ function TasklistEquipmentResult({
                       {task.durationMinutes} menit
                     </span>
                   </div>
-                  <h3 className="mt-3 text-base font-bold uppercase text-neutral-950">
+                  <h3 className="mt-3 text-base font-bold uppercase text-[#232122]">
                     {task.description}
                   </h3>
                   <div className="mt-4 grid gap-3 text-sm leading-6 text-neutral-700 md:grid-cols-2">
-                    <TaskInfo label="Procedure" value={task.procedure} />
+                    <TaskInfo label="Prosedur" value={task.procedure} />
                     <TaskInfo
-                      label="Acceptance Criteria"
+                      label="Kriteria penerimaan"
                       value={task.acceptanceCriteria}
                     />
                   </div>
@@ -329,9 +329,9 @@ function TasklistEquipmentResult({
                   ) : null}
                   <div className="rounded-lg bg-white/80 p-3">
                     <p className="text-xs font-bold uppercase tracking-wide text-neutral-500">
-                      Performance
+                      Performa
                     </p>
-                    <p className="mt-1 text-2xl font-black text-neutral-950">
+                    <p className="mt-1 text-2xl font-black text-[#232122]">
                       {result?.performance || "-"}
                     </p>
                   </div>
@@ -356,7 +356,7 @@ function GradingAssessmentTable({
     <GradingFormSection
       title="Penilaian Peralatan"
       headerSlot={
-        <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-bold text-white">
+        <span className="rounded-full bg-[#036CB6] px-3 py-1 text-xs font-bold text-white">
           Total {formatNumber(totalScore)}
         </span>
       }
@@ -364,7 +364,7 @@ function GradingAssessmentTable({
     >
       {items.length ? (
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[760px] border-collapse text-sm text-neutral-950">
+          <table className="w-full min-w-[760px] border-collapse text-sm text-[#232122]">
             <thead>
               <tr className="bg-slate-100">
                 <th className="w-14 border border-zinc-200 px-3 py-3 text-center font-bold text-slate-700">
@@ -441,7 +441,7 @@ function JsonRecordSection({
   return (
     <GradingFormSection title={title}>
       {entries.length ? (
-        <dl className="grid gap-3 text-sm text-neutral-950 md:grid-cols-2">
+        <dl className="grid gap-3 text-sm text-[#232122] md:grid-cols-2">
           {entries.map(([key, value]) => (
             <InfoItem
               key={key}
@@ -463,7 +463,7 @@ function InfoItem({ label, value }: { label: string; value: string | number }) {
       <dt className="text-xs font-bold uppercase tracking-wide text-neutral-500">
         {label}
       </dt>
-      <dd className="mt-1 font-semibold text-neutral-950">{value}</dd>
+      <dd className="mt-1 font-semibold text-[#232122]">{value}</dd>
     </div>
   );
 }
@@ -490,9 +490,11 @@ function getTaskResult(
 }
 
 function getPerformanceClass(performance?: string) {
-  if (performance === "H") return "border-emerald-200 bg-emerald-50";
+  if (performance === "H") {
+    return "border-[#d8e3a3] bg-[#F3F7DF]";
+  }
   if (performance === "M") return "border-amber-200 bg-amber-50";
-  if (performance === "L") return "border-rose-200 bg-rose-50";
+  if (performance === "L") return "border-[#f6b9c0] bg-[#FDE8EB]";
 
   return "border-zinc-200 bg-white";
 }

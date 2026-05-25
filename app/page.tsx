@@ -18,74 +18,63 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-zinc-100 text-neutral-950">
-      <div className="grid min-h-screen grid-cols-[minmax(0,1fr)_520px] max-lg:grid-cols-1">
-        <section className="relative overflow-hidden bg-slate-950 px-10 py-10 text-white max-lg:min-h-[360px] max-sm:px-6">
-          <div className="absolute inset-0 opacity-70">
-            <div className="absolute left-[-12%] top-[-18%] h-[520px] w-[520px] rounded-full bg-sky-600/30 blur-3xl" />
-            <div className="absolute bottom-[-18%] right-[-10%] h-[460px] w-[460px] rounded-full bg-emerald-500/20 blur-3xl" />
-          </div>
-
-          <div className="relative z-10 flex min-h-full flex-col justify-between">
+    <main className="min-h-screen bg-zinc-100 text-[#232122]">
+      <div className="grid min-h-screen grid-cols-[minmax(0,1fr)_500px] max-lg:grid-cols-1">
+        <section className="bg-[#036CB6] px-10 py-10 text-white max-lg:min-h-[360px] max-sm:px-6">
+          <div className="flex min-h-full flex-col justify-between">
             <div>
               <div className="flex items-center gap-3">
-                <div className="grid h-11 w-11 place-items-center rounded-lg bg-white text-lg font-black text-slate-950">
+                <div className="grid h-11 w-11 place-items-center rounded-lg bg-white text-lg font-black text-[#232122]">
                   G
                 </div>
                 <div>
                   <p className="text-xl font-bold">GradeTrack</p>
-                  <p className="text-xs font-medium uppercase tracking-[0.2em] text-slate-400">
-                    Asset grading workspace
+                  <p className="text-xs font-medium uppercase tracking-wide text-white/70">
+                    Sistem grading aset
                   </p>
                 </div>
               </div>
 
               <div className="mt-20 max-w-2xl max-lg:mt-12">
-                <h1 className="max-w-xl text-5xl font-bold leading-tight tracking-normal max-sm:text-4xl">
-                  Grading, tasklist, dan rekap aset operasional.
+                <h1 className="max-w-xl text-4xl font-bold leading-tight tracking-normal max-sm:text-3xl">
+                  Input grading dan tasklist dalam satu sistem.
                 </h1>
-                <p className="mt-5 max-w-lg text-base leading-7 text-slate-300">
-                  Satu ruang kerja untuk inspeksi kondisi peralatan, tindak
-                  lanjut pekerjaan, dan ringkasan performa aset.
+                <p className="mt-5 max-w-lg text-base leading-7 text-white/80">
+                  Gunakan nomor pegawai dan kata sandi untuk masuk. Setelah
+                  masuk, pilih menu sesuai pekerjaan: grading, tasklist,
+                  pengajuan, atau dashboard.
                 </p>
               </div>
             </div>
 
-            <div className="relative mt-12 grid max-w-3xl grid-cols-3 gap-3 max-sm:grid-cols-1">
-              <div className="rounded-lg border border-white/10 bg-white/8 p-4">
-                <p className="text-2xl font-bold">08</p>
-                <p className="mt-1 text-xs uppercase tracking-wide text-slate-400">
-                  Form aktif
-                </p>
-              </div>
-              <div className="rounded-lg border border-white/10 bg-white/8 p-4">
-                <p className="text-2xl font-bold">24</p>
-                <p className="mt-1 text-xs uppercase tracking-wide text-slate-400">
-                  Task terbuka
-                </p>
-              </div>
-              <div className="rounded-lg border border-white/10 bg-white/8 p-4">
-                <p className="text-2xl font-bold">91%</p>
-                <p className="mt-1 text-xs uppercase tracking-wide text-slate-400">
-                  Rekap selesai
-                </p>
-              </div>
-            </div>
+            <ol className="mt-12 grid max-w-2xl gap-3 text-sm text-white/85">
+              {[
+                "Pilih lokasi dan jenis peralatan.",
+                "Isi form sesuai hasil pemeriksaan.",
+                "Kirim data dan lihat hasilnya di menu Pengajuan.",
+              ].map((item, index) => (
+                <li className="flex items-center gap-3" key={item}>
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white text-xs font-bold text-[#232122]">
+                    {index + 1}
+                  </span>
+                  {item}
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
 
         <section className="flex min-h-screen items-center justify-center px-8 py-10 max-sm:px-5">
           <div className="w-full max-w-md">
             <div className="mb-8">
-              <p className="text-sm font-bold uppercase tracking-wide text-sky-700">
+              <p className="text-sm font-bold uppercase tracking-wide text-[#036CB6]">
                 Masuk ke GradeTrack
               </p>
-              <h2 className="mt-2 text-3xl font-bold text-neutral-950">
-                Login pekerja
+              <h2 className="mt-2 text-3xl font-bold text-[#232122]">
+                Masuk
               </h2>
               <p className="mt-2 text-sm leading-6 text-neutral-600">
-                Gunakan nomor pekerja dan password untuk mengakses workspace
-                grading.
+                Masukkan nomor pegawai dan kata sandi yang terdaftar.
               </p>
             </div>
 
@@ -99,15 +88,15 @@ export default function Home() {
                     className="text-sm font-semibold text-neutral-800"
                     htmlFor="employee-number"
                   >
-                    No pekerja
+                    Nomor pegawai
                   </label>
                   <input
                     autoComplete="username"
-                    className="mt-2 h-12 w-full rounded-lg border border-zinc-300 bg-white px-4 text-sm outline-none transition placeholder:text-neutral-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                    className="mt-2 h-12 w-full rounded-lg border border-zinc-300 bg-white px-4 text-sm outline-none transition placeholder:text-neutral-400 focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
                     id="employee-number"
                     inputMode="numeric"
                     name="employeeNumber"
-                    placeholder="Masukkan no pekerja"
+                    placeholder="Contoh: 123456"
                     required
                     type="text"
                   />
@@ -118,14 +107,14 @@ export default function Home() {
                     className="text-sm font-semibold text-neutral-800"
                     htmlFor="password"
                   >
-                    Password
+                    Kata sandi
                   </label>
                   <input
                     autoComplete="current-password"
-                    className="mt-2 h-12 w-full rounded-lg border border-zinc-300 bg-white px-4 text-sm outline-none transition placeholder:text-neutral-400 focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                    className="mt-2 h-12 w-full rounded-lg border border-zinc-300 bg-white px-4 text-sm outline-none transition placeholder:text-neutral-400 focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
                     id="password"
                     name="password"
-                    placeholder="Masukkan password"
+                    placeholder="Masukkan kata sandi"
                     required
                     type="password"
                   />
@@ -133,7 +122,7 @@ export default function Home() {
               </div>
 
               <button
-                className="mt-6 h-12 w-full rounded-lg bg-slate-950 px-4 text-sm font-bold text-white transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-400"
+                className="mt-6 h-12 w-full rounded-lg bg-[#036CB6] px-4 text-sm font-bold text-white transition hover:bg-[#025894] focus:outline-none focus:ring-2 focus:ring-[#036CB6] focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-400"
                 disabled={isSubmitting}
                 type="submit"
               >

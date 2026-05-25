@@ -7,7 +7,7 @@ export function SgrFieldDataSection() {
         <div className="border-b border-zinc-200 bg-slate-50 px-4 py-3 text-sm font-bold uppercase tracking-wide text-slate-700">
           Grounding (ANSI NETA MTS)
         </div>
-        <table className="w-full border-collapse text-center text-sm text-neutral-950">
+        <table className="w-full border-collapse text-center text-sm text-[#232122]">
           <thead>
             <tr className="bg-slate-100">
               <th className="border border-zinc-200 px-3 py-2 font-bold uppercase text-slate-700">
@@ -26,7 +26,7 @@ export function SgrFieldDataSection() {
               <td className="border border-zinc-200 p-0">
                 <input
                   aria-label="Grounding measured"
-                  className="h-9 w-full border border-transparent bg-white px-2 text-center outline-none transition focus:border-sky-500"
+                  className="h-9 w-full border border-transparent bg-white px-2 text-center outline-none transition focus:border-[#036CB6]"
                   step="0.1"
                   type="number"
                 />

@@ -204,7 +204,7 @@ export function useEquipmentPage() {
           method: "PATCH",
         },
       );
-      toast.success("Status equipment diperbarui.");
+      toast.success("Status peralatan diperbarui.");
       setEditingStatusEquipment(null);
       await refreshEquipment();
     } catch (updateError) {
@@ -226,7 +226,7 @@ export function useEquipmentPage() {
       await fetchJson<Equipment>(`${apiBaseUrl}/equipment/${deletingEquipment.id}`, {
         method: "DELETE",
       });
-      toast.success("Equipment dihapus.");
+      toast.success("Peralatan dihapus.");
       setDeletingEquipment(null);
       await refreshEquipment();
     } catch (deleteError) {

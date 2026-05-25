@@ -6,58 +6,55 @@ import {
   IoEyeOutline,
   IoListOutline,
 } from "react-icons/io5";
+import {
+  ErrorBanner,
+  PageCard,
+  PageHeader,
+  PageShell,
+} from "@/components/ui/page-section";
 import { useSubmissionsPage } from "@/hooks/use-submissions-page";
 
 export function SubmissionsPage() {
   const page = useSubmissionsPage();
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-5">
-      <section className="rounded-lg border border-zinc-200 bg-white shadow-sm">
-        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-zinc-200 p-5">
-          <div className="flex items-center gap-3">
-            <span className="grid h-11 w-11 place-items-center rounded-lg bg-slate-950 text-white">
-              <IoDocumentTextOutline aria-hidden="true" className="text-xl" />
-            </span>
-            <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
-                Submission
-              </p>
-              <h1 className="text-2xl font-bold text-neutral-950">
-                Grading dan Tasklist
-              </h1>
-            </div>
-          </div>
+    <PageShell>
+      <PageCard>
+        <PageHeader
+          action={
           <div className="inline-flex rounded-lg border border-zinc-200 bg-white p-1">
             <button
               className={`h-9 rounded-md px-3 text-sm font-semibold ${
                 page.scope === "mine"
-                  ? "bg-slate-950 text-white"
+                  ? "bg-[#036CB6] text-white"
                   : "text-slate-700 hover:bg-slate-50"
               }`}
               onClick={() => page.setScope("mine")}
               type="button"
             >
-              Submission saya
+              Pengajuan saya
             </button>
             <button
               className={`h-9 rounded-md px-3 text-sm font-semibold ${
                 page.scope === "all"
-                  ? "bg-slate-950 text-white"
+                  ? "bg-[#036CB6] text-white"
                   : "text-slate-700 hover:bg-slate-50"
               }`}
               onClick={() => page.setScope("all")}
               type="button"
             >
-              Semua submission
+              Semua pengajuan
             </button>
           </div>
-        </div>
+          }
+          description="Lihat hasil grading dan tasklist yang sudah dikirim."
+          eyebrow="Pengajuan"
+          icon={<IoDocumentTextOutline aria-hidden="true" />}
+          title="Grading dan Tasklist"
+        />
 
         {page.error ? (
-          <div className="border-b border-red-200 bg-red-50 px-5 py-3 text-sm font-medium text-red-700">
-            {page.error}
-          </div>
+          <ErrorBanner>{page.error}</ErrorBanner>
         ) : null}
 
         <div className="overflow-x-auto">
@@ -65,7 +62,7 @@ export function SubmissionsPage() {
             <thead className="bg-slate-50 text-xs uppercase tracking-wide text-neutral-500">
               <tr>
                 <th className="border-b border-zinc-200 px-5 py-3 font-bold">
-                  Submission
+                  Pengajuan
                 </th>
                 <th className="border-b border-zinc-200 px-4 py-3 font-bold">
                   Tipe
@@ -88,14 +85,14 @@ export function SubmissionsPage() {
               {page.isLoading ? (
                 <tr>
                   <td className="px-5 py-8 text-center text-neutral-500" colSpan={6}>
-                    Memuat submission...
+                    Memuat data pengajuan...
                   </td>
                 </tr>
               ) : null}
               {!page.isLoading && page.rows.length === 0 ? (
                 <tr>
                   <td className="px-5 py-8 text-center text-neutral-500" colSpan={6}>
-                    Submission belum ada.
+                    Data pengajuan belum tersedia.
                   </td>
                 </tr>
               ) : null}
@@ -103,7 +100,7 @@ export function SubmissionsPage() {
                 ? page.rows.map((row) => (
                     <tr className="hover:bg-slate-50" key={`${row.type}-${row.id}`}>
                       <td className="px-5 py-4">
-                        <p className="font-bold text-neutral-950">{row.title}</p>
+                        <p className="font-bold text-[#232122]">{row.title}</p>
                         <p className="mt-1 text-xs text-neutral-500">
                           {row.subtitle}
                         </p>
@@ -115,7 +112,7 @@ export function SubmissionsPage() {
                         </span>
                       </td>
                       <td className="px-4 py-4">
-                        <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-700">
+                        <span className="rounded-full bg-[#F3F7DF] px-2.5 py-1 text-xs font-bold text-[#A8BC36]">
                           {row.status}
                         </span>
                       </td>
@@ -130,7 +127,7 @@ export function SubmissionsPage() {
                             href={row.detailHref}
                           >
                             <IoEyeOutline aria-hidden="true" className="text-lg" />
-                            Detail
+                            Lihat detail
                           </Link>
                         </div>
                       </td>
@@ -140,7 +137,7 @@ export function SubmissionsPage() {
             </tbody>
           </table>
         </div>
-      </section>
-    </div>
+      </PageCard>
+    </PageShell>
   );
 }

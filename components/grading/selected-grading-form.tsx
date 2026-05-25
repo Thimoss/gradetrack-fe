@@ -401,10 +401,10 @@ export function SelectedGradingForm({
       <header className="rounded-lg border border-zinc-200 bg-white px-6 py-5 shadow-sm">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
+            <p className="text-xs font-bold uppercase tracking-wide text-[#036CB6]">
               Form Grading
             </p>
-            <h1 className="mt-2 text-2xl font-bold text-neutral-950">
+            <h1 className="mt-2 text-2xl font-bold text-[#232122]">
               {selectedEquipmentOption.label}
             </h1>
             <p className="mt-1 text-sm text-neutral-600">
@@ -418,7 +418,7 @@ export function SelectedGradingForm({
                 Nomor Tag
               </span>
               <select
-                className="h-11 min-w-48 rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-neutral-950 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                className="h-11 min-w-48 rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-[#232122] outline-none focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
                 id="equipment-tag-select"
                 onChange={(event) => onSelectedTagChange(event.target.value)}
                 value={selectedTag}
@@ -444,7 +444,7 @@ export function SelectedGradingForm({
             >
               Download Template
             </TemplateDownloadLink>
-            <div className="mt-5 rounded-lg bg-slate-950 px-4 py-3 text-right text-white shadow-sm">
+            <div className="mt-5 rounded-lg bg-[#036CB6] px-4 py-3 text-right text-white shadow-sm">
               <p className="text-xs uppercase tracking-wide text-slate-300">
                 Total Skor
               </p>
@@ -453,7 +453,7 @@ export function SelectedGradingForm({
               </p>
             </div>
             <button
-              className="mt-5 h-11 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-5 h-11 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894] disabled:cursor-not-allowed disabled:opacity-60"
               disabled={isSubmitting || !selectedEquipment}
               onClick={submitGrading}
               type="button"

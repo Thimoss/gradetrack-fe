@@ -20,53 +20,52 @@ export function GradingPage() {
         <section className="overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm">
           <div className="grid gap-8 p-6 lg:grid-cols-[minmax(0,1fr)_360px] lg:p-8">
             <div>
-              <div className="grid h-12 w-12 place-items-center rounded-lg bg-slate-950 text-white">
+              <div className="grid h-12 w-12 place-items-center rounded-lg bg-[#036CB6] text-white">
                 <IoClipboardOutline aria-hidden="true" className="text-2xl" />
               </div>
-              <p className="mt-6 text-xs font-bold uppercase tracking-wide text-sky-700">
-                Grading Workflow
+              <p className="mt-6 text-xs font-bold uppercase tracking-wide text-[#036CB6]">
+                Input Grading
               </p>
-              <h1 className="mt-2 max-w-2xl text-3xl font-bold text-neutral-950">
-                Input grading dimulai dari tanggal, jenis equipment, lalu nomor
-                tag.
+              <h1 className="mt-2 max-w-2xl text-3xl font-bold text-[#232122]">
+                Mulai dari tanggal, lokasi, jenis peralatan, lalu nomor tag.
               </h1>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600">
-                Flow ini menyiapkan konteks penilaian sebelum form dibuka supaya
-                form yang tampil sesuai equipment yang dipilih.
+                Sistem akan menampilkan form sesuai pilihan agar pengisian lebih
+                mudah dan tidak tertukar.
               </p>
               <button
-                className="mt-6 inline-flex h-11 items-center gap-2 rounded-lg bg-slate-950 px-5 text-sm font-semibold text-white transition hover:bg-slate-800"
+                className="mt-6 inline-flex h-11 items-center gap-2 rounded-lg bg-[#036CB6] px-5 text-sm font-semibold text-white transition hover:bg-[#025894]"
                 onClick={gradingPage.startGrading}
                 type="button"
               >
-                Input Grading
+                Mulai input grading
                 <IoChevronForwardOutline aria-hidden="true" className="text-lg" />
               </button>
             </div>
 
             <div className="rounded-lg border border-zinc-200 bg-slate-50 p-5">
-              <p className="text-sm font-bold text-neutral-950">Alur input</p>
+              <p className="text-sm font-bold text-[#232122]">Langkah input</p>
               <ol className="mt-4 space-y-3 text-sm text-neutral-700">
                 <li className="flex gap-3">
-                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white text-xs font-bold text-slate-950">
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white text-xs font-bold text-[#232122]">
                     1
                   </span>
-                  User membuka menu grading.
+                  Buka menu grading.
                 </li>
                 <li className="flex gap-3">
-                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white text-xs font-bold text-slate-950">
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white text-xs font-bold text-[#232122]">
                     2
                   </span>
                   Pilih tanggal penilaian.
                 </li>
                 <li className="flex gap-3">
-                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white text-xs font-bold text-slate-950">
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white text-xs font-bold text-[#232122]">
                     3
                   </span>
-                  Pilih jenis equipment.
+                  Pilih jenis peralatan.
                 </li>
                 <li className="flex gap-3">
-                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white text-xs font-bold text-slate-950">
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-white text-xs font-bold text-[#232122]">
                     4
                   </span>
                   Pilih nomor tag di dalam form.
@@ -75,9 +74,9 @@ export function GradingPage() {
               <div className="mt-5 flex items-center gap-3 rounded-lg border border-zinc-200 bg-white p-3 text-sm text-neutral-600">
                 <IoCalendarOutline
                   aria-hidden="true"
-                  className="shrink-0 text-xl text-sky-700"
+                  className="shrink-0 text-xl text-[#036CB6]"
                 />
-                Tanggal dan jenis equipment akan dipakai sebagai konteks submit.
+                Tanggal, lokasi, dan jenis peralatan dipakai saat data dikirim.
               </div>
             </div>
           </div>
@@ -99,11 +98,11 @@ export function GradingPage() {
         <section className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
+              <p className="text-xs font-bold uppercase tracking-wide text-[#036CB6]">
                 Template Lembar Fisik
               </p>
-              <h2 className="mt-1 text-lg font-bold text-neutral-950">
-                Download template grading untuk survey lapangan
+              <h2 className="mt-1 text-lg font-bold text-[#232122]">
+                Unduh template grading untuk survei lapangan
               </h2>
             </div>
           </div>

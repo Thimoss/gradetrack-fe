@@ -18,7 +18,7 @@ function NumberCell({ label }: { label: string }) {
     <td className="border border-zinc-200 p-0">
       <input
         aria-label={label}
-        className="h-9 w-full border border-transparent bg-white px-2 text-center outline-none transition focus:border-sky-500"
+        className="h-9 w-full border border-transparent bg-white px-2 text-center outline-none transition focus:border-[#036CB6]"
         step="0.1"
         type="number"
       />
@@ -34,7 +34,7 @@ export function TnkFieldDataSection() {
           <h3 className="text-sm font-bold uppercase tracking-wide text-slate-700">
             Data Ketebalan
           </h3>
-          <table className="mt-3 w-full min-w-[360px] border-collapse text-center text-sm text-neutral-950">
+          <table className="mt-3 w-full min-w-[360px] border-collapse text-center text-sm text-[#232122]">
             <thead>
               <tr className="bg-slate-100">
                 <th className="border border-zinc-200 px-3 py-2 font-bold uppercase text-slate-700">
@@ -75,7 +75,7 @@ export function TnkFieldDataSection() {
             <h3 className="text-sm font-bold uppercase tracking-wide text-slate-700">
               Data Settlement
             </h3>
-            <table className="mt-3 w-full min-w-[300px] border-collapse text-center text-sm text-neutral-950">
+            <table className="mt-3 w-full min-w-[300px] border-collapse text-center text-sm text-[#232122]">
               <thead>
                 <tr className="bg-slate-100">
                   <th className="border border-zinc-200 px-3 py-2 font-bold uppercase text-slate-700">
@@ -102,7 +102,7 @@ export function TnkFieldDataSection() {
             <h3 className="text-sm font-bold uppercase tracking-wide text-slate-700">
               Data Grounding
             </h3>
-            <table className="mt-3 w-full min-w-[300px] border-collapse text-center text-sm text-neutral-950">
+            <table className="mt-3 w-full min-w-[300px] border-collapse text-center text-sm text-[#232122]">
               <thead>
                 <tr className="bg-slate-100">
                   <th className="border border-zinc-200 px-3 py-2 font-bold uppercase text-slate-700">
@@ -130,7 +130,7 @@ export function TnkFieldDataSection() {
           <h3 className="text-sm font-bold uppercase tracking-wide text-slate-700">
             Data Plumbness
           </h3>
-          <table className="mt-3 w-full min-w-[260px] border-collapse text-center text-sm text-neutral-950">
+          <table className="mt-3 w-full min-w-[260px] border-collapse text-center text-sm text-[#232122]">
             <thead>
               <tr className="bg-slate-100">
                 <th className="border border-zinc-200 px-3 py-2 font-bold uppercase text-slate-700">

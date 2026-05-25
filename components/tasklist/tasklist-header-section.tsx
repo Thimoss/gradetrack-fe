@@ -17,9 +17,9 @@ function InfoRow({
 }) {
   return (
     <div className="grid grid-cols-[minmax(150px,220px)_16px_minmax(0,1fr)] items-center gap-2 text-sm max-sm:grid-cols-[minmax(120px,1fr)_12px_minmax(0,1fr)]">
-      <dt className="font-bold text-neutral-950">{label}</dt>
+      <dt className="font-bold text-[#232122]">{label}</dt>
       <dd className="text-center text-neutral-400">:</dd>
-      <dd className="min-h-9 rounded-md border border-zinc-200 bg-white px-3 py-2 font-semibold text-neutral-950">
+      <dd className="min-h-9 rounded-md border border-zinc-200 bg-white px-3 py-2 font-semibold text-[#232122]">
         {value}
       </dd>
     </div>
@@ -38,7 +38,7 @@ export function TasklistHeaderSection({
   return (
     <section className="overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm">
       <div className="border-b border-zinc-200 bg-slate-50 px-5 py-3">
-        <h1 className="text-sm font-bold uppercase tracking-wide text-slate-900">
+        <h1 className="text-sm font-bold uppercase tracking-wide text-[#232122]">
           Tasklist
         </h1>
       </div>

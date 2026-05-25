@@ -280,7 +280,7 @@ export function useGradingPage() {
 
   function submitEquipmentType() {
     if (!selectedEquipment) {
-      setSelectionError("Equipment belum tersedia untuk depot dan jenis ini.");
+      setSelectionError("Peralatan belum tersedia untuk depot dan jenis ini.");
       return;
     }
 

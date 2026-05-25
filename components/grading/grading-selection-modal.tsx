@@ -55,7 +55,7 @@ export function GradingSelectionModal({
   const isLocationStep = step === "location";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 px-4 py-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#036CB6]/55 px-4 py-6">
       <div
         aria-modal="true"
         className="flex max-h-[calc(100dvh-8rem)] w-full max-w-2xl flex-col overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-2xl sm:max-h-[calc(100dvh-4rem)]"
@@ -63,10 +63,10 @@ export function GradingSelectionModal({
       >
         <div className="shrink-0 flex items-start justify-between gap-4 border-b border-zinc-200 px-5 py-4">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
+            <p className="text-xs font-bold uppercase tracking-wide text-[#036CB6]">
               Input Grading
             </p>
-            <h2 className="mt-1 text-xl font-bold text-neutral-950">
+            <h2 className="mt-1 text-xl font-bold text-[#232122]">
               {isDateStep
                 ? "Pilih tanggal penilaian"
                 : isLocationStep
@@ -96,13 +96,13 @@ export function GradingSelectionModal({
               <span className="text-sm font-semibold text-neutral-700">
                 Tanggal penilaian
               </span>
-              <span className="mt-2 flex items-center gap-3 rounded-lg border border-zinc-200 bg-white px-4 py-3 focus-within:border-sky-500 focus-within:ring-2 focus-within:ring-sky-100">
+              <span className="mt-2 flex items-center gap-3 rounded-lg border border-zinc-200 bg-white px-4 py-3 focus-within:border-[#036CB6] focus-within:ring-2 focus-within:ring-[#E6F1FA]">
                 <IoCalendarOutline
                   aria-hidden="true"
                   className="text-xl text-slate-500"
                 />
                 <input
-                  className="w-full bg-transparent text-sm font-semibold text-neutral-950 outline-none"
+                  className="w-full bg-transparent text-sm font-semibold text-[#232122] outline-none"
                   id="assessment-date"
                   onChange={(event) => onAssessmentDateChange(event.target.value)}
                   required
@@ -120,7 +120,7 @@ export function GradingSelectionModal({
                 Batal
               </button>
               <button
-                className="h-10 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+                className="h-10 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894]"
                 type="submit"
               >
                 Lanjut
@@ -140,7 +140,7 @@ export function GradingSelectionModal({
                 Lokasi survey
               </span>
               <select
-                className="mt-2 h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-neutral-950 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                className="mt-2 h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-[#232122] outline-none focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
                 disabled={isLoadingDepots}
                 id="grading-depot-select"
                 onChange={(event) => onDepotChange(event.target.value)}
@@ -156,7 +156,7 @@ export function GradingSelectionModal({
               </select>
             </label>
             {selectionError ? (
-              <p className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">
+              <p className="rounded-lg border border-[#f6b9c0] bg-[#FDE8EB] px-3 py-2 text-sm font-semibold text-[#E91D32]">
                 {selectionError}
               </p>
             ) : null}
@@ -169,7 +169,7 @@ export function GradingSelectionModal({
                 Batal
               </button>
               <button
-                className="h-10 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className="h-10 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894] disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={!selectedDepotId || isLoadingDepots}
                 type="submit"
               >
@@ -181,7 +181,7 @@ export function GradingSelectionModal({
           <div className="flex min-h-0 flex-1 flex-col">
             <div className="min-h-0 flex-1 overflow-y-auto p-5">
               {selectionError ? (
-                <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">
+                <p className="mb-4 rounded-lg border border-[#f6b9c0] bg-[#FDE8EB] px-3 py-2 text-sm font-semibold text-[#E91D32]">
                   {selectionError}
                 </p>
               ) : null}
@@ -199,8 +199,8 @@ export function GradingSelectionModal({
                   <button
                     className={`rounded-lg border p-4 text-left transition ${
                       isSelected
-                        ? "border-slate-950 bg-slate-950 text-white"
-                        : "border-zinc-200 bg-white text-neutral-950 hover:border-sky-300 hover:bg-sky-50"
+                        ? "border-[#036CB6] bg-[#036CB6] text-white"
+                        : "border-zinc-200 bg-white text-[#232122] hover:border-[#8ec5e8] hover:bg-[#E6F1FA]"
                     }`}
                     key={option.type}
                     onClick={() => onEquipmentTypeChange(option.type)}
@@ -240,7 +240,7 @@ export function GradingSelectionModal({
                 Batal
               </button>
               <button
-                className="h-10 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+                className="h-10 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894]"
                 disabled={
                   isLoadingEquipment ||
                   !equipmentOptions.find(

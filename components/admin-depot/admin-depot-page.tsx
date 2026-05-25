@@ -10,42 +10,36 @@ import {
   IoSearchOutline,
   IoTrashOutline,
 } from "react-icons/io5";
+import {
+  EmptyTableRow,
+  ErrorBanner,
+  PageCard,
+  PageHeader,
+  PageShell,
+} from "@/components/ui/page-section";
 import { useAdminDepotPage } from "@/hooks/use-admin-depot-page";
 
 export function AdminDepotPage() {
   const page = useAdminDepotPage();
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-5">
-      <section className="rounded-lg border border-zinc-200 bg-white shadow-sm">
-        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-zinc-200 p-5">
-          <div>
-            <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-lg bg-slate-950 text-white">
-                <IoPeopleOutline aria-hidden="true" className="text-xl" />
-              </span>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
-                  User Management
-                </p>
-                <h1 className="text-2xl font-bold text-neutral-950">
-                  Admin Depot
-                </h1>
-              </div>
-            </div>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600">
-              Admin region membuat akun admin depot dan mereset password saat
-              user lupa password.
-            </p>
-          </div>
-          <Link
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
-            href="/admin-depot/new"
-          >
-            <IoAddOutline aria-hidden="true" className="text-lg" />
-            Tambah admin depot
-          </Link>
-        </div>
+    <PageShell>
+      <PageCard>
+        <PageHeader
+          action={
+            <Link
+              className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894]"
+              href="/admin-depot/new"
+            >
+              <IoAddOutline aria-hidden="true" className="text-lg" />
+              Tambah petugas
+            </Link>
+          }
+          description="Kelola akun petugas depot dan reset kata sandi saat diperlukan."
+          eyebrow="Manajemen Pengguna"
+          icon={<IoPeopleOutline aria-hidden="true" />}
+          title="Petugas Depot"
+        />
 
         <div className="border-b border-zinc-200 p-5">
           <label className="relative block max-w-xl">
@@ -55,7 +49,7 @@ export function AdminDepotPage() {
               className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-lg text-neutral-400"
             />
             <input
-              className="h-11 w-full rounded-lg border border-zinc-200 bg-white pl-10 pr-3 text-sm text-neutral-950 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100"
+              className="h-11 w-full rounded-lg border border-zinc-200 bg-white pl-10 pr-3 text-sm text-[#232122] outline-none transition focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
               onChange={(event) => page.applySearch(event.target.value)}
               placeholder="Cari nomor pegawai atau nama"
               type="search"
@@ -65,9 +59,7 @@ export function AdminDepotPage() {
         </div>
 
         {page.error ? (
-          <div className="border-b border-red-200 bg-red-50 px-5 py-3 text-sm font-medium text-red-700">
-            {page.error}
-          </div>
+          <ErrorBanner>{page.error}</ErrorBanner>
         ) : null}
 
         <div className="overflow-x-auto">
@@ -93,28 +85,22 @@ export function AdminDepotPage() {
             </thead>
             <tbody className="divide-y divide-zinc-100">
               {page.isLoading ? (
-                <tr>
-                  <td className="px-5 py-8 text-center text-neutral-500" colSpan={5}>
-                    Memuat admin depot...
-                  </td>
-                </tr>
+                <EmptyTableRow colSpan={5}>Memuat data petugas...</EmptyTableRow>
               ) : null}
               {!page.isLoading && page.users.length === 0 ? (
-                <tr>
-                  <td className="px-5 py-8 text-center text-neutral-500" colSpan={5}>
-                    Admin depot belum ada.
-                  </td>
-                </tr>
+                <EmptyTableRow colSpan={5}>
+                  Data petugas depot belum tersedia.
+                </EmptyTableRow>
               ) : null}
               {!page.isLoading
                 ? page.users.map((user) => (
                     <tr className="hover:bg-slate-50" key={user.id}>
-                      <td className="px-5 py-4 font-bold text-neutral-950">
+                      <td className="px-5 py-4 font-bold text-[#232122]">
                         {user.employee_number}
                       </td>
                       <td className="px-4 py-4 text-neutral-700">{user.name}</td>
                       <td className="px-4 py-4 text-neutral-700">
-                        <p className="font-semibold text-neutral-950">
+                        <p className="font-semibold text-[#232122]">
                           {user.depot?.depot_name ?? "-"}
                         </p>
                         <p className="mt-1 text-xs text-neutral-500">
@@ -125,7 +111,7 @@ export function AdminDepotPage() {
                         <span
                           className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${
                             user.status === "active"
-                              ? "bg-emerald-100 text-emerald-700"
+                              ? "bg-[#F3F7DF] text-[#A8BC36]"
                               : "bg-zinc-200 text-neutral-700"
                           }`}
                         >
@@ -140,11 +126,11 @@ export function AdminDepotPage() {
                             type="button"
                           >
                             <IoKeyOutline aria-hidden="true" className="text-lg" />
-                            Reset password
+                            Reset kata sandi
                           </button>
                           <button
                             aria-label={`Hapus ${user.name}`}
-                            className="grid h-9 w-9 place-items-center rounded-lg border border-red-200 text-red-700 transition hover:bg-red-50"
+                            className="grid h-9 w-9 place-items-center rounded-lg border border-[#f6b9c0] text-[#E91D32] transition hover:bg-[#FDE8EB]"
                             onClick={() => page.openDeleteModal(user)}
                             type="button"
                           >
@@ -161,8 +147,8 @@ export function AdminDepotPage() {
 
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-200 px-5 py-4 text-sm text-neutral-600">
           <p>
-            Total <span className="font-bold text-neutral-950">{page.totalItems}</span>{" "}
-            admin depot
+            Total <span className="font-bold text-[#232122]">{page.totalItems}</span>{" "}
+            petugas depot
           </p>
           <div className="flex items-center gap-2">
             <button
@@ -173,7 +159,7 @@ export function AdminDepotPage() {
             >
               <IoChevronBackOutline aria-hidden="true" className="text-lg" />
             </button>
-            <span className="min-w-16 text-center text-sm font-bold text-neutral-950">
+            <span className="min-w-16 text-center text-sm font-bold text-[#232122]">
               {page.pageLabel}
             </span>
             <button
@@ -186,21 +172,21 @@ export function AdminDepotPage() {
             </button>
           </div>
         </div>
-      </section>
+      </PageCard>
 
       {page.resetUser ? (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 px-4">
+        <div className="fixed inset-0 z-50 grid place-items-center bg-[#036CB6]/50 px-4">
           <form
             className="w-full max-w-md rounded-lg bg-white shadow-xl"
             onSubmit={page.submitResetPassword}
           >
             <div className="border-b border-zinc-200 p-5">
-              <h2 className="text-lg font-bold text-neutral-950">
-                Reset password
+              <h2 className="text-lg font-bold text-[#232122]">
+                Reset kata sandi
               </h2>
               <p className="mt-2 text-sm leading-6 text-neutral-600">
-                Masukkan password baru untuk{" "}
-                <span className="font-bold text-neutral-950">
+                Masukkan kata sandi baru untuk{" "}
+                <span className="font-bold text-[#232122]">
                   {page.resetUser.name}
                 </span>
                 .
@@ -209,10 +195,10 @@ export function AdminDepotPage() {
             <div className="p-5">
               <label>
                 <span className="text-sm font-bold text-neutral-800">
-                  Password baru
+                  Kata sandi baru
                 </span>
                 <input
-                  className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100"
+                  className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-[#232122] outline-none transition focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
                   minLength={6}
                   onChange={(event) => page.setResetPassword(event.target.value)}
                   required
@@ -231,12 +217,12 @@ export function AdminDepotPage() {
                 Batal
               </button>
               <button
-                className="inline-flex h-10 items-center gap-2 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894] disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={page.isResetting}
                 type="submit"
               >
                 <IoKeyOutline aria-hidden="true" className="text-lg" />
-                {page.isResetting ? "Menyimpan..." : "Reset"}
+                {page.isResetting ? "Menyimpan..." : "Reset kata sandi"}
               </button>
             </div>
           </form>
@@ -244,18 +230,18 @@ export function AdminDepotPage() {
       ) : null}
 
       {page.deletingUser ? (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 px-4">
+        <div className="fixed inset-0 z-50 grid place-items-center bg-[#036CB6]/50 px-4">
           <div className="w-full max-w-md rounded-lg bg-white shadow-xl">
             <div className="border-b border-zinc-200 p-5">
-              <h2 className="text-lg font-bold text-neutral-950">
-                Hapus admin depot
+              <h2 className="text-lg font-bold text-[#232122]">
+                Hapus petugas depot
               </h2>
               <p className="mt-2 text-sm leading-6 text-neutral-600">
                 Akun{" "}
-                <span className="font-bold text-neutral-950">
+                <span className="font-bold text-[#232122]">
                   {page.deletingUser.name}
                 </span>{" "}
-                akan dihapus dari daftar admin depot.
+                akan dihapus dari daftar petugas depot.
               </p>
             </div>
             <div className="flex justify-end gap-3 p-5">
@@ -268,7 +254,7 @@ export function AdminDepotPage() {
                 Batal
               </button>
               <button
-                className="inline-flex h-10 items-center gap-2 rounded-lg bg-red-700 px-4 text-sm font-semibold text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#E91D32] px-4 text-sm font-semibold text-white transition hover:bg-[#C91629] disabled:cursor-not-allowed disabled:opacity-60"
                 disabled={page.isDeleting}
                 onClick={page.confirmDeleteUser}
                 type="button"
@@ -280,6 +266,6 @@ export function AdminDepotPage() {
           </div>
         </div>
       ) : null}
-    </div>
+    </PageShell>
   );
 }

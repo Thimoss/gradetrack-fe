@@ -30,7 +30,7 @@ export function GeneratorDocumentationSection() {
           return (
             <label
               key={label}
-              className="relative flex aspect-[2.08/1] cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-dashed border-slate-300 bg-slate-50 text-sm font-semibold text-slate-600 outline-none transition hover:border-sky-500 hover:bg-sky-50 focus-within:ring-2 focus-within:ring-sky-500"
+              className="relative flex aspect-[2.08/1] cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-dashed border-slate-300 bg-slate-50 text-sm font-semibold text-slate-600 outline-none transition hover:border-[#036CB6] hover:bg-[#E6F1FA] focus-within:ring-2 focus-within:ring-[#036CB6]"
               htmlFor={inputId}
             >
               {image?.previewUrl ? (

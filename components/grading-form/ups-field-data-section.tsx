@@ -4,7 +4,7 @@ function NumberInput({ label }: { label: string }) {
   return (
     <input
       aria-label={label}
-      className="h-9 w-full border border-transparent bg-white px-2 text-center outline-none transition focus:border-sky-500"
+      className="h-9 w-full border border-transparent bg-white px-2 text-center outline-none transition focus:border-[#036CB6]"
       step="0.1"
       type="number"
     />
@@ -15,7 +15,7 @@ function CategoryInput({ label }: { label: string }) {
   return (
     <select
       aria-label={label}
-      className="h-9 w-full border border-transparent bg-white px-2 text-center outline-none transition focus:border-sky-500"
+      className="h-9 w-full border border-transparent bg-white px-2 text-center outline-none transition focus:border-[#036CB6]"
       defaultValue=""
     >
       <option value="" />
@@ -34,7 +34,7 @@ export function UpsFieldDataSection() {
           <div className="border-b border-zinc-200 bg-slate-50 px-4 py-3 text-sm font-bold uppercase tracking-wide text-slate-700">
             Grounding (ANSI NETA MTS)
           </div>
-          <table className="w-full border-collapse text-center text-sm text-neutral-950">
+          <table className="w-full border-collapse text-center text-sm text-[#232122]">
             <thead>
               <tr className="bg-slate-100">
                 <th className="border border-zinc-200 px-3 py-2 font-bold uppercase text-slate-700">
@@ -68,7 +68,7 @@ export function UpsFieldDataSection() {
           <div className="border-b border-zinc-200 bg-slate-50 px-4 py-3 text-sm font-bold uppercase tracking-wide text-slate-700">
             Output Voltage Stability (UPS) IEC 62040-3
           </div>
-          <table className="w-full min-w-[560px] border-collapse text-center text-sm text-neutral-950">
+          <table className="w-full min-w-[560px] border-collapse text-center text-sm text-[#232122]">
             <thead>
               <tr className="bg-slate-100">
                 <th className="border border-zinc-200 px-3 py-2 font-bold uppercase text-slate-700">
@@ -108,7 +108,7 @@ export function UpsFieldDataSection() {
           <div className="border-b border-zinc-200 bg-slate-50 px-4 py-3 text-sm font-bold uppercase tracking-wide text-slate-700">
             Transfer Time Test (AC Fail to Battery) IEC 62040-3
           </div>
-          <table className="w-full min-w-[420px] border-collapse text-center text-sm text-neutral-950">
+          <table className="w-full min-w-[420px] border-collapse text-center text-sm text-[#232122]">
             <thead>
               <tr className="bg-slate-100">
                 <th className="border border-zinc-200 px-3 py-2 font-bold uppercase text-slate-700">
@@ -139,7 +139,7 @@ export function UpsFieldDataSection() {
           <div className="border-b border-zinc-200 bg-slate-50 px-4 py-3 text-sm font-bold uppercase tracking-wide text-slate-700">
             Internal Resistance Test Battery IEEE STD 1184
           </div>
-          <table className="w-full min-w-[420px] border-collapse text-center text-sm text-neutral-950">
+          <table className="w-full min-w-[420px] border-collapse text-center text-sm text-[#232122]">
             <thead>
               <tr className="bg-slate-100">
                 <th className="border border-zinc-200 px-3 py-2 font-bold uppercase text-slate-700">
@@ -167,7 +167,7 @@ export function UpsFieldDataSection() {
           <div className="border-b border-zinc-200 bg-slate-50 px-4 py-3 text-sm font-bold uppercase tracking-wide text-slate-700">
             Discharge Time IEC 62040-3
           </div>
-          <table className="w-full min-w-[560px] border-collapse text-center text-sm text-neutral-950">
+          <table className="w-full min-w-[560px] border-collapse text-center text-sm text-[#232122]">
             <thead>
               <tr className="bg-slate-100">
                 <th className="border border-zinc-200 px-3 py-2 font-bold uppercase text-slate-700">

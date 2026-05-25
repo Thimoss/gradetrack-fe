@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import { IoCheckmarkCircle, IoChevronForwardOutline } from "react-icons/io5";
 import type {
   TasklistCycle,
   TasklistDepotOption,
@@ -118,6 +122,12 @@ function buildCycleOptions(availableCycles: TasklistCycle[]) {
   }));
 }
 
+function getSelectedEquipmentLabel(value: TasklistEquipmentType) {
+  return (
+    equipmentOptions.find((option) => option.value === value)?.label ?? value
+  );
+}
+
 export function TasklistSelectionFlow({
   step,
   availableCycles,
@@ -134,6 +144,9 @@ export function TasklistSelectionFlow({
   onSubmitEquipment,
   onSubmitCycle,
 }: TasklistSelectionFlowProps) {
+  const [downloadEquipmentType, setDownloadEquipmentType] =
+    useState<TasklistEquipmentType>(selectedEquipmentType);
+
   if (step === "form") return null;
 
   const cycleOptions = buildCycleOptions(availableCycles);
@@ -142,10 +155,10 @@ export function TasklistSelectionFlow({
 
   return (
     <section className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
-      <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
+      <p className="text-xs font-bold uppercase tracking-wide text-[#036CB6]">
         Input Tasklist
       </p>
-      <h1 className="mt-2 text-2xl font-bold text-neutral-950">
+      <h1 className="mt-2 text-2xl font-bold text-[#232122]">
         {step === "depot"
           ? "Pilih depot"
           : step === "equipment"
@@ -154,7 +167,7 @@ export function TasklistSelectionFlow({
       </h1>
 
       {selectionError ? (
-        <p className="mt-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-semibold text-red-700">
+        <p className="mt-4 rounded-lg border border-[#f6b9c0] bg-[#FDE8EB] px-3 py-2 text-sm font-semibold text-[#E91D32]">
           {selectionError}
         </p>
       ) : null}
@@ -166,7 +179,7 @@ export function TasklistSelectionFlow({
               Lokasi survey
             </span>
             <select
-              className="mt-2 h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-neutral-950 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+              className="mt-2 h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-[#232122] outline-none focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
               disabled={isLoadingDepots}
               id="tasklist-depot-select"
               onChange={(event) => onDepotChange(event.target.value)}
@@ -182,7 +195,7 @@ export function TasklistSelectionFlow({
             </select>
           </label>
           <button
-            className="h-10 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-10 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894] disabled:cursor-not-allowed disabled:opacity-60"
             disabled={!selectedDepotId || isLoadingDepots}
             onClick={onSubmitDepot}
             type="button"
@@ -191,58 +204,115 @@ export function TasklistSelectionFlow({
           </button>
         </div>
       ) : step === "equipment" ? (
-        <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {equipmentOptions.map((option) => {
-            const isSelected = selectedEquipmentType === option.value;
-
-            return (
-              <article
-                className={`rounded-lg border p-4 transition ${
-                  isSelected
-                    ? "border-slate-950 bg-slate-950 text-white"
-                    : "border-zinc-200 bg-white text-neutral-950"
-                }`}
-                key={option.value}
+        <>
+          <div className="mt-5 grid gap-3 rounded-lg border border-zinc-200 bg-slate-50 p-4 lg:grid-cols-[minmax(0,1fr)_280px_auto] lg:items-end">
+            <div>
+              <p className="text-sm font-bold text-[#232122]">
+                Unduh PDF tasklist
+              </p>
+              <p className="mt-1 text-xs leading-5 text-neutral-500">
+                Gunakan jika perlu lembar bantu. Untuk input digital, pilih
+                equipment pada daftar di bawah.
+              </p>
+            </div>
+            <label>
+              <span className="text-xs font-bold uppercase text-neutral-500">
+                Jenis equipment
+              </span>
+              <select
+                className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-[#232122] outline-none focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
+                onChange={(event) =>
+                  setDownloadEquipmentType(
+                    event.target.value as TasklistEquipmentType,
+                  )
+                }
+                value={downloadEquipmentType}
               >
-                <button
-                  className="block w-full text-left"
-                  onClick={() => onEquipmentTypeChange(option.value)}
-                  type="button"
-                >
-                  <span className="block text-sm font-bold">{option.label}</span>
-                  <span
-                    className={`mt-1 block text-xs ${
-                      isSelected ? "text-slate-200" : "text-neutral-500"
-                    }`}
-                  >
-                    {option.description}
-                  </span>
-                </button>
-                <TemplateDownloadLink
-                  className={`mt-4 h-9 w-full ${
+                {equipmentOptions.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <TemplateDownloadLink
+              className="h-10 border-[#036CB6] bg-white text-[#036CB6] hover:bg-[#E6F1FA]"
+              equipmentType={downloadEquipmentType}
+              kind="tasklist"
+            >
+              Unduh PDF
+            </TemplateDownloadLink>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {equipmentOptions.map((option) => {
+              const isSelected = selectedEquipmentType === option.value;
+
+              return (
+                <article
+                  className={`flex min-h-40 flex-col rounded-lg border bg-white transition ${
                     isSelected
-                      ? "border-slate-700 bg-white text-slate-950 hover:bg-slate-100"
-                      : ""
+                      ? "border-[#036CB6] shadow-sm ring-2 ring-[#E6F1FA]"
+                      : "border-zinc-200 hover:border-[#8ec5e8] hover:bg-[#E6F1FA]"
                   }`}
-                  equipmentType={option.value}
-                  kind="tasklist"
+                  key={option.value}
                 >
-                  Download PDF
-                </TemplateDownloadLink>
-              </article>
-            );
-          })}
-        </div>
+                  <button
+                    aria-pressed={isSelected}
+                    className="flex flex-1 flex-col p-4 text-left"
+                    onClick={() => onEquipmentTypeChange(option.value)}
+                    type="button"
+                  >
+                    <span className="flex items-start justify-between gap-3">
+                      <span className="block text-sm font-bold text-[#232122]">
+                        {option.label}
+                      </span>
+                      {isSelected ? (
+                        <IoCheckmarkCircle
+                          aria-hidden="true"
+                          className="shrink-0 text-xl text-[#036CB6]"
+                        />
+                      ) : null}
+                    </span>
+                    <span className="mt-2 block text-xs leading-5 text-neutral-500">
+                      {option.description}
+                    </span>
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+
+          <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-slate-50 px-4 py-3">
+            <div>
+              <p className="text-xs font-bold uppercase text-neutral-500">
+                Equipment dipilih
+              </p>
+              <p className="mt-1 text-sm font-bold text-[#232122]">
+                {getSelectedEquipmentLabel(selectedEquipmentType)}
+              </p>
+            </div>
+            <button
+              className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894] disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={isLoadingEquipment || isLoadingTemplate}
+              onClick={onSubmitEquipment}
+              type="button"
+            >
+              Lanjut pilih siklus
+              <IoChevronForwardOutline aria-hidden="true" className="text-lg" />
+            </button>
+          </div>
+        </>
       ) : (
         <div className={`mt-5 grid gap-3 sm:grid-cols-2 ${cycleGridClass}`}>
           {cycleOptions.map((option) => (
             <button
-              className="rounded-lg border border-zinc-200 bg-white p-4 text-left transition hover:border-sky-300 hover:bg-sky-50"
+              className="rounded-lg border border-zinc-200 bg-white p-4 text-left transition hover:border-[#8ec5e8] hover:bg-[#E6F1FA]"
               key={option.value}
               onClick={() => onSubmitCycle(option.value)}
               type="button"
             >
-              <span className="block text-sm font-bold text-neutral-950">
+              <span className="block text-sm font-bold text-[#232122]">
                 {option.label}
               </span>
               <span className="mt-1 block text-xs text-neutral-500">
@@ -253,16 +323,6 @@ export function TasklistSelectionFlow({
         </div>
       )}
 
-      {step === "equipment" ? (
-        <button
-          className="mt-5 h-10 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-          disabled={isLoadingEquipment || isLoadingTemplate}
-          onClick={onSubmitEquipment}
-          type="button"
-        >
-          Lanjut Pilih Siklus
-        </button>
-      ) : null}
     </section>
   );
 }

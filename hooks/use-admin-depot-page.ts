@@ -146,7 +146,7 @@ export function useAdminDepotPage() {
           method: "PATCH",
         },
       );
-      toast.success(`Password ${resetUser.name} direset.`);
+      toast.success(`Kata sandi ${resetUser.name} berhasil direset.`);
       setResetUser(null);
       setResetPassword("");
       await refreshUsers();

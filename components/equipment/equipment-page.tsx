@@ -11,6 +11,13 @@ import {
   IoTrashOutline,
 } from "react-icons/io5";
 import {
+  EmptyTableRow,
+  ErrorBanner,
+  PageCard,
+  PageHeader,
+  PageShell,
+} from "@/components/ui/page-section";
+import {
   equipmentTypeOptions,
   equipmentStatusOptions,
   type Equipment,
@@ -23,61 +30,49 @@ export function EquipmentPage() {
   const page = useEquipmentPage();
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-5">
-      <section className="rounded-lg border border-zinc-200 bg-white shadow-sm">
-        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-zinc-200 p-5">
-          <div>
-            <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-lg bg-slate-950 text-white">
-                <IoBuildOutline aria-hidden="true" className="text-xl" />
-              </span>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
-                  Master Data
-                </p>
-                <h1 className="text-2xl font-bold text-neutral-950">
-                  CRUD Equipment
-                </h1>
-              </div>
-            </div>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600">
-              Kelola equipment yang dipakai untuk grading, tasklist, dan rekap.
-            </p>
-          </div>
-          <Link
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
-            href="/equipment/new"
-          >
-            <IoAddOutline aria-hidden="true" className="text-lg" />
-            Tambah equipment
-          </Link>
-        </div>
+    <PageShell>
+      <PageCard>
+        <PageHeader
+          action={
+            <Link
+              className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894]"
+              href="/equipment/new"
+            >
+              <IoAddOutline aria-hidden="true" className="text-lg" />
+              Tambah peralatan
+            </Link>
+          }
+          description="Kelola daftar peralatan yang dipakai untuk grading, tasklist, dan rekap."
+          eyebrow="Master Data"
+          icon={<IoBuildOutline aria-hidden="true" />}
+          title="Data Peralatan"
+        />
 
         <div className="grid gap-3 border-b border-zinc-200 p-5 lg:grid-cols-[minmax(0,1fr)_240px_200px]">
           <label className="relative block">
-            <span className="sr-only">Cari equipment</span>
+            <span className="sr-only">Cari peralatan</span>
             <IoSearchOutline
               aria-hidden="true"
               className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-lg text-neutral-400"
             />
             <input
-              className="h-11 w-full rounded-lg border border-zinc-200 bg-white pl-10 pr-3 text-sm text-neutral-950 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100"
+              className="h-11 w-full rounded-lg border border-zinc-200 bg-white pl-10 pr-3 text-sm text-[#232122] outline-none transition focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
               onChange={(event) => page.applySearch(event.target.value)}
-              placeholder="Cari tag, serial, manufacturer, model, lokasi"
+              placeholder="Cari tag, nomor seri, pabrikan, model, lokasi"
               type="search"
               value={page.search}
             />
           </label>
           <label>
-            <span className="sr-only">Filter jenis equipment</span>
+            <span className="sr-only">Filter jenis peralatan</span>
             <select
-              className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-medium text-neutral-950 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100"
+              className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-medium text-[#232122] outline-none transition focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
               onChange={(event) =>
                 page.applyEquipmentType(event.target.value as "" | EquipmentType)
               }
               value={page.equipmentType}
             >
-              <option value="">Semua equipment</option>
+              <option value="">Semua peralatan</option>
               {equipmentTypeOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -86,9 +81,9 @@ export function EquipmentPage() {
             </select>
           </label>
           <label>
-            <span className="sr-only">Filter status equipment</span>
+            <span className="sr-only">Filter status peralatan</span>
             <select
-              className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-medium text-neutral-950 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100"
+              className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-medium text-[#232122] outline-none transition focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
               onChange={(event) =>
                 page.applyStatus(event.target.value as "" | EquipmentStatus)
               }
@@ -105,9 +100,7 @@ export function EquipmentPage() {
         </div>
 
         {page.error ? (
-          <div className="border-b border-red-200 bg-red-50 px-5 py-3 text-sm font-medium text-red-700">
-            {page.error}
-          </div>
+          <ErrorBanner>{page.error}</ErrorBanner>
         ) : null}
 
         <div className="overflow-x-auto">
@@ -115,7 +108,7 @@ export function EquipmentPage() {
             <thead className="bg-slate-50 text-xs uppercase tracking-wide text-neutral-500">
               <tr>
                 <th className="border-b border-zinc-200 px-5 py-3 font-bold">
-                  Equipment
+                  Peralatan
                 </th>
                 <th className="border-b border-zinc-200 px-4 py-3 font-bold">
                   Tipe
@@ -139,39 +132,31 @@ export function EquipmentPage() {
             </thead>
             <tbody className="divide-y divide-zinc-100">
               {page.isLoading ? (
-                <tr>
-                  <td className="px-5 py-8 text-center text-neutral-500" colSpan={7}>
-                    Memuat equipment...
-                  </td>
-                </tr>
+                <EmptyTableRow colSpan={7}>Memuat data peralatan...</EmptyTableRow>
               ) : null}
 
               {!page.isLoading && page.equipment.length === 0 ? (
-                <tr>
-                  <td className="px-5 py-8 text-center text-neutral-500" colSpan={7}>
-                    Equipment belum ada.
-                  </td>
-                </tr>
+                <EmptyTableRow colSpan={7}>Data peralatan belum tersedia.</EmptyTableRow>
               ) : null}
 
               {!page.isLoading
                 ? page.equipment.map((item) => (
                     <tr className="hover:bg-slate-50" key={item.id}>
                       <td className="px-5 py-4">
-                        <p className="font-bold text-neutral-950">
+                        <p className="font-bold text-[#232122]">
                           {getIdentityValue(item, "tagNumber") ||
                             getIdentityValue(item, "lineNumber") ||
                             "-"}
                         </p>
                         <p className="mt-1 text-xs text-neutral-500">
-                          Serial {getIdentityValue(item, "serialNumber") || "-"}
+                          Nomor seri {getIdentityValue(item, "serialNumber") || "-"}
                         </p>
                       </td>
                       <td className="px-4 py-4 text-neutral-700">
                         {getEquipmentTypeLabel(item.equipmentType)}
                       </td>
                       <td className="px-4 py-4 text-neutral-700">
-                        <p className="font-semibold text-neutral-950">
+                        <p className="font-semibold text-[#232122]">
                           {item.depot?.depot_name ?? "-"}
                         </p>
                         <p className="mt-1 text-xs text-neutral-500">
@@ -186,7 +171,7 @@ export function EquipmentPage() {
                         </span>
                       </td>
                       <td className="px-4 py-4 text-neutral-700">
-                        <p className="font-semibold text-neutral-950">
+                        <p className="font-semibold text-[#232122]">
                           {formatValue(item.maker?.manufacturer)}
                         </p>
                         <p className="mt-1 text-xs text-neutral-500">
@@ -214,7 +199,7 @@ export function EquipmentPage() {
                           </Link>
                           <button
                             aria-label={`Hapus ${getIdentityValue(item, "tagNumber")}`}
-                            className="grid h-9 w-9 place-items-center rounded-lg border border-red-200 text-red-700 transition hover:bg-red-50"
+                            className="grid h-9 w-9 place-items-center rounded-lg border border-[#f6b9c0] text-[#E91D32] transition hover:bg-[#FDE8EB]"
                             onClick={() => page.askDeleteEquipment(item)}
                             type="button"
                           >
@@ -232,8 +217,8 @@ export function EquipmentPage() {
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-200 px-5 py-4 text-sm text-neutral-600">
           <p>
             Total{" "}
-            <span className="font-bold text-neutral-950">{page.totalItems}</span>{" "}
-            equipment
+            <span className="font-bold text-[#232122]">{page.totalItems}</span>{" "}
+            peralatan
           </p>
           <div className="flex items-center gap-2">
             <button
@@ -244,7 +229,7 @@ export function EquipmentPage() {
             >
               <IoChevronBackOutline aria-hidden="true" className="text-lg" />
             </button>
-            <span className="min-w-16 text-center text-sm font-bold text-neutral-950">
+            <span className="min-w-16 text-center text-sm font-bold text-[#232122]">
               {page.pageLabel}
             </span>
             <button
@@ -257,11 +242,11 @@ export function EquipmentPage() {
             </button>
           </div>
         </div>
-      </section>
+      </PageCard>
 
       {page.deletingEquipment ? <DeleteEquipmentModal page={page} /> : null}
       {page.editingStatusEquipment ? <EditStatusModal page={page} /> : null}
-    </div>
+    </PageShell>
   );
 }
 
@@ -272,13 +257,13 @@ function DeleteEquipmentModal({ page }: { page: EquipmentPageState }) {
   if (!item) return null;
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 px-4">
+    <div className="fixed inset-0 z-50 grid place-items-center bg-[#036CB6]/50 px-4">
       <div className="w-full max-w-md rounded-lg bg-white shadow-xl">
         <div className="border-b border-zinc-200 p-5">
-          <h2 className="text-lg font-bold text-neutral-950">Hapus equipment</h2>
+          <h2 className="text-lg font-bold text-[#232122]">Hapus peralatan</h2>
           <p className="mt-2 text-sm leading-6 text-neutral-600">
-            Equipment{" "}
-            <span className="font-bold text-neutral-950">
+            Peralatan{" "}
+            <span className="font-bold text-[#232122]">
               {getIdentityValue(item, "tagNumber") || "-"}
             </span>{" "}
             akan dihapus dari master data.
@@ -294,7 +279,7 @@ function DeleteEquipmentModal({ page }: { page: EquipmentPageState }) {
             Batal
           </button>
           <button
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-red-700 px-4 text-sm font-semibold text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#E91D32] px-4 text-sm font-semibold text-white transition hover:bg-[#C91629] disabled:cursor-not-allowed disabled:opacity-60"
             disabled={page.isDeleting}
             onClick={page.confirmDeleteEquipment}
             type="button"
@@ -313,15 +298,15 @@ function EditStatusModal({ page }: { page: EquipmentPageState }) {
   if (!item) return null;
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 px-4">
+    <div className="fixed inset-0 z-50 grid place-items-center bg-[#036CB6]/50 px-4">
       <div className="w-full max-w-md rounded-lg bg-white shadow-xl">
         <div className="border-b border-zinc-200 p-5">
-          <h2 className="text-lg font-bold text-neutral-950">
-            Edit status equipment
+          <h2 className="text-lg font-bold text-[#232122]">
+            Ubah status peralatan
           </h2>
           <p className="mt-2 text-sm leading-6 text-neutral-600">
-            Ubah status{" "}
-            <span className="font-bold text-neutral-950">
+            Ubah status peralatan{" "}
+            <span className="font-bold text-[#232122]">
               {getIdentityValue(item, "tagNumber") || "-"}
             </span>
             .
@@ -331,7 +316,7 @@ function EditStatusModal({ page }: { page: EquipmentPageState }) {
           <label>
             <span className="text-sm font-bold text-neutral-800">Status</span>
             <select
-              className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100"
+              className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-[#232122] outline-none transition focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
               onChange={(event) =>
                 page.setStatusForm(event.target.value as EquipmentStatus)
               }
@@ -355,7 +340,7 @@ function EditStatusModal({ page }: { page: EquipmentPageState }) {
             Batal
           </button>
           <button
-            className="h-10 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-10 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894] disabled:cursor-not-allowed disabled:opacity-60"
             disabled={page.isUpdatingStatus}
             onClick={page.submitStatusUpdate}
             type="button"
@@ -380,7 +365,7 @@ function getStatusLabel(status: EquipmentStatus) {
 }
 
 function getStatusClass(status: EquipmentStatus) {
-  if (status === "running") return "bg-emerald-100 text-emerald-700";
+  if (status === "running") return "bg-[#F3F7DF] text-[#A8BC36]";
   if (status === "idle") return "bg-amber-100 text-amber-700";
   return "bg-zinc-200 text-neutral-700";
 }

@@ -4,21 +4,22 @@ import type {
   DashboardCategoryCount,
   DashboardLocationRow,
 } from "@/hooks/use-dashboard-page";
+import { ErrorBanner, PageCard, PageShell } from "@/components/ui/page-section";
 import { useDashboardPage } from "@/hooks/use-dashboard-page";
 
 const trendLabel: Record<DashboardLocationRow["gradingKpi"]["trend"], string> =
   {
-    UP: "UP",
-    DOWN: "DOWN",
-    FLAT: "STABLE",
+    UP: "Naik",
+    DOWN: "Turun",
+    FLAT: "Stabil",
   };
 
 const trendClassName: Record<
   DashboardLocationRow["gradingKpi"]["trend"],
   string
 > = {
-  UP: "text-emerald-700",
-  DOWN: "text-red-700",
+  UP: "text-[#A8BC36]",
+  DOWN: "text-[#E91D32]",
   FLAT: "text-slate-600",
 };
 
@@ -50,38 +51,35 @@ function SummaryCard({
   return (
     <article className="rounded-lg border border-zinc-200 bg-white p-4 shadow-sm">
       <p className="text-xs font-bold uppercase text-slate-500">{label}</p>
-      <p className="mt-3 text-2xl font-bold text-neutral-950">{value}</p>
+      <p className="mt-3 text-2xl font-bold text-[#232122]">{value}</p>
       <p className="mt-1 text-sm text-neutral-600">{helper}</p>
     </article>
   );
 }
 
 export function DashboardPage() {
-  const {
-    errorMessage,
-    isLoading,
-    metrics,
-    period,
-    setPeriod,
-    summary,
-  } = useDashboardPage();
+  const { errorMessage, isLoading, metrics, period, setPeriod, summary } =
+    useDashboardPage();
   const hasRows = summary.rows.length > 0;
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-5">
-      <header className="flex flex-wrap items-end justify-between gap-4 border-b border-zinc-200 pb-4">
+    <PageShell>
+      <header className="flex flex-wrap items-end justify-between gap-4 rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
         <div>
           <p className="text-sm font-bold uppercase text-slate-500">
-            Rekap Data Grading
+            Ringkasan Operasional
           </p>
-          <h1 className="mt-1 text-2xl font-bold text-neutral-950">
+          <h1 className="mt-1 text-2xl font-bold text-[#232122]">
             Dashboard LTSA
           </h1>
+          <p className="mt-2 max-w-2xl text-sm text-neutral-600">
+            Pantau hasil grading, progress tasklist, dan kondisi tiap lokasi.
+          </p>
         </div>
         <label className="grid gap-1 text-sm font-semibold text-neutral-800">
           Periode
           <input
-            className="h-10 rounded-lg border border-zinc-300 px-3 text-sm font-semibold text-neutral-950"
+            className="h-10 rounded-lg border border-zinc-300 px-3 text-sm font-semibold text-[#232122]"
             onChange={(event) => setPeriod(event.target.value)}
             type="month"
             value={period}
@@ -91,13 +89,13 @@ export function DashboardPage() {
 
       <section className="grid gap-4 md:grid-cols-3">
         <SummaryCard
-          helper="Lokasi pada master depot"
+          helper="Lokasi pada master data"
           label="Lokasi"
           value={metrics.locationCount}
         />
         <SummaryCard
-          helper="Equipment dengan kategori after"
-          label="Grading after"
+          helper="Peralatan yang sudah dinilai"
+          label="Grading selesai"
           value={metrics.gradedEquipmentCount}
         />
         <SummaryCard
@@ -107,20 +105,17 @@ export function DashboardPage() {
         />
       </section>
 
-      {errorMessage ? (
-        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
-          {errorMessage}
-        </div>
-      ) : null}
+      {errorMessage ? <ErrorBanner>{errorMessage}</ErrorBanner> : null}
 
-      <section className="overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm">
+      <PageCard>
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 px-4 py-3">
           <div>
-            <h2 className="text-base font-bold text-neutral-950">
+            <h2 className="text-base font-bold text-[#232122]">
               Rekap per lokasi
             </h2>
             <p className="mt-1 text-sm text-neutral-600">
-              Before, after, best before, KPI grading, dan tasklist plan/real.
+              Before, after, best before, KPI grading, serta rencana dan
+              realisasi tasklist.
             </p>
           </div>
           <p className="text-sm font-bold text-slate-600">
@@ -147,16 +142,10 @@ export function DashboardPage() {
                 <th className="border border-zinc-200 px-3 py-3" colSpan={3}>
                   Best Before
                 </th>
-                <th
-                  className="border border-zinc-200 px-3 py-3"
-                  rowSpan={2}
-                >
+                <th className="border border-zinc-200 px-3 py-3" rowSpan={2}>
                   KPI Grad
                 </th>
-                <th
-                  className="border border-zinc-200 px-3 py-3"
-                  rowSpan={2}
-                >
+                <th className="border border-zinc-200 px-3 py-3" rowSpan={2}>
                   Progress
                 </th>
                 <th className="border border-zinc-200 px-3 py-3" colSpan={3}>
@@ -164,13 +153,21 @@ export function DashboardPage() {
                 </th>
               </tr>
               <tr className="bg-slate-50 text-center text-xs font-bold uppercase text-slate-600">
-                {["LOW", "MED", "HIGH", "LOW", "MED", "HIGH", "LOW", "MED", "HIGH"].map(
-                  (label, index) => (
-                    <th className="border border-zinc-200 px-3 py-2" key={index}>
-                      {label}
-                    </th>
-                  ),
-                )}
+                {[
+                  "LOW",
+                  "MED",
+                  "HIGH",
+                  "LOW",
+                  "MED",
+                  "HIGH",
+                  "LOW",
+                  "MED",
+                  "HIGH",
+                ].map((label, index) => (
+                  <th className="border border-zinc-200 px-3 py-2" key={index}>
+                    {label}
+                  </th>
+                ))}
                 <th className="border border-zinc-200 px-3 py-2">Plan</th>
                 <th className="border border-zinc-200 px-3 py-2">Real</th>
                 <th className="border border-zinc-200 px-3 py-2">%</th>
@@ -183,7 +180,7 @@ export function DashboardPage() {
                     className="border border-zinc-200 px-4 py-8 text-center text-sm font-semibold text-slate-500"
                     colSpan={15}
                   >
-                    Memuat dashboard...
+                    Memuat data dashboard...
                   </td>
                 </tr>
               ) : null}
@@ -202,7 +199,7 @@ export function DashboardPage() {
               {!isLoading
                 ? summary.rows.map((row) => (
                     <tr className="hover:bg-slate-50" key={row.depotId}>
-                      <th className="sticky left-0 z-10 border border-zinc-200 bg-white px-3 py-3 text-left font-bold text-neutral-950">
+                      <th className="sticky left-0 z-10 border border-zinc-200 bg-white px-3 py-3 text-left font-bold text-[#232122]">
                         <span className="block">{row.location}</span>
                         <span className="mt-1 block text-xs font-medium text-slate-500">
                           {row.city}
@@ -216,7 +213,7 @@ export function DashboardPage() {
                       >
                         {trendLabel[row.gradingKpi.trend]}
                       </td>
-                      <td className="border border-zinc-200 px-3 py-3 text-center font-bold text-neutral-950">
+                      <td className="border border-zinc-200 px-3 py-3 text-center font-bold text-[#232122]">
                         {row.gradingProgress}
                       </td>
                       <td className="border border-zinc-200 px-3 py-3 text-center">
@@ -225,7 +222,7 @@ export function DashboardPage() {
                       <td className="border border-zinc-200 px-3 py-3 text-center">
                         {row.tasklist.real}
                       </td>
-                      <td className="border border-zinc-200 px-3 py-3 text-center font-bold text-neutral-950">
+                      <td className="border border-zinc-200 px-3 py-3 text-center font-bold text-[#232122]">
                         {row.tasklist.progress}%
                       </td>
                     </tr>
@@ -233,7 +230,7 @@ export function DashboardPage() {
                 : null}
             </tbody>
             <tfoot>
-              <tr className="bg-slate-100 font-bold text-neutral-950">
+              <tr className="bg-slate-100 font-bold text-[#232122]">
                 <th className="border border-zinc-200 px-3 py-3 text-left">
                   Total
                 </th>
@@ -259,7 +256,7 @@ export function DashboardPage() {
             </tfoot>
           </table>
         </div>
-      </section>
-    </div>
+      </PageCard>
+    </PageShell>
   );
 }

@@ -16,15 +16,15 @@ export function AdminDepotFormPage() {
         <form onSubmit={page.submitAdminDepot}>
           <div className="flex flex-wrap items-start justify-between gap-4 border-b border-zinc-200 p-5">
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-lg bg-slate-950 text-white">
+              <span className="grid h-11 w-11 place-items-center rounded-lg bg-[#036CB6] text-white">
                 <IoPeopleOutline aria-hidden="true" className="text-xl" />
               </span>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
-                  User Management
+                <p className="text-xs font-bold uppercase tracking-wide text-[#036CB6]">
+                  Manajemen Pengguna
                 </p>
-                <h1 className="text-2xl font-bold text-neutral-950">
-                  Tambah admin depot
+                <h1 className="text-2xl font-bold text-[#232122]">
+                  Tambah petugas depot
                 </h1>
               </div>
             </div>
@@ -39,7 +39,7 @@ export function AdminDepotFormPage() {
           </div>
 
           {page.error ? (
-            <div className="border-b border-red-200 bg-red-50 px-5 py-3 text-sm font-medium text-red-700">
+            <div className="border-b border-[#f6b9c0] bg-[#FDE8EB] px-5 py-3 text-sm font-medium text-[#E91D32]">
               {page.error}
             </div>
           ) : null}
@@ -58,7 +58,7 @@ export function AdminDepotFormPage() {
             />
             <TextField
               autoComplete="username"
-              label="No. pegawai"
+              label="Nomor pegawai"
               name="employee_number"
               onChange={page.handleFieldChange}
               required
@@ -74,7 +74,7 @@ export function AdminDepotFormPage() {
             />
             <TextField
               autoComplete="new-password"
-              label="Password"
+              label="Kata sandi"
               minLength={6}
               name="password"
               onChange={page.handleFieldChange}
@@ -93,7 +93,7 @@ export function AdminDepotFormPage() {
               Batal
             </button>
             <button
-              className="inline-flex h-10 items-center gap-2 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894] disabled:cursor-not-allowed disabled:opacity-60"
               disabled={page.isSubmitting}
               type="submit"
             >
@@ -133,7 +133,7 @@ function TextField({
       <span className="text-sm font-bold text-neutral-800">{label}</span>
       <input
         autoComplete={autoComplete}
-        className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100"
+        className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-[#232122] outline-none transition focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
         minLength={minLength}
         name={name}
         onChange={onChange}
@@ -164,7 +164,7 @@ function SelectField({
     <label>
       <span className="text-sm font-bold text-neutral-800">{label}</span>
       <select
-        className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100"
+        className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-[#232122] outline-none transition focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
         name={name}
         onChange={onChange}
         required={required}

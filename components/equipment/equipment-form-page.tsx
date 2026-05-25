@@ -16,7 +16,7 @@ type EquipmentFormPageProps = {
 
 export function EquipmentFormPage({ equipmentId }: EquipmentFormPageProps) {
   const page = useEquipmentFormPage(equipmentId);
-  const title = page.isEditMode ? "Edit equipment" : "Tambah equipment";
+  const title = page.isEditMode ? "Edit peralatan" : "Tambah peralatan";
   const needsMaker = page.form.equipmentType !== "MOTOR_OPERATED_VALVE_MOV";
   const needsTagNumber = page.form.equipmentType !== "PIPING_SYSTEM_PIP";
 
@@ -26,16 +26,16 @@ export function EquipmentFormPage({ equipmentId }: EquipmentFormPageProps) {
         <form onSubmit={page.submitEquipment}>
           <div className="flex flex-wrap items-start justify-between gap-4 border-b border-zinc-200 p-5">
             <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-lg bg-slate-950 text-white">
+              <span className="grid h-11 w-11 place-items-center rounded-lg bg-[#036CB6] text-white">
                 <IoBuildOutline aria-hidden="true" className="text-xl" />
               </span>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
+                <p className="text-xs font-bold uppercase tracking-wide text-[#036CB6]">
                   Master Data
                 </p>
-                <h1 className="text-2xl font-bold text-neutral-950">{title}</h1>
+                <h1 className="text-2xl font-bold text-[#232122]">{title}</h1>
                 <p className="mt-1 text-sm text-neutral-500">
-                  Isi data equipment untuk grading dan tasklist.
+                  Isi data peralatan untuk grading dan tasklist.
                 </p>
               </div>
             </div>
@@ -50,21 +50,21 @@ export function EquipmentFormPage({ equipmentId }: EquipmentFormPageProps) {
           </div>
 
           {page.error ? (
-            <div className="border-b border-red-200 bg-red-50 px-5 py-3 text-sm font-medium text-red-700">
+            <div className="border-b border-[#f6b9c0] bg-[#FDE8EB] px-5 py-3 text-sm font-medium text-[#E91D32]">
               {page.error}
             </div>
           ) : null}
 
           {page.isLoading ? (
             <div className="p-5 text-sm text-neutral-500">
-              Memuat equipment...
+              Memuat data peralatan...
             </div>
           ) : (
             <div className="grid gap-5 p-5">
               <div className="grid gap-4 lg:grid-cols-3">
                 <SelectField
                   disabled={page.isEditMode}
-                  label="Jenis equipment"
+                  label="Jenis peralatan"
                   name="equipmentType"
                   onChange={page.handleFieldChange}
                   options={equipmentTypeOptions}
@@ -94,7 +94,7 @@ export function EquipmentFormPage({ equipmentId }: EquipmentFormPageProps) {
                   />
                 ) : null}
                 <TextField
-                  label="Serial number"
+                  label="Nomor seri"
                   name="serialNumber"
                   onChange={page.handleFieldChange}
                   required={page.form.equipmentType !== "MOTOR_OPERATED_VALVE_MOV"}
@@ -103,7 +103,7 @@ export function EquipmentFormPage({ equipmentId }: EquipmentFormPageProps) {
                 {needsMaker ? (
                   <>
                     <TextField
-                      label="Manufacturer"
+                      label="Pabrikan"
                       name="manufacturer"
                       onChange={page.handleFieldChange}
                       required={page.form.equipmentType !== "UNINTERRUPTIBLE_POWER_SYSTEM_UPS"}
@@ -133,7 +133,7 @@ export function EquipmentFormPage({ equipmentId }: EquipmentFormPageProps) {
               </div>
 
               <div>
-                <p className="text-sm font-bold text-neutral-950">
+                <p className="text-sm font-bold text-[#232122]">
                   Spesifikasi wajib
                 </p>
                 <div className="mt-3 grid gap-4 lg:grid-cols-3">
@@ -168,12 +168,12 @@ export function EquipmentFormPage({ equipmentId }: EquipmentFormPageProps) {
               Batal
             </button>
             <button
-              className="inline-flex h-10 items-center gap-2 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+              className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894] disabled:cursor-not-allowed disabled:opacity-60"
               disabled={page.isLoading || page.isSubmitting}
               type="submit"
             >
               <IoSaveOutline aria-hidden="true" className="text-lg" />
-              {page.isSubmitting ? "Menyimpan..." : "Simpan equipment"}
+              {page.isSubmitting ? "Menyimpan..." : "Simpan peralatan"}
             </button>
           </div>
         </form>
@@ -207,7 +207,7 @@ function TextField({
     <label>
       <span className="text-sm font-bold text-neutral-800">{label}</span>
       <input
-        className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100 disabled:bg-slate-100 disabled:text-neutral-500"
+        className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-[#232122] outline-none transition focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA] disabled:bg-slate-100 disabled:text-neutral-500"
         disabled={disabled}
         name={name}
         onChange={onChange}
@@ -237,7 +237,7 @@ function SelectField({
     <label>
       <span className="text-sm font-bold text-neutral-800">{label}</span>
       <select
-        className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-neutral-950 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100 disabled:bg-slate-100 disabled:text-neutral-500"
+        className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm text-[#232122] outline-none transition focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA] disabled:bg-slate-100 disabled:text-neutral-500"
         disabled={disabled}
         name={name}
         onChange={onChange}

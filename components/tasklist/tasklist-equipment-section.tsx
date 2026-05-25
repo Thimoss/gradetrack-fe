@@ -41,7 +41,8 @@ const performanceOptions: Array<{
     value: "H",
     label: "H",
     helper: "High",
-    className: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    className:
+      "border-[#d8e3a3] bg-[#F3F7DF] text-[#A8BC36]",
   },
   {
     value: "M",
@@ -53,14 +54,16 @@ const performanceOptions: Array<{
     value: "L",
     label: "L",
     helper: "Low",
-    className: "border-rose-200 bg-rose-50 text-rose-700",
+    className: "border-[#f6b9c0] bg-[#FDE8EB] text-[#E91D32]",
   },
 ];
 
 function getTaskStatusClass(performance: TasklistPerformance) {
-  if (performance === "H") return "border-emerald-200 bg-emerald-50";
+  if (performance === "H") {
+    return "border-[#d8e3a3] bg-[#F3F7DF]";
+  }
   if (performance === "M") return "border-amber-200 bg-amber-50";
-  if (performance === "L") return "border-rose-200 bg-rose-50";
+  if (performance === "L") return "border-[#f6b9c0] bg-[#FDE8EB]";
 
   return "border-zinc-200 bg-white";
 }
@@ -87,14 +90,14 @@ export function TasklistEquipmentSection({
     <section className="overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-zinc-200 bg-slate-50 px-5 py-3">
         <div>
-          <h2 className="text-sm font-bold uppercase tracking-wide text-slate-900">
+          <h2 className="text-sm font-bold uppercase tracking-wide text-[#232122]">
             Rutin : {equipmentType} ({cycleLabel})
           </h2>
           <p className="mt-1 text-xs text-neutral-500">
             Pilih satu equipment, lalu isi semua task untuk equipment tersebut.
           </p>
         </div>
-        <div className="rounded-full bg-slate-950 px-3 py-1 text-xs font-bold text-white">
+        <div className="rounded-full bg-[#036CB6] px-3 py-1 text-xs font-bold text-white">
           {selectedEquipmentFinishedCount}/{tasks.length} task selesai
         </div>
       </div>
@@ -108,7 +111,7 @@ export function TasklistEquipmentSection({
               <button
                 className={`h-11 shrink-0 rounded-lg border px-4 text-sm font-bold transition ${
                   isActive
-                    ? "border-slate-950 bg-slate-950 text-white"
+                    ? "border-[#036CB6] bg-[#036CB6] text-white"
                     : "border-zinc-200 bg-white text-slate-700 hover:bg-slate-50"
                 }`}
                 key={item.id}
@@ -132,7 +135,7 @@ export function TasklistEquipmentSection({
             <article
               className={`rounded-lg border p-4 transition ${
                 isFirstEmptyTask
-                  ? "border-sky-500 bg-sky-50 ring-2 ring-sky-100"
+                  ? "border-[#036CB6] bg-[#E6F1FA] ring-2 ring-[#E6F1FA]"
                   : getTaskStatusClass(performance)
               }`}
               id={`tasklist-task-${task.id}`}
@@ -148,7 +151,7 @@ export function TasklistEquipmentSection({
                       {task.durationMinutes} menit
                     </span>
                   </div>
-                  <h3 className="mt-3 text-base font-bold uppercase text-neutral-950">
+                  <h3 className="mt-3 text-base font-bold uppercase text-[#232122]">
                     {task.description}
                   </h3>
                   <div className="mt-4 grid gap-3 text-sm leading-6 text-neutral-700 md:grid-cols-2">
@@ -175,7 +178,7 @@ export function TasklistEquipmentSection({
                         {task.measurementUnit ? `(${task.measurementUnit})` : ""}
                       </span>
                       <input
-                        className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-neutral-950 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                        className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-[#232122] outline-none focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
                         id={`${task.id}-value`}
                         onChange={(event) =>
                           onMeasuredValueChange(
@@ -246,7 +249,7 @@ export function TasklistEquipmentSection({
             Tanggal Pelaksanaan
           </span>
           <input
-            className="mt-2 h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-neutral-950 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+            className="mt-2 h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-[#232122] outline-none focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
             id="tasklist-execution-date"
             onChange={(event) => onExecutionDateChange(event.target.value)}
             type="date"
@@ -256,7 +259,7 @@ export function TasklistEquipmentSection({
         <label className="block" htmlFor="tasklist-remarks">
           <span className="text-sm font-bold text-neutral-700">Keterangan</span>
           <textarea
-            className="mt-2 h-24 w-full resize-none rounded-lg border border-zinc-200 bg-white p-3 text-sm text-neutral-950 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+            className="mt-2 h-24 w-full resize-none rounded-lg border border-zinc-200 bg-white p-3 text-sm text-[#232122] outline-none focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
             id="tasklist-remarks"
             onChange={(event) => onRemarksChange(event.target.value)}
             value={remarks}

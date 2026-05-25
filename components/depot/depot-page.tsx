@@ -10,42 +10,36 @@ import {
   IoSearchOutline,
   IoTrashOutline,
 } from "react-icons/io5";
+import {
+  EmptyTableRow,
+  ErrorBanner,
+  PageCard,
+  PageHeader,
+  PageShell,
+} from "@/components/ui/page-section";
 import { depotOwnershipOptions, depotStatusOptions, useDepotPage } from "@/hooks/use-depot-page";
 
 export function DepotPage() {
   const depotPage = useDepotPage();
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-5">
-      <section className="rounded-lg border border-zinc-200 bg-white shadow-sm">
-        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-zinc-200 p-5">
-          <div>
-            <div className="flex items-center gap-3">
-              <span className="grid h-11 w-11 place-items-center rounded-lg bg-slate-950 text-white">
-                <IoBusinessOutline aria-hidden="true" className="text-xl" />
-              </span>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-sky-700">
-                  Master Data
-                </p>
-                <h1 className="text-2xl font-bold text-neutral-950">
-                  CRUD Depot
-                </h1>
-              </div>
-            </div>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-neutral-600">
-              Kelola lokasi depot yang dipakai untuk equipment, grading,
-              tasklist, dan rekap dashboard.
-            </p>
-          </div>
-          <Link
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
-            href="/depot/new"
-          >
-            <IoAddOutline aria-hidden="true" className="text-lg" />
-            Tambah depot
-          </Link>
-        </div>
+    <PageShell>
+      <PageCard>
+        <PageHeader
+          action={
+            <Link
+              className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894]"
+              href="/depot/new"
+            >
+              <IoAddOutline aria-hidden="true" className="text-lg" />
+              Tambah depot
+            </Link>
+          }
+          description="Kelola lokasi depot untuk peralatan, grading, tasklist, dan rekap dashboard."
+          eyebrow="Master Data"
+          icon={<IoBusinessOutline aria-hidden="true" />}
+          title="Data Depot"
+        />
 
         <div className="grid gap-3 border-b border-zinc-200 p-5 lg:grid-cols-[minmax(0,1fr)_220px]">
           <label className="relative block">
@@ -55,7 +49,7 @@ export function DepotPage() {
               className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-lg text-neutral-400"
             />
             <input
-              className="h-11 w-full rounded-lg border border-zinc-200 bg-white pl-10 pr-3 text-sm text-neutral-950 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100"
+              className="h-11 w-full rounded-lg border border-zinc-200 bg-white pl-10 pr-3 text-sm text-[#232122] outline-none transition focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
               onChange={(event) => depotPage.applySearch(event.target.value)}
               placeholder="Cari kode, nama, kota, provinsi"
               type="search"
@@ -65,7 +59,7 @@ export function DepotPage() {
           <label>
             <span className="sr-only">Filter status</span>
             <select
-              className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-medium text-neutral-950 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100"
+              className="h-11 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-medium text-[#232122] outline-none transition focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
               onChange={(event) =>
                 depotPage.applyStatus(event.target.value as "" | "active" | "inactive")
               }
@@ -82,9 +76,7 @@ export function DepotPage() {
         </div>
 
         {depotPage.error ? (
-          <div className="border-b border-red-200 bg-red-50 px-5 py-3 text-sm font-medium text-red-700">
-            {depotPage.error}
-          </div>
+          <ErrorBanner>{depotPage.error}</ErrorBanner>
         ) : null}
 
         <div className="overflow-x-auto">
@@ -101,7 +93,7 @@ export function DepotPage() {
                   PIC
                 </th>
                 <th className="border-b border-zinc-200 px-4 py-3 font-bold">
-                  Ownership
+                  Kepemilikan
                 </th>
                 <th className="border-b border-zinc-200 px-4 py-3 font-bold">
                   Status
@@ -113,26 +105,18 @@ export function DepotPage() {
             </thead>
             <tbody className="divide-y divide-zinc-100">
               {depotPage.isLoading ? (
-                <tr>
-                  <td className="px-5 py-8 text-center text-neutral-500" colSpan={6}>
-                    Memuat data depot...
-                  </td>
-                </tr>
+                <EmptyTableRow colSpan={6}>Memuat data depot...</EmptyTableRow>
               ) : null}
 
               {!depotPage.isLoading && depotPage.depots.length === 0 ? (
-                <tr>
-                  <td className="px-5 py-8 text-center text-neutral-500" colSpan={6}>
-                    Data depot belum ada.
-                  </td>
-                </tr>
+                <EmptyTableRow colSpan={6}>Data depot belum tersedia.</EmptyTableRow>
               ) : null}
 
               {!depotPage.isLoading
                 ? depotPage.depots.map((depot) => (
                     <tr className="hover:bg-slate-50" key={depot.id}>
                       <td className="px-5 py-4">
-                        <p className="font-bold text-neutral-950">
+                        <p className="font-bold text-[#232122]">
                           {depot.depot_name}
                         </p>
                         <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-neutral-500">
@@ -140,7 +124,7 @@ export function DepotPage() {
                         </p>
                       </td>
                       <td className="px-4 py-4 text-neutral-700">
-                        <p className="font-semibold text-neutral-950">
+                        <p className="font-semibold text-[#232122]">
                           {depot.city}, {depot.province}
                         </p>
                         <p className="mt-1 line-clamp-1 text-xs text-neutral-500">
@@ -148,7 +132,7 @@ export function DepotPage() {
                         </p>
                       </td>
                       <td className="px-4 py-4 text-neutral-700">
-                        <p className="font-semibold text-neutral-950">
+                        <p className="font-semibold text-[#232122]">
                           {depot.pic_name ?? "-"}
                         </p>
                         <p className="mt-1 text-xs text-neutral-500">
@@ -162,7 +146,7 @@ export function DepotPage() {
                         <span
                           className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${
                             depot.status === "active"
-                              ? "bg-emerald-100 text-emerald-700"
+                              ? "bg-[#F3F7DF] text-[#A8BC36]"
                               : "bg-zinc-200 text-neutral-700"
                           }`}
                         >
@@ -180,7 +164,7 @@ export function DepotPage() {
                           </Link>
                           <button
                             aria-label={`Hapus ${depot.depot_name}`}
-                            className="grid h-9 w-9 place-items-center rounded-lg border border-red-200 text-red-700 transition hover:bg-red-50"
+                            className="grid h-9 w-9 place-items-center rounded-lg border border-[#f6b9c0] text-[#E91D32] transition hover:bg-[#FDE8EB]"
                             onClick={() => depotPage.askDeleteDepot(depot)}
                             type="button"
                           >
@@ -197,7 +181,7 @@ export function DepotPage() {
 
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-zinc-200 px-5 py-4 text-sm text-neutral-600">
           <p>
-            Total <span className="font-bold text-neutral-950">{depotPage.totalItems}</span>{" "}
+            Total <span className="font-bold text-[#232122]">{depotPage.totalItems}</span>{" "}
             depot
           </p>
           <div className="flex items-center gap-2">
@@ -209,7 +193,7 @@ export function DepotPage() {
             >
               <IoChevronBackOutline aria-hidden="true" className="text-lg" />
             </button>
-            <span className="min-w-16 text-center text-sm font-bold text-neutral-950">
+            <span className="min-w-16 text-center text-sm font-bold text-[#232122]">
               {depotPage.pageLabel}
             </span>
             <button
@@ -222,12 +206,12 @@ export function DepotPage() {
             </button>
           </div>
         </div>
-      </section>
+      </PageCard>
 
       {depotPage.deletingDepot ? (
         <DeleteDepotModal depotPage={depotPage} />
       ) : null}
-    </div>
+    </PageShell>
   );
 }
 
@@ -238,12 +222,12 @@ function DeleteDepotModal({ depotPage }: { depotPage: DepotPageState }) {
   if (!depot) return null;
 
   return (
-    <div className="fixed inset-0 z-50 grid place-items-center bg-slate-950/50 px-4">
+    <div className="fixed inset-0 z-50 grid place-items-center bg-[#036CB6]/50 px-4">
       <div className="w-full max-w-md rounded-lg bg-white shadow-xl">
         <div className="border-b border-zinc-200 p-5">
-          <h2 className="text-lg font-bold text-neutral-950">Hapus depot</h2>
+          <h2 className="text-lg font-bold text-[#232122]">Hapus depot</h2>
           <p className="mt-2 text-sm leading-6 text-neutral-600">
-            Depot <span className="font-bold text-neutral-950">{depot.depot_name}</span>{" "}
+            Depot <span className="font-bold text-[#232122]">{depot.depot_name}</span>{" "}
             akan dihapus dari master data.
           </p>
         </div>
@@ -257,7 +241,7 @@ function DeleteDepotModal({ depotPage }: { depotPage: DepotPageState }) {
             Batal
           </button>
           <button
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-red-700 px-4 text-sm font-semibold text-white transition hover:bg-red-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#E91D32] px-4 text-sm font-semibold text-white transition hover:bg-[#C91629] disabled:cursor-not-allowed disabled:opacity-60"
             disabled={depotPage.isDeleting}
             onClick={depotPage.confirmDeleteDepot}
             type="button"

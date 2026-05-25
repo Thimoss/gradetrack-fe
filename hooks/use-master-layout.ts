@@ -20,12 +20,12 @@ export type NavigationItem = {
 export const navigationItems: NavigationItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: "dashboard" },
   { href: "/depot", label: "Depot", icon: "depot" },
-  { href: "/equipment", label: "Equipment", icon: "equipment" },
-  { href: "/admin-depot", label: "Admin Depot", icon: "user" },
+  { href: "/equipment", label: "Peralatan", icon: "equipment" },
+  { href: "/admin-depot", label: "Petugas Depot", icon: "user" },
   { href: "/grading", label: "Grading", icon: "grading" },
   { href: "/tasklist", label: "Tasklist", icon: "tasklist" },
-  { href: "/submissions", label: "Submission", icon: "submission" },
-  { href: "/dashboard", label: "Rekap", icon: "recap" },
+  { href: "/submissions", label: "Pengajuan", icon: "submission" },
+  { href: "/recap", label: "Rekap", icon: "recap" },
 ];
 
 export function useMasterLayout() {

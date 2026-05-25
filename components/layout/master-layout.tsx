@@ -54,11 +54,11 @@ export function MasterLayout({ children }: MasterLayoutProps) {
     : "lg:max-w-0 lg:opacity-0";
 
   return (
-    <div className="min-h-screen bg-zinc-100 text-neutral-950">
+    <div className="min-h-screen bg-zinc-100 text-[#232122]">
       {isMobileSidebarOpen ? (
         <button
           aria-label="Tutup sidebar"
-          className="fixed inset-0 z-40 bg-slate-950/50 lg:hidden"
+          className="fixed inset-0 z-40 bg-[#036CB6]/50 lg:hidden"
           onClick={closeMobileSidebar}
           type="button"
         />
@@ -80,17 +80,17 @@ export function MasterLayout({ children }: MasterLayoutProps) {
             }`}
             href="/dashboard"
           >
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-slate-950 text-sm font-black text-white">
+            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#036CB6] text-sm font-black text-white">
               <IoAnalyticsOutline aria-hidden="true" className="text-xl" />
             </span>
             <span
               className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ease-out ${labelVisibility}`}
             >
-              <span className="block truncate text-base font-bold text-neutral-950">
+              <span className="block truncate text-base font-bold text-[#232122]">
                 GradeTrack
               </span>
               <span className="block truncate text-xs font-medium uppercase tracking-wide text-neutral-500">
-                Workspace
+                Operasional aset
               </span>
             </span>
           </Link>
@@ -115,7 +115,7 @@ export function MasterLayout({ children }: MasterLayoutProps) {
               <Link
                 className={`flex h-11 items-center gap-3 overflow-hidden rounded-lg px-3 text-sm font-semibold transition-[background-color,color,padding] duration-200 ${
                   isActive
-                    ? "bg-slate-950 text-white"
+                    ? "bg-[#036CB6] text-white"
                     : "text-slate-700 hover:bg-slate-100"
                 } ${isDesktopSidebarOpen ? "" : "lg:justify-center lg:px-2"}`}
                 href={item.href}
@@ -151,17 +151,17 @@ export function MasterLayout({ children }: MasterLayoutProps) {
             }`}
           >
             <div className="flex items-center gap-3">
-              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-sky-100 text-xs font-black text-sky-700">
+              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#E6F1FA] text-xs font-black text-[#036CB6]">
                 <IoBriefcaseOutline aria-hidden="true" className="text-lg" />
               </div>
               <div
                 className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ease-out ${labelVisibility}`}
               >
-                <p className="truncate text-sm font-bold text-neutral-950">
-                  IT Cikampek
+                <p className="truncate text-sm font-bold text-[#232122]">
+                  LTSA Cikampek
                 </p>
                 <p className="truncate text-xs text-neutral-500">
-                  Work area aktif
+                  Area kerja aktif
                 </p>
               </div>
             </div>
@@ -198,11 +198,11 @@ export function MasterLayout({ children }: MasterLayoutProps) {
                 )}
               </button>
               <div>
-                <p className="text-sm font-bold text-neutral-950">
-                  Asset grading workspace
+                <p className="text-sm font-bold text-[#232122]">
+                  Sistem grading aset
                 </p>
                 <p className="text-xs text-neutral-500 max-sm:hidden">
-                  Grading, tasklist, dan rekap operasional
+                  Input, pengajuan, dan rekap operasional
                 </p>
               </div>
             </div>
@@ -213,9 +213,9 @@ export function MasterLayout({ children }: MasterLayoutProps) {
                 type="button"
               >
                 <IoHelpCircleOutline aria-hidden="true" className="text-lg" />
-                Bantuan
+                Panduan
               </button>
-              <div className="grid h-10 w-10 place-items-center rounded-lg bg-slate-950 text-sm font-black text-white">
+              <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#036CB6] text-sm font-black text-white">
                 <IoPersonOutline aria-hidden="true" className="text-lg" />
               </div>
             </div>
@@ -226,8 +226,8 @@ export function MasterLayout({ children }: MasterLayoutProps) {
 
         <footer className="border-t border-zinc-200 bg-white px-6 py-4 text-xs text-neutral-500 max-sm:px-4">
           <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-3 max-sm:flex-col max-sm:items-start">
-            <p>GradeTrack internal workspace.</p>
-            <p>Grading, tasklist, dan rekap aset.</p>
+            <p>GradeTrack internal.</p>
+            <p>Grading, tasklist, dan rekap aset operasional.</p>
           </div>
         </footer>
       </div>

@@ -118,7 +118,7 @@ export function TasklistPage() {
         throw new Error(payload.message ?? "Gagal submit tasklist.");
       }
 
-      toast.success("Tasklist disubmit dan otomatis approved.");
+      toast.success("Tasklist berhasil dikirim.");
       router.push("/submissions");
     } catch (error) {
       toast.error(
@@ -162,12 +162,12 @@ export function TasklistPage() {
 
           <section className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-white p-4 shadow-sm">
             <div>
-              <p className="text-sm font-bold text-neutral-950">
+              <p className="text-sm font-bold text-[#232122]">
                 {equipmentTypeLabel[tasklistPage.selectedEquipmentType]} -{" "}
                 {cycleLabel[tasklistPage.cycle]}
               </p>
               <p className="mt-1 text-xs text-neutral-500">
-                Siklus dipilih di awal. Untuk mengganti siklus, ulangi pilihan
+                Siklus dipilih di awal. Untuk mengganti siklus, pilih ulang
                 tasklist.
               </p>
             </div>
@@ -176,33 +176,33 @@ export function TasklistPage() {
               onClick={tasklistPage.restartSelection}
               type="button"
             >
-              Ganti Pilihan
+              Ganti pilihan
             </button>
             <TemplateDownloadLink
               equipmentType={tasklistPage.selectedEquipmentType}
               kind="tasklist"
             >
-              Download PDF
+              Unduh PDF
             </TemplateDownloadLink>
           </section>
 
-          <section className="rounded-lg border border-sky-200 bg-sky-50 p-4 text-sm text-slate-700">
+          <section className="rounded-lg border border-[#b8d9ef] bg-[#E6F1FA] p-4 text-sm text-slate-700">
             <div className="flex gap-3">
               <IoInformationCircleOutline
                 aria-hidden="true"
-                className="mt-0.5 shrink-0 text-xl text-sky-700"
+                className="mt-0.5 shrink-0 text-xl text-[#036CB6]"
               />
               <div>
-                <p className="font-bold text-slate-950">
+                <p className="font-bold text-[#232122]">
                   Rekap bulan ini: {taskCount} task x {equipmentCount}{" "}
-                  equipment x {occurrenceCount} occurrence ={" "}
+                  peralatan x {occurrenceCount} jadwal ={" "}
                   {totalTasklistPlan}.
                 </p>
                 <p className="mt-1 leading-6">
-                  Plan per occurrence {planPerOccurrence}. Harian memakai hari
+                  Rencana per jadwal {planPerOccurrence}. Harian memakai hari
                   efektif, mingguan memakai jumlah minggu, bulanan satu kali, 6
                   bulanan masuk bulan ke-6 dan ke-12, tahunan masuk bulan ke-12.
-                  Real mengikuti occurrence yang sudah direalisasikan.
+                  Realisasi mengikuti jadwal yang sudah selesai.
                 </p>
               </div>
             </div>
@@ -235,22 +235,22 @@ export function TasklistPage() {
 
           <section className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-white px-5 py-4 shadow-sm">
             <div>
-              <p className="text-sm font-bold text-neutral-950">
-                Validasi sebelum submit
+              <p className="text-sm font-bold text-[#232122]">
+                Periksa sebelum kirim
               </p>
               {submitMessage ? (
-                <p className="mt-2 text-sm font-semibold text-sky-700">
+                <p className="mt-2 text-sm font-semibold text-[#036CB6]">
                   {submitMessage}
                 </p>
               ) : null}
             </div>
             <button
-              className="h-10 rounded-lg bg-slate-950 px-4 text-sm font-semibold text-white transition hover:bg-slate-800"
+              className="h-10 rounded-lg bg-[#036CB6] px-4 text-sm font-semibold text-white transition hover:bg-[#025894]"
               disabled={isSubmitting}
               onClick={submitTasklist}
               type="button"
             >
-              {isSubmitting ? "Submit..." : "Submit Tasklist"}
+              {isSubmitting ? "Mengirim..." : "Kirim tasklist"}
             </button>
           </section>
         </>
