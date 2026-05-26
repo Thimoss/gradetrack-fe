@@ -1,7 +1,8 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useAuthStore } from "@/stores/auth-store";
 
 export type NavigationItem = {
   href: string;
@@ -30,8 +31,16 @@ export const navigationItems: NavigationItem[] = [
 
 export function useMasterLayout() {
   const pathname = usePathname();
+  const router = useRouter();
+  const user = useAuthStore((state) => state.user);
+  const hydrateUser = useAuthStore((state) => state.hydrateUser);
+  const clearUser = useAuthStore((state) => state.clearUser);
   const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    hydrateUser();
+  }, [hydrateUser]);
 
   function toggleDesktopSidebar() {
     setIsDesktopSidebarOpen((current) => !current);
@@ -50,8 +59,14 @@ export function useMasterLayout() {
     return pathname.startsWith(href);
   }
 
+  function logout() {
+    clearUser();
+    router.replace("/");
+  }
+
   return {
     pathname,
+    user,
     navigationItems,
     isDesktopSidebarOpen,
     isMobileSidebarOpen,
@@ -59,5 +74,6 @@ export function useMasterLayout() {
     openMobileSidebar,
     closeMobileSidebar,
     isActiveNavigation,
+    logout,
   };
 }

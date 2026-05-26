@@ -2,6 +2,13 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
+import {
+  firstInvalid,
+  invalid,
+  sanitizeText,
+  validateRequiredText,
+  valid,
+} from "@/lib/input-validation";
 
 export type AdminDepotUser = {
   id: number;
@@ -104,7 +111,7 @@ export function useAdminDepotPage() {
   }
 
   function applySearch(value: string) {
-    setSearch(value);
+    setSearch(sanitizeText(value));
     setPage(1);
   }
 
@@ -134,8 +141,23 @@ export function useAdminDepotPage() {
     event.preventDefault();
     if (!resetUser) return;
 
-    setIsResetting(true);
     setError(null);
+
+    const validation = firstInvalid([
+      validateRequiredText(resetPassword, "Kata sandi baru", {
+        maxLength: 120,
+      }),
+      resetPassword.length >= 6
+        ? valid()
+        : invalid("Kata sandi baru minimal 6 karakter."),
+    ]);
+    if (!validation.isValid) {
+      setError(validation.message);
+      toast.error(validation.message);
+      return;
+    }
+
+    setIsResetting(true);
 
     try {
       await fetchJson<AdminDepotUser>(
@@ -204,7 +226,7 @@ export function useAdminDepotPage() {
     isResetting,
     isDeleting,
     error,
-    setResetPassword,
+    setResetPassword: (value: string) => setResetPassword(sanitizeText(value)),
     applySearch,
     openResetModal,
     closeResetModal,

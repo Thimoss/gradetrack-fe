@@ -6,12 +6,17 @@ import {
   vibrationRows,
 } from "./generator-measurement-data";
 import { GradingFormSection } from "./grading-form-section";
+import { sanitizeDecimal } from "@/lib/input-validation";
 
 function MeasurementInput({ label }: { label: string }) {
   return (
     <input
       aria-label={label}
       className="h-9 w-full border border-transparent bg-slate-50 px-2 text-center outline-none transition focus:border-[#036CB6] focus:bg-white"
+      inputMode="decimal"
+      onChange={(event) => {
+        event.target.value = sanitizeDecimal(event.target.value);
+      }}
       type="text"
     />
   );

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Equipment, EquipmentType } from "@/hooks/use-equipment-page";
+import { validateDate } from "@/lib/input-validation";
 
 export type GradingEquipmentType =
   | "gst"
@@ -260,6 +261,12 @@ export function useGradingPage() {
   }
 
   function submitAssessmentDate() {
+    const validation = validateDate(assessmentDate, "Tanggal penilaian");
+    if (!validation.isValid) {
+      setSelectionError(validation.message);
+      return;
+    }
+
     setStep("location");
   }
 

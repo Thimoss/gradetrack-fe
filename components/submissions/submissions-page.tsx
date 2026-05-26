@@ -7,7 +7,6 @@ import {
   IoListOutline,
 } from "react-icons/io5";
 import {
-  ErrorBanner,
   PageCard,
   PageHeader,
   PageShell,
@@ -52,10 +51,6 @@ export function SubmissionsPage() {
           icon={<IoDocumentTextOutline aria-hidden="true" />}
           title="Grading dan Tasklist"
         />
-
-        {page.error ? (
-          <ErrorBanner>{page.error}</ErrorBanner>
-        ) : null}
 
         <div className="overflow-x-auto">
           <table className="min-w-[900px] w-full border-collapse text-left text-sm">

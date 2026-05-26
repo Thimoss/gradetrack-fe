@@ -1,6 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import {
+  sanitizeDecimal,
+  sanitizeText,
+  validateDate,
+  validateRequiredNumber,
+  valid,
+} from "@/lib/input-validation";
 
 export type TasklistPerformance = "H" | "M" | "L" | "";
 export type TasklistEquipmentType =
@@ -2822,6 +2829,7 @@ export function useTasklistPage() {
     equipmentId: string,
     measuredValue: string,
   ) {
+    const sanitizedValue = sanitizeDecimal(measuredValue);
     setResultsByKey((current) => ({
       ...current,
       [resultKey]: results.map((result) => {
@@ -2829,7 +2837,7 @@ export function useTasklistPage() {
           return result;
         }
 
-        return { ...result, measuredValue };
+        return { ...result, measuredValue: sanitizedValue };
       }),
     }));
   }
@@ -2858,7 +2866,35 @@ export function useTasklistPage() {
     return null;
   }
 
+  function findInvalidMeasurementResult() {
+    for (const equipmentItem of equipment) {
+      for (const task of tasks) {
+        const result = getResult(task.id, equipmentItem.id);
+        if (!result) continue;
+
+        const validation = findMeasurementValidation(result, task);
+        if (!validation.isValid) {
+          return {
+            equipment: equipmentItem,
+            task,
+          };
+        }
+      }
+    }
+
+    return null;
+  }
+
   function validateBeforeSubmit() {
+    const dateValidation = validateDate(executionDate, "Tanggal pelaksanaan");
+    if (!dateValidation.isValid) {
+      return {
+        isValid: false,
+        message: dateValidation.message,
+        taskId: null,
+      };
+    }
+
     if (!selectedDepotId) {
       return {
         isValid: false,
@@ -2878,6 +2914,18 @@ export function useTasklistPage() {
     const firstEmptyResult = findFirstEmptyResult();
 
     if (!firstEmptyResult) {
+      const invalidMeasurement = findInvalidMeasurementResult();
+      if (invalidMeasurement) {
+        setSelectedEquipmentId(invalidMeasurement.equipment.id);
+        setFirstEmptyTaskId(invalidMeasurement.task.id);
+
+        return {
+          isValid: false,
+          message: `${invalidMeasurement.equipment.tagNumber} - ${invalidMeasurement.task.code} harus diisi angka.`,
+          taskId: invalidMeasurement.task.id,
+        };
+      }
+
       setFirstEmptyTaskId(null);
       return {
         isValid: true,
@@ -2929,7 +2977,7 @@ export function useTasklistPage() {
     setCycle: changeCycle,
     setExecutionDate,
     setSelectedDepotId,
-    setRemarks,
+    setRemarks: (value: string) => setRemarks(sanitizeText(value)),
     setSelectedEquipmentType: changeEquipmentType,
     setSelectedEquipmentId,
     submitCycleSelection,
@@ -2939,6 +2987,14 @@ export function useTasklistPage() {
     updatePerformance,
     validateBeforeSubmit,
   };
+}
+
+function findMeasurementValidation(
+  result: TasklistResult,
+  task: TasklistTask,
+) {
+  if (task.inputType !== "MEASUREMENT") return valid();
+  return validateRequiredNumber(result.measuredValue, task.measurementLabel ?? "Nilai");
 }
 
 async function fetchJson<T>(input: RequestInfo | URL, init?: RequestInit) {

@@ -58,15 +58,44 @@ Gunakan `react-icons` untuk icon UI.
 
 ## State Management
 
-Gunakan state management yang maintainable.
+Gunakan state management yang maintainable dengan SWR dan Zustand.
 
 - Local state boleh untuk state kecil khusus komponen.
-- Shared state lintas halaman/fitur gunakan Zustand.
+- Server state dan data dari API wajib memakai SWR.
+- Shared client state lintas halaman/fitur wajib memakai Zustand.
 - Store Zustand harus kecil dan fokus per domain, contoh `auth`, `grading`, `tasklist`, `recap`.
 - Jangan taruh semua state dalam satu global store besar.
-- Async action dipisah dari UI component.
+- Jangan simpan data server duplikat di Zustand jika sudah dikelola SWR.
+- Zustand hanya untuk state client, contoh user login, role, pilihan UI global, filter aktif, draft form, dan status modal.
+- SWR dipakai untuk fetch, cache, revalidate, loading, error, mutate, dan sinkron data setelah create/update/delete.
+- Async action dipisah dari UI component. Hook page boleh memanggil SWR/Zustand, tetapi komponen UI tidak boleh berisi fetch mentah.
 
-Jika Zustand belum ada di dependency saat mulai implementasi shared state, tambahkan dependency dengan alasan jelas.
+Jika SWR atau Zustand belum ada di dependency saat mulai implementasi, tambahkan dependency dengan alasan jelas.
+
+## Data Fetching
+
+Pola fetch wajib konsisten.
+
+- Semua GET API gunakan `useSWR`.
+- Mutasi POST/PUT/PATCH/DELETE gunakan helper async lalu panggil `mutate`.
+- Gunakan key SWR yang stabil, contoh `["/equipment", params]`.
+- Jangan fetch langsung di component render.
+- Jangan memakai `useEffect + fetch + setState` untuk data server baru. Refactor ke SWR saat menyentuh area terkait.
+- Empty state ditangani dari `data` kosong, bukan dari error fetch.
+- Error teknis jangan tampil mentah ke user awam. Gunakan wording sederhana atau diamkan jika konteksnya memang boleh kosong.
+- Backend response envelope dibaca lewat helper fetcher, lalu hook menerima `data` utama.
+- Hindari multiple fetch paralel manual jika bisa dipisah menjadi hook SWR kecil per resource.
+
+## Store Pattern
+
+Zustand store harus sederhana.
+
+- Simpan hanya state client yang benar-benar perlu shared.
+- Store tidak boleh menjadi pengganti cache API.
+- Store auth minimal menyimpan `employee_number`, `name`, `role`, `depot_id`, dan action `setUser`/`clearUser`.
+- Store filter boleh menyimpan filter aktif lintas halaman jika filter perlu dipertahankan.
+- Persist ke `localStorage` hanya untuk auth/session ringan dan preferensi UI yang memang perlu bertahan.
+- Jangan simpan password, token mentah yang tidak diperlukan, atau payload besar di localStorage.
 
 ## Clean Code
 
@@ -94,6 +123,9 @@ hooks/
   use-login-page.ts
 stores/
   auth-store.ts
+lib/
+  api-client.ts
+  swr.ts
 ```
 
 Pattern boleh disesuaikan dengan kebutuhan fitur, tapi prinsipnya tetap: page tipis, komponen fokus, logic di hook, shared state di store.

@@ -225,6 +225,8 @@ function GradingSubmissionView({ data }: { data: GradingSubmissionDetail }) {
 }
 
 function TasklistSubmissionView({ data }: { data: TasklistSubmissionDetail }) {
+  const userRemarks = getUserTasklistRemarks(data.session.remarks);
+
   return (
     <div className="flex flex-col gap-5">
       <TasklistHeaderSection
@@ -244,7 +246,7 @@ function TasklistSubmissionView({ data }: { data: TasklistSubmissionDetail }) {
           <InfoItem label="Tanggal Pelaksanaan" value={formatDate(data.session.executionDate)} />
           <InfoItem label="Status" value={formatStatus(data.session.approvalStatus)} />
           <InfoItem label="Dibuat Oleh" value={data.session.createdBy ?? "-"} />
-          <InfoItem label="Keterangan" value={data.session.remarks ?? "-"} />
+          {userRemarks ? <InfoItem label="Keterangan" value={userRemarks} /> : null}
         </dl>
       </GradingFormSection>
 
@@ -298,43 +300,43 @@ function TasklistEquipmentResult({
               className={`rounded-lg border p-4 ${getPerformanceClass(result?.performance)}`}
               key={task.id}
             >
-              <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-md bg-white px-2 py-1 text-xs font-bold text-slate-700 shadow-sm">
-                      {task.code}
-                    </span>
-                    <span className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-neutral-500 shadow-sm">
-                      {task.durationMinutes} menit
-                    </span>
+              <div className="grid gap-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="rounded-md bg-white px-2 py-1 text-xs font-bold text-slate-700 shadow-sm">
+                        {task.code}
+                      </span>
+                      <span className="rounded-md bg-white px-2 py-1 text-xs font-semibold text-neutral-500 shadow-sm">
+                        {task.durationMinutes} menit
+                      </span>
+                    </div>
+                    <h3 className="mt-3 text-base font-bold uppercase text-[#232122]">
+                      {task.description}
+                    </h3>
                   </div>
-                  <h3 className="mt-3 text-base font-bold uppercase text-[#232122]">
-                    {task.description}
-                  </h3>
-                  <div className="mt-4 grid gap-3 text-sm leading-6 text-neutral-700 md:grid-cols-2">
-                    <TaskInfo label="Prosedur" value={task.procedure} />
-                    <TaskInfo
-                      label="Kriteria penerimaan"
-                      value={task.acceptanceCriteria}
-                    />
+                  <div className="min-w-32 rounded-lg bg-white/85 px-4 py-3 text-center shadow-sm">
+                    <p className="text-xs font-bold uppercase tracking-wide text-neutral-500">
+                      Performa
+                    </p>
+                    <p className="mt-1 text-2xl font-black leading-none text-[#232122]">
+                      {result?.performance || "-"}
+                    </p>
                   </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="grid gap-3 text-sm leading-6 text-neutral-700 lg:grid-cols-2">
+                  <TaskInfo label="Prosedur" value={task.procedure} />
+                  <TaskInfo
+                    label="Kriteria penerimaan"
+                    value={task.acceptanceCriteria}
+                  />
                   {task.inputType === "MEASUREMENT" ? (
                     <TaskInfo
                       label={`${task.measurementLabel ?? "Nilai"}${task.measurementUnit ? ` (${task.measurementUnit})` : ""}`}
                       value={result?.measuredValue || "-"}
                     />
                   ) : null}
-                  <div className="rounded-lg bg-white/80 p-3">
-                    <p className="text-xs font-bold uppercase tracking-wide text-neutral-500">
-                      Performa
-                    </p>
-                    <p className="mt-1 text-2xl font-black text-[#232122]">
-                      {result?.performance || "-"}
-                    </p>
-                  </div>
                 </div>
               </div>
             </article>
@@ -426,7 +428,6 @@ function GradingAssessmentTable({
     </GradingFormSection>
   );
 }
-
 function JsonRecordSection({
   title,
   data,
@@ -541,6 +542,25 @@ function formatNumber(value?: number) {
 
 function formatStatus(value?: string) {
   return value ? value.replaceAll("_", " ") : "-";
+}
+
+function getUserTasklistRemarks(value?: string | null) {
+  if (!value) return "";
+
+  const cleaned = value
+    .replace(
+      /\b(monthlyCycle|occurrenceCount|realizedOccurrenceCount|planPerOccurrence)=[^;\n]+;?/g,
+      "",
+    )
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((line) => !/smoke test|integrasi api/i.test(line))
+    .map((line) => line.replace(/^[;,\s]+|[;,\s]+$/g, ""))
+    .filter(Boolean)
+    .join("\n");
+
+  return cleaned;
 }
 
 function formatKey(key: string) {

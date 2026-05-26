@@ -4,6 +4,14 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import type { AdminDepotUser } from "@/hooks/use-admin-depot-page";
+import {
+  firstInvalid,
+  invalid,
+  sanitizeInteger,
+  sanitizeText,
+  validateRequiredText,
+  valid,
+} from "@/lib/input-validation";
 
 type AdminDepotFormState = {
   employee_number: string;
@@ -65,13 +73,26 @@ export function useAdminDepotFormPage() {
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) {
     const { name, value } = event.target;
-    setForm((current) => ({ ...current, [name]: value }));
+    setForm((current) => ({
+      ...current,
+      [name]: name === "employee_number" || name === "depot_id"
+        ? sanitizeInteger(value)
+        : sanitizeText(value),
+    }));
   }
 
   async function submitAdminDepot(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setIsSubmitting(true);
     setError(null);
+
+    const validation = validateAdminDepotForm(form, depots);
+    if (!validation.isValid) {
+      setError(validation.message);
+      toast.error(validation.message);
+      return;
+    }
+
+    setIsSubmitting(true);
 
     try {
       await fetchJson<AdminDepotUser>(`${apiBaseUrl}/api/master/users`, {
@@ -124,4 +145,23 @@ async function fetchJson<T>(input: RequestInfo | URL, init?: RequestInit) {
 function getErrorMessage(error: unknown) {
   if (error instanceof Error) return error.message;
   return "Terjadi kesalahan.";
+}
+
+function validateAdminDepotForm(
+  form: AdminDepotFormState,
+  depots: DepotOption[],
+) {
+  const depotExists = depots.some((depot) => String(depot.id) === form.depot_id);
+
+  return firstInvalid([
+    depotExists ? valid() : invalid("Lokasi tugas wajib dipilih dari daftar depot."),
+    validateRequiredText(form.employee_number, "Nomor pegawai", {
+      maxLength: 30,
+    }),
+    validateRequiredText(form.name, "Nama", { maxLength: 120 }),
+    validateRequiredText(form.password, "Kata sandi", { maxLength: 120 }),
+    form.password.length >= 6
+      ? valid()
+      : invalid("Kata sandi minimal 6 karakter."),
+  ]);
 }

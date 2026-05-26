@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   IoCalendarOutline,
   IoChevronForwardOutline,
@@ -8,10 +9,16 @@ import {
 import { GradingSelectionModal } from "@/components/grading/grading-selection-modal";
 import { SelectedGradingForm } from "@/components/grading/selected-grading-form";
 import { TemplateDownloadLink } from "@/components/template-download-link";
-import { useGradingPage } from "@/hooks/use-grading-page";
+import {
+  type GradingEquipmentType,
+  gradingEquipmentOptions,
+  useGradingPage,
+} from "@/hooks/use-grading-page";
 
 export function GradingPage() {
   const gradingPage = useGradingPage();
+  const [downloadEquipmentType, setDownloadEquipmentType] =
+    useState<GradingEquipmentType>(gradingEquipmentOptions[0].type);
   const isFormOpen = gradingPage.step === "form";
 
   return (
@@ -96,7 +103,7 @@ export function GradingPage() {
 
       {!isFormOpen ? (
         <section className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm">
-          <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px_auto] lg:items-end">
             <div>
               <p className="text-xs font-bold uppercase tracking-wide text-[#036CB6]">
                 Template Lembar Fisik
@@ -104,19 +111,39 @@ export function GradingPage() {
               <h2 className="mt-1 text-lg font-bold text-[#232122]">
                 Unduh template grading untuk survei lapangan
               </h2>
+              <p className="mt-1 text-sm leading-6 text-neutral-600">
+                Pilih jenis peralatan, lalu unduh template yang dibutuhkan.
+              </p>
             </div>
-          </div>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {gradingPage.gradingEquipmentOptions.map((option) => (
-              <TemplateDownloadLink
-                className="w-full"
-                equipmentType={option.type}
-                kind="grading"
-                key={option.type}
+
+            <label>
+              <span className="text-xs font-bold uppercase text-neutral-500">
+                Jenis peralatan
+              </span>
+              <select
+                className="mt-2 h-10 w-full rounded-lg border border-zinc-200 bg-white px-3 text-sm font-semibold text-[#232122] outline-none focus:border-[#036CB6] focus:ring-2 focus:ring-[#E6F1FA]"
+                onChange={(event) =>
+                  setDownloadEquipmentType(
+                    event.target.value as GradingEquipmentType,
+                  )
+                }
+                value={downloadEquipmentType}
               >
-                {option.label}
-              </TemplateDownloadLink>
-            ))}
+                {gradingPage.gradingEquipmentOptions.map((option) => (
+                  <option key={option.type} value={option.type}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+
+            <TemplateDownloadLink
+              className="h-10 border-[#036CB6] bg-white text-[#036CB6] hover:bg-[#E6F1FA]"
+              equipmentType={downloadEquipmentType}
+              kind="grading"
+            >
+              Unduh Template
+            </TemplateDownloadLink>
           </div>
         </section>
       ) : null}

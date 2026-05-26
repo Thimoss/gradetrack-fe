@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
+import { sanitizeText } from "@/lib/input-validation";
 
 export type DepotStatus = "active" | "inactive";
 
@@ -181,7 +182,7 @@ export function useDepotPage() {
   }
 
   function applySearch(value: string) {
-    setSearch(value);
+    setSearch(sanitizeText(value));
     setPage(1);
   }
 

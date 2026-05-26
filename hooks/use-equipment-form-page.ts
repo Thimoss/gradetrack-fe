@@ -7,6 +7,19 @@ import {
   type Equipment,
   type EquipmentType,
 } from "@/hooks/use-equipment-page";
+import {
+  firstInvalid,
+  invalid,
+  sanitizeDecimal,
+  sanitizeInteger,
+  sanitizeText,
+  validateEnum,
+  validateOptionalText,
+  validateRequiredNumber,
+  validateRequiredPositiveInteger,
+  validateRequiredText,
+  valid,
+} from "@/lib/input-validation";
 
 type DepotOption = {
   id: number;
@@ -57,6 +70,19 @@ const emptyForm: EquipmentFormState = {
   manufactureYear: "",
   extra: {},
 };
+
+const equipmentTypeValues = [
+  "GENERATOR_GST",
+  "MOTOR_OPERATED_VALVE_MOV",
+  "FLOW_METER_MTR",
+  "PIPING_SYSTEM_PIP",
+  "PRODUCT_PUMP_PMP",
+  "MEDIUM_VOLTAGE_SWITCHGEAR_SGR1",
+  "STORAGE_TANK_TNK1",
+  "SPHERICAL_TANK_TNK2",
+  "POWER_TRANSFORMER_TRF",
+  "UNINTERRUPTIBLE_POWER_SYSTEM_UPS",
+] as const;
 
 export const equipmentRequiredFields: Record<EquipmentType, FieldConfig[]> = {
   GENERATOR_GST: [
@@ -230,7 +256,7 @@ export function useEquipmentFormPage(equipmentId?: string) {
       return;
     }
 
-    setForm((current) => ({ ...current, [name]: value }));
+    setForm((current) => ({ ...current, [name]: sanitizeEquipmentValue(name, value) }));
   }
 
   function handleExtraFieldChange(
@@ -239,14 +265,22 @@ export function useEquipmentFormPage(equipmentId?: string) {
     const { name, value } = event.target;
     setForm((current) => ({
       ...current,
-      extra: { ...current.extra, [name]: value },
+      extra: { ...current.extra, [name]: sanitizeEquipmentValue(name, value) },
     }));
   }
 
   async function submitEquipment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setIsSubmitting(true);
     setError(null);
+
+    const validation = validateEquipmentForm(form, isEditMode, depots);
+    if (!validation.isValid) {
+      setError(validation.message);
+      toast.error(validation.message);
+      return;
+    }
+
+    setIsSubmitting(true);
 
     const endpoint = isEditMode
       ? `${apiBaseUrl}/equipment/${equipmentId}`
@@ -399,10 +433,76 @@ function toOptionalNumber(value: string) {
   return Number(value);
 }
 
+function sanitizeEquipmentValue(name: string, value: string) {
+  if (name === "depot_id" || name === "manufactureYear") {
+    return sanitizeInteger(value);
+  }
+  if (isNumericKey(name)) return sanitizeDecimal(value);
+  return sanitizeText(value);
+}
+
 function isNumericKey(key: string) {
   return /year|voltage|capacity|power|nps|rating|diameter|length|pressure|temperature|current|duration|frequency|cubicle|phase|impedance|rise|tap|mass|height/i.test(
     key,
   );
+}
+
+function validateEquipmentForm(
+  form: EquipmentFormState,
+  isEditMode: boolean,
+  depots: DepotOption[],
+) {
+  const requiredFields = equipmentRequiredFields[form.equipmentType];
+  const depotExists = depots.some((depot) => String(depot.id) === form.depot_id);
+  const needsMaker = form.equipmentType !== "MOTOR_OPERATED_VALVE_MOV";
+  const needsTagNumber = form.equipmentType !== "PIPING_SYSTEM_PIP";
+
+  return firstInvalid([
+    validateEnum(form.equipmentType, equipmentTypeValues, "Jenis peralatan"),
+    isEditMode
+      ? valid()
+      : depotExists
+        ? valid()
+        : invalid("Lokasi tugas wajib dipilih dari daftar depot."),
+    needsTagNumber
+      ? validateRequiredText(form.tagNumber, "Nomor tag", { maxLength: 80 })
+      : valid(),
+    form.equipmentType !== "MOTOR_OPERATED_VALVE_MOV"
+      ? validateRequiredText(form.serialNumber, "Nomor seri", { maxLength: 80 })
+      : validateOptionalText(form.serialNumber, "Nomor seri", { maxLength: 80 }),
+    needsMaker && form.equipmentType !== "UNINTERRUPTIBLE_POWER_SYSTEM_UPS"
+      ? validateRequiredText(form.manufacturer, "Pabrikan", { maxLength: 120 })
+      : validateOptionalText(form.manufacturer, "Pabrikan", { maxLength: 120 }),
+    needsMaker &&
+    form.equipmentType !== "STORAGE_TANK_TNK1" &&
+    form.equipmentType !== "SPHERICAL_TANK_TNK2" &&
+    form.equipmentType !== "UNINTERRUPTIBLE_POWER_SYSTEM_UPS"
+      ? validateRequiredText(form.model, "Model", { maxLength: 120 })
+      : validateOptionalText(form.model, "Model", { maxLength: 120 }),
+    form.equipmentType !== "MOTOR_OPERATED_VALVE_MOV"
+      ? validateManufactureYear(form.manufactureYear)
+      : valid(),
+    ...requiredFields.map((field) =>
+      field.type === "number"
+        ? validateRequiredNumber(form.extra[field.name] ?? "", field.label)
+        : validateRequiredText(form.extra[field.name] ?? "", field.label, {
+            maxLength: 120,
+          }),
+    ),
+  ]);
+}
+
+function validateManufactureYear(value: string) {
+  const result = validateRequiredPositiveInteger(value, "Tahun pembuatan");
+  if (!result.isValid) return result;
+
+  const year = Number(value);
+  const currentYear = new Date().getFullYear();
+  if (year < 1900 || year > currentYear + 1) {
+    return invalid("Tahun pembuatan harus masuk akal.");
+  }
+
+  return valid();
 }
 
 function getErrorMessage(error: unknown) {

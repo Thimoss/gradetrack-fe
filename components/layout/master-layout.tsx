@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
 import {
@@ -15,6 +16,7 @@ import {
   IoDocumentTextOutline,
   IoGridOutline,
   IoHelpCircleOutline,
+  IoLogOutOutline,
   IoMenu,
   IoPeopleOutline,
   IoPersonOutline,
@@ -40,12 +42,14 @@ const navigationIcon: Record<NavigationItem["icon"], ReactNode> = {
 export function MasterLayout({ children }: MasterLayoutProps) {
   const {
     navigationItems,
+    user,
     isDesktopSidebarOpen,
     isMobileSidebarOpen,
     toggleDesktopSidebar,
     openMobileSidebar,
     closeMobileSidebar,
     isActiveNavigation,
+    logout,
   } = useMasterLayout();
 
   const desktopSidebarWidth = isDesktopSidebarOpen ? "lg:w-72" : "lg:w-20";
@@ -76,12 +80,24 @@ export function MasterLayout({ children }: MasterLayoutProps) {
         >
           <Link
             className={`flex min-w-0 items-center gap-3 ${
-              isDesktopSidebarOpen ? "" : "lg:justify-center"
+              isDesktopSidebarOpen
+                ? ""
+                : "lg:mx-auto lg:h-11 lg:w-11 lg:justify-center lg:gap-0"
             }`}
             href="/dashboard"
           >
-            <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-[#036CB6] text-sm font-black text-white">
-              <IoAnalyticsOutline aria-hidden="true" className="text-xl" />
+            <span
+              className={`flex shrink-0 items-center justify-center rounded-lg bg-white ring-1 ring-zinc-200 ${
+                isDesktopSidebarOpen ? "h-10 w-10" : "h-11 w-11"
+              }`}
+            >
+              <Image
+                alt="Pertamina Patra Niaga"
+                className="h-auto w-8"
+                height={94}
+                src="/logo/logo1.png"
+                width={250}
+              />
             </span>
             <span
               className={`min-w-0 overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-200 ease-out ${labelVisibility}`}
@@ -117,7 +133,11 @@ export function MasterLayout({ children }: MasterLayoutProps) {
                   isActive
                     ? "bg-[#036CB6] text-white"
                     : "text-slate-700 hover:bg-slate-100"
-                } ${isDesktopSidebarOpen ? "" : "lg:justify-center lg:px-2"}`}
+                } ${
+                  isDesktopSidebarOpen
+                    ? ""
+                    : "lg:mx-auto lg:w-11 lg:justify-center lg:gap-0 lg:px-0"
+                }`}
                 href={item.href}
                 key={`${item.href}-${item.label}`}
                 onClick={closeMobileSidebar}
@@ -125,7 +145,11 @@ export function MasterLayout({ children }: MasterLayoutProps) {
               >
                 <span
                   className={`grid h-7 w-7 shrink-0 place-items-center rounded-md text-base ${
-                    isActive ? "bg-white/15" : "bg-slate-100 text-slate-700"
+                    isActive
+                      ? isDesktopSidebarOpen
+                        ? "bg-white/15"
+                        : "bg-transparent"
+                      : "bg-slate-100 text-slate-700"
                   }`}
                 >
                   {navigationIcon[item.icon]}
@@ -146,11 +170,17 @@ export function MasterLayout({ children }: MasterLayoutProps) {
           }`}
         >
           <div
-            className={`rounded-lg bg-slate-50 p-3 transition-[padding] duration-300 ease-in-out ${
-              isDesktopSidebarOpen ? "" : "lg:p-2"
+            className={`rounded-lg bg-slate-50 p-3 transition-[height,width,padding] duration-300 ease-in-out ${
+              isDesktopSidebarOpen ? "" : "lg:mx-auto lg:h-11 lg:w-11 lg:p-0"
             }`}
           >
-            <div className="flex items-center gap-3">
+            <div
+              className={`flex items-center gap-3 ${
+                isDesktopSidebarOpen
+                  ? ""
+                  : "lg:h-full lg:w-full lg:justify-center lg:gap-0"
+              }`}
+            >
               <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-[#E6F1FA] text-xs font-black text-[#036CB6]">
                 <IoBriefcaseOutline aria-hidden="true" className="text-lg" />
               </div>
@@ -208,16 +238,40 @@ export function MasterLayout({ children }: MasterLayoutProps) {
             </div>
 
             <div className="flex items-center gap-3">
-              <button
-                className="hidden h-10 items-center gap-2 rounded-lg border border-zinc-200 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 sm:flex"
-                type="button"
+              <Link
+                className="flex h-11 w-11 items-center justify-center gap-2 rounded-lg border border-zinc-200 px-0 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 sm:w-auto sm:px-4"
+                href="/bantuan"
+                title="Bantuan"
               >
                 <IoHelpCircleOutline aria-hidden="true" className="text-lg" />
-                Panduan
+                <span className="max-sm:hidden">Bantuan</span>
+              </Link>
+              <Link
+                className="flex h-11 min-w-0 items-center gap-3 rounded-lg border border-zinc-200 bg-white px-3 text-left transition hover:bg-slate-50 max-sm:w-11 max-sm:justify-center max-sm:px-0"
+                href="/profile"
+                title={user?.name ?? "Profil"}
+              >
+                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#036CB6] text-white">
+                  <IoPersonOutline aria-hidden="true" className="text-lg" />
+                </span>
+                <span className="min-w-0 max-sm:hidden">
+                  <span className="block truncate text-sm font-bold leading-4 text-[#232122]">
+                    {user?.name ?? "Belum masuk"}
+                  </span>
+                  <span className="block truncate text-xs text-neutral-500">
+                    {user?.employee_number ?? "-"} · {formatRole(user?.role)}
+                  </span>
+                </span>
+              </Link>
+              <button
+                aria-label="Keluar"
+                className="grid h-11 w-11 place-items-center rounded-lg border border-zinc-200 text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-[#036CB6] focus:ring-offset-2"
+                onClick={logout}
+                title="Keluar"
+                type="button"
+              >
+                <IoLogOutOutline aria-hidden="true" className="text-xl" />
               </button>
-              <div className="grid h-10 w-10 place-items-center rounded-lg bg-[#036CB6] text-sm font-black text-white">
-                <IoPersonOutline aria-hidden="true" className="text-lg" />
-              </div>
             </div>
           </div>
         </header>
@@ -233,4 +287,10 @@ export function MasterLayout({ children }: MasterLayoutProps) {
       </div>
     </div>
   );
+}
+
+function formatRole(role?: string) {
+  if (role === "ADMIN_REGION") return "Admin Region";
+  if (role === "ADMIN_DEPOT") return "Admin Depot";
+  return role ?? "-";
 }

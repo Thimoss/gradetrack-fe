@@ -67,6 +67,14 @@ import type {
   GradingEquipmentType,
 } from "@/hooks/use-grading-page";
 import type { Equipment } from "@/hooks/use-equipment-page";
+import {
+  firstInvalid,
+  invalid,
+  validateDate,
+  validateEnum,
+  validateRequiredText,
+  valid,
+} from "@/lib/input-validation";
 
 type SelectedGradingFormProps = {
   assessmentDate: string;
@@ -78,6 +86,18 @@ type SelectedGradingFormProps = {
   onSelectedTagChange: (value: string) => void;
   onRestartFlow: () => void;
 };
+
+const gradingEquipmentTypeValues = [
+  "gst",
+  "mov",
+  "mtr",
+  "pip",
+  "pmp",
+  "sgr",
+  "tnk",
+  "trf",
+  "ups",
+] as const;
 
 type AssessmentSummary = {
   totalScore: number;
@@ -354,6 +374,22 @@ export function SelectedGradingForm({
   }, [formKey]);
 
   async function submitGrading() {
+    const validation = firstInvalid([
+      validateDate(assessmentDate, "Tanggal penilaian"),
+      validateEnum(
+        selectedEquipmentType,
+        gradingEquipmentTypeValues,
+        "Jenis peralatan",
+      ),
+      validateRequiredText(selectedTag, "Nomor tag", { maxLength: 80 }),
+      selectedEquipment ? valid() : invalid("Peralatan wajib dipilih."),
+      selectedDepot ? valid() : invalid("Depot wajib dipilih."),
+    ]);
+    if (!validation.isValid) {
+      toast.error(validation.message);
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {

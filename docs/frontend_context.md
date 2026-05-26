@@ -8,6 +8,8 @@ Snapshot konteks `grading-fe` per 2026-05-24.
 - Styling: Tailwind CSS.
 - Font utama: Montserrat.
 - Icon dependency: `react-icons`.
+- Data fetching dan cache server state: SWR.
+- Shared client state: Zustand.
 - Nama web sementara: GradeTrack.
 - Fungsi web: grading peralatan, tasklist tindak lanjut, rekap, monitoring.
 
@@ -18,7 +20,10 @@ Snapshot konteks `grading-fe` per 2026-05-24.
 - Gunakan palet login sebagai dasar warna semua halaman.
 - Gunakan `react-icons`, utamakan `react-icons/io5`.
 - State kecil tetap local state.
-- Shared state lintas fitur gunakan Zustand.
+- Server state dan sinkron data API gunakan SWR.
+- Shared client state lintas fitur gunakan Zustand.
+- Jangan duplikasi data server dari SWR ke Zustand.
+- Mutasi data wajib memanggil `mutate` agar list/detail terkait sinkron.
 - Page harus tipis, komponen kecil, logic di hook per halaman.
 - Jangan tambah dependency baru tanpa alasan kuat.
 

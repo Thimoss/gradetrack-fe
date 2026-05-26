@@ -1,21 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import Image from "next/image";
+import { useLoginPage } from "@/hooks/use-login-page";
+import { sanitizeInteger } from "@/lib/input-validation";
 
 export default function Home() {
-  const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = new FormData(event.currentTarget);
-    const employeeNumber = String(form.get("employeeNumber") ?? "").trim();
-    setIsSubmitting(true);
-    window.localStorage.setItem("grading_employee_number", employeeNumber);
-    window.localStorage.setItem("grading_user_role", "ADMIN_DEPOT");
-    router.push("/dashboard");
-  }
+  const loginPage = useLoginPage();
 
   return (
     <main className="min-h-screen bg-zinc-100 text-[#232122]">
@@ -24,8 +14,15 @@ export default function Home() {
           <div className="flex min-h-full flex-col justify-between">
             <div>
               <div className="flex items-center gap-3">
-                <div className="grid h-11 w-11 place-items-center rounded-lg bg-white text-lg font-black text-[#232122]">
-                  G
+                <div className="flex h-11 w-28 items-center justify-center rounded-lg bg-white px-3">
+                  <Image
+                    alt="Pertamina Patra Niaga"
+                    className="h-auto w-full"
+                    height={94}
+                    priority
+                    src="/logo/logo1.png"
+                    width={250}
+                  />
                 </div>
                 <div>
                   <p className="text-xl font-bold">GradeTrack</p>
@@ -80,7 +77,7 @@ export default function Home() {
 
             <form
               className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm"
-              onSubmit={handleSubmit}
+              onSubmit={loginPage.handleSubmit}
             >
               <div className="space-y-5">
                 <div>
@@ -96,6 +93,9 @@ export default function Home() {
                     id="employee-number"
                     inputMode="numeric"
                     name="employeeNumber"
+                    onChange={(event) => {
+                      event.target.value = sanitizeInteger(event.target.value);
+                    }}
                     placeholder="Contoh: 123456"
                     required
                     type="text"
@@ -123,11 +123,16 @@ export default function Home() {
 
               <button
                 className="mt-6 h-12 w-full rounded-lg bg-[#036CB6] px-4 text-sm font-bold text-white transition hover:bg-[#025894] focus:outline-none focus:ring-2 focus:ring-[#036CB6] focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-400"
-                disabled={isSubmitting}
+                disabled={loginPage.isSubmitting}
                 type="submit"
               >
-                {isSubmitting ? "Memproses..." : "Masuk"}
+                {loginPage.isSubmitting ? "Memproses..." : "Masuk"}
               </button>
+              {loginPage.errorMessage ? (
+                <p className="mt-4 rounded-lg bg-[#FDE8EA] px-4 py-3 text-sm font-semibold text-[#E91D32]">
+                  {loginPage.errorMessage}
+                </p>
+              ) : null}
             </form>
 
             <p className="mt-6 text-center text-xs leading-5 text-neutral-500">

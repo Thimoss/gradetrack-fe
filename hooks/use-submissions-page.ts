@@ -1,10 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-
-type ApiEnvelope<T> = {
-  data: T;
-};
+import { useMemo, useState } from "react";
+import useSWR from "swr";
+import { apiFetch } from "@/lib/api-client";
+import { useAuthStore } from "@/stores/auth-store";
 
 export type SubmissionScope = "mine" | "all";
 
@@ -44,93 +43,45 @@ type TasklistResponse = {
   }>;
 };
 
-const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:3001";
-
 export function useSubmissionsPage() {
   const [scope, setScope] = useState<SubmissionScope>("mine");
-  const [rows, setRows] = useState<SubmissionRow[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
+  const currentEmployeeNumber = useAuthStore(
+    (state) => state.user?.employee_number ?? "",
+  );
+  const createdByQuery =
+    scope === "mine" && currentEmployeeNumber
+      ? `&createdBy=${encodeURIComponent(currentEmployeeNumber)}`
+      : "";
+  const gradingKey = ["grading-submissions", createdByQuery] as const;
+  const tasklistKey = ["tasklist-submissions", createdByQuery] as const;
+  const grading = useSWR(gradingKey, ([, query]) =>
+    apiFetch<GradingResponse>(`/grading-submissions?limit=100${query}`),
+  );
+  const tasklist = useSWR(tasklistKey, ([, query]) =>
+    apiFetch<TasklistResponse>(`/tasklists?limit=100${query}`),
+  );
+  const rows = useMemo(() => {
+    if (grading.error || tasklist.error) return [];
 
-  const currentEmployeeNumber = useMemo(() => {
-    if (typeof window === "undefined") return "";
-    return window.localStorage.getItem("grading_employee_number") ?? "";
-  }, []);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function loadSubmissions() {
-      setIsLoading(true);
-      setError("");
-
-      try {
-        const createdByQuery =
-          scope === "mine" && currentEmployeeNumber
-            ? `&createdBy=${encodeURIComponent(currentEmployeeNumber)}`
-            : "";
-        const [grading, tasklist] = await Promise.all([
-          fetchJson<GradingResponse>(
-            `${apiBaseUrl}/grading-submissions?limit=100${createdByQuery}`,
-            controller.signal,
-          ),
-          fetchJson<TasklistResponse>(
-            `${apiBaseUrl}/tasklists?limit=100${createdByQuery}`,
-            controller.signal,
-          ),
-        ]);
-
-        setRows(
-          [
-            ...grading.items.map(mapGradingRow),
-            ...tasklist.items.map(mapTasklistRow),
-          ].sort(
-            (left, right) =>
-              new Date(right.createdAt).getTime() -
-              new Date(left.createdAt).getTime(),
-          ),
-        );
-      } catch (fetchError) {
-        if (
-          fetchError instanceof DOMException &&
-          fetchError.name === "AbortError"
-        ) {
-          return;
-        }
-        setError(
-          fetchError instanceof Error
-            ? fetchError.message
-            : "Gagal memuat submission.",
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    void loadSubmissions();
-
-    return () => controller.abort();
-  }, [currentEmployeeNumber, scope]);
+    return [
+      ...(grading.data?.items ?? []).map(mapGradingRow),
+      ...(tasklist.data?.items ?? []).map(mapTasklistRow),
+    ].sort(
+      (left, right) =>
+        new Date(right.createdAt).getTime() -
+        new Date(left.createdAt).getTime(),
+    );
+  }, [grading.data?.items, grading.error, tasklist.data?.items, tasklist.error]);
+  const isLoading = grading.isLoading || tasklist.isLoading;
+  const error = grading.error ?? tasklist.error ?? null;
 
   return {
-    scope,
-    rows,
-    isLoading,
     error,
+    isLoading,
+    rows,
+    scope,
     setScope,
   };
-}
-
-async function fetchJson<T>(url: string, signal: AbortSignal) {
-  const response = await fetch(url, { signal });
-  const envelope = (await response.json()) as ApiEnvelope<T>;
-
-  if (!response.ok) {
-    throw new Error("Gagal memuat submission.");
-  }
-
-  return envelope.data;
 }
 
 function mapGradingRow(item: GradingResponse["items"][number]): SubmissionRow {

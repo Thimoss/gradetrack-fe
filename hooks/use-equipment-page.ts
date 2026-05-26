@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
+import { sanitizeText } from "@/lib/input-validation";
 
 export type EquipmentType =
   | "GENERATOR_GST"
@@ -154,7 +155,7 @@ export function useEquipmentPage() {
   }
 
   function applySearch(value: string) {
-    setSearch(value);
+    setSearch(sanitizeText(value));
     setPage(1);
   }
 
