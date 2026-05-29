@@ -4,8 +4,7 @@ export type ApiEnvelope<T> = {
   data: T;
 };
 
-export const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
+export const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
 export async function apiFetch<T>(
   path: string,
@@ -31,5 +30,6 @@ export function getApiMessage(message?: string | string[]) {
 
 function buildApiUrl(path: string) {
   if (path.startsWith("http")) return path;
-  return `${apiBaseUrl}${path}`;
+  if (!apiBaseUrl) return path;
+  return `${apiBaseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
 }
