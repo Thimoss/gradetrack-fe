@@ -1,5 +1,6 @@
 "use client";
 
+import { apiBaseUrl } from "@/lib/api-client";
 import { useEffect, useMemo, useState } from "react";
 import type { Equipment, EquipmentType } from "@/hooks/use-equipment-page";
 import { validateDate } from "@/lib/input-validation";
@@ -46,9 +47,6 @@ type DepotListResponse = {
 type EquipmentListResponse = {
   items: Equipment[];
 };
-
-const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
 const gradingTypeToEquipmentType: Record<GradingEquipmentType, EquipmentType> = {
   gst: "GENERATOR_GST",

@@ -1,5 +1,6 @@
 "use client";
 
+import { apiBaseUrl } from "@/lib/api-client";
 import { useEffect, useMemo, useState } from "react";
 
 export type DashboardCategoryCount = {
@@ -46,9 +47,6 @@ export type DashboardSummary = {
 type ApiEnvelope<T> = {
   data: T;
 };
-
-const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
 function getCurrentPeriod() {
   return new Date().toISOString().slice(0, 7);

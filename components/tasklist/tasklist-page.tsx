@@ -13,6 +13,7 @@ import {
   type TasklistEquipmentType,
   useTasklistPage,
 } from "@/hooks/use-tasklist-page";
+import { apiBaseUrl } from "@/lib/api-client";
 
 const cycleLabel: Record<TasklistCycle, string> = {
   DAILY: "Harian",
@@ -77,7 +78,7 @@ export function TasklistPage() {
       const createdBy =
         window.localStorage.getItem("grading_employee_number") ?? "admin-depot";
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/tasklists`,
+        `${apiBaseUrl}/tasklists`,
         {
           body: JSON.stringify({
             session: {

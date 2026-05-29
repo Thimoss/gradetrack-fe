@@ -4,7 +4,13 @@ export type ApiEnvelope<T> = {
   data: T;
 };
 
-export const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+if (!API_BASE_URL) {
+  throw new Error("NEXT_PUBLIC_API_BASE_URL belum diset.");
+}
+
+export const apiBaseUrl = API_BASE_URL.replace(/\/$/, "");
 
 export async function apiFetch<T>(
   path: string,
@@ -28,8 +34,7 @@ export function getApiMessage(message?: string | string[]) {
   return message || "Data belum dapat diproses.";
 }
 
-function buildApiUrl(path: string) {
+export function buildApiUrl(path: string) {
   if (path.startsWith("http")) return path;
-  if (!apiBaseUrl) return path;
-  return `${apiBaseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
+  return `${apiBaseUrl}/${path.replace(/^\//, "")}`;
 }

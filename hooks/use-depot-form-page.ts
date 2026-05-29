@@ -1,5 +1,6 @@
 "use client";
 
+import { apiBaseUrl } from "@/lib/api-client";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -22,9 +23,6 @@ type ApiEnvelope<T> = {
   message: string;
   data: T;
 };
-
-const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
 const emptyForm: DepotFormState = {
   depot_code: "",

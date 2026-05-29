@@ -1,5 +1,6 @@
 "use client";
 
+import { apiBaseUrl } from "@/lib/api-client";
 import { useEffect, useMemo, useState } from "react";
 import {
   sanitizeDecimal,
@@ -97,9 +98,6 @@ type DepotListResponse = {
 type TasklistTemplateResponse = {
   tasks: TasklistTask[];
 };
-
-const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
 const gstEquipment: TasklistEquipment[] = Array.from(
   { length: 7 },

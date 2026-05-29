@@ -1,4 +1,5 @@
 import { IoDownloadOutline } from "react-icons/io5";
+import { apiBaseUrl } from "@/lib/api-client";
 
 type TemplateDownloadLinkProps = {
   kind: "grading" | "tasklist";
@@ -6,9 +7,6 @@ type TemplateDownloadLinkProps = {
   children: string;
   className?: string;
 };
-
-const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
 export function TemplateDownloadLink({
   kind,

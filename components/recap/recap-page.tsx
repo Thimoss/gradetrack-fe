@@ -1,5 +1,6 @@
 "use client";
 
+import { apiBaseUrl } from "@/lib/api-client";
 import { Fragment, useEffect, useMemo, useState, type ReactNode } from "react";
 import Image from "next/image";
 import {
@@ -87,9 +88,6 @@ type TasklistRecapRow = {
   description: string;
   values: Record<TasklistCycle, { plan: number; real: number }>;
 };
-
-const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
 const monthLabels = [
   "Jan",

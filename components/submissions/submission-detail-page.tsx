@@ -1,5 +1,6 @@
 "use client";
 
+import { apiBaseUrl } from "@/lib/api-client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { IoArrowBackOutline } from "react-icons/io5";
@@ -93,9 +94,6 @@ type TasklistSubmissionDetail = {
     }>;
   }>;
 };
-
-const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
 export function SubmissionDetailPage({ id, kind }: SubmissionDetailPageProps) {
   const [data, setData] = useState<DetailData | null>(null);

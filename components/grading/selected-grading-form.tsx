@@ -67,6 +67,7 @@ import type {
   GradingEquipmentType,
 } from "@/hooks/use-grading-page";
 import type { Equipment } from "@/hooks/use-equipment-page";
+import { apiBaseUrl } from "@/lib/api-client";
 import {
   firstInvalid,
   invalid,
@@ -396,7 +397,7 @@ export function SelectedGradingForm({
       const createdBy =
         window.localStorage.getItem("grading_employee_number") ?? "admin-depot";
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/grading-submissions/${selectedEquipmentType}`,
+        `${apiBaseUrl}/grading-submissions/${selectedEquipmentType}`,
         {
           body: JSON.stringify({
             equipmentId: selectedEquipment?.id,
