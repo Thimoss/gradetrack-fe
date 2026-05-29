@@ -396,7 +396,7 @@ export function SelectedGradingForm({
       const createdBy =
         window.localStorage.getItem("grading_employee_number") ?? "admin-depot";
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:3001"}/grading-submissions/${selectedEquipmentType}`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/grading-submissions/${selectedEquipmentType}`,
         {
           body: JSON.stringify({
             equipmentId: selectedEquipment?.id,

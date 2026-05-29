@@ -5,7 +5,7 @@ export type ApiEnvelope<T> = {
 };
 
 export const apiBaseUrl =
-  process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:3001";
+  process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
 export async function apiFetch<T>(
   path: string,

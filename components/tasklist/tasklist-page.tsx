@@ -77,7 +77,7 @@ export function TasklistPage() {
       const createdBy =
         window.localStorage.getItem("grading_employee_number") ?? "admin-depot";
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:3001"}/tasklists`,
+        `${process.env.NEXT_PUBLIC_API_BASE_URL ?? ""}/tasklists`,
         {
           body: JSON.stringify({
             session: {
